@@ -579,3 +579,14 @@ html.light footer a.text-slate-300:hover {
   color: #F28C28 !important;
 }
 
+/* Logo visibility enhancement in dark mode */
+.dark-logo-glow {
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+html.dark .dark-logo-glow,
+.dark .dark-logo-glow,
+.keep-dark .dark-logo-glow {
+  filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 8px rgba(255, 255, 255, 0.45));
+}
+

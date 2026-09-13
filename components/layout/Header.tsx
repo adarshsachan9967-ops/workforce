@@ -94,21 +94,21 @@ export default function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Official Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-11 sm:h-12 w-36 sm:w-44 bg-white rounded-xl p-1 shadow-md border border-slate-200/80 flex items-center justify-center overflow-hidden transition-all group-hover:shadow-lg flex-shrink-0">
+            <div className="relative h-11 sm:h-12 w-40 sm:w-48 flex items-center justify-start flex-shrink-0">
               <Image
                 src="/logo.png"
                 alt="Workforce Infotech Pvt. Ltd."
                 fill
                 priority
                 unoptimized
-                className="object-contain p-0.5"
+                className="object-contain object-left dark-logo-glow transition-transform duration-300 group-hover:scale-105"
               />
             </div>
-            <div className="hidden lg:flex flex-col">
+            <div className="hidden 2xl:flex flex-col border-l border-slate-300 dark:border-navy-700 pl-3">
               <span className="text-xs font-bold text-accent-gold uppercase tracking-wider">
                 {language === "hi" ? "उत्तर प्रदेश चुनाव 2027" : "UP Elections 2027"}
               </span>
-              <span className="text-[10px] text-slate-400 font-mono tracking-wider">
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono tracking-wider">
                 {language === "hi" ? "चुनाव प्रबंधन संस्थान" : "Election Management"}
               </span>
             </div>

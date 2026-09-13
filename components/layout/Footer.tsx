@@ -33,21 +33,21 @@ export default function Footer() {
       <div className="border-b border-navy-800/80 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <div className="relative h-11 w-36 sm:w-44 bg-white rounded-xl p-1 shadow-md border border-slate-200/80 flex items-center justify-center overflow-hidden flex-shrink-0">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+              <div className="relative h-12 sm:h-14 w-44 sm:w-52 flex items-center justify-start flex-shrink-0">
                 <Image
                   src="/logo.png"
                   alt="Workforce Infotech Pvt. Ltd."
                   fill
                   unoptimized
-                  className="object-contain p-0.5"
+                  className="object-contain object-left dark-logo-glow"
                 />
               </div>
-              <div>
+              <div className="sm:border-l sm:border-navy-700/80 sm:pl-5 space-y-1">
                 <h3 className="text-xl sm:text-2xl font-black tracking-wider text-white uppercase">
                   {brandName} <span className="text-accent-orange">{brandSuffix}</span>
                 </h3>
-                <p className="text-xs text-accent-gold font-medium">
+                <p className="text-xs sm:text-sm text-accent-gold font-medium">
                   {language === "hi" ? settings.brandTaglineHi : settings.brandTaglineEn}
                 </p>
               </div>
