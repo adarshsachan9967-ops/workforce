@@ -15,18 +15,18 @@ export default function GalleryTeaser() {
   const featuredItems = galleryItems.filter((item) => featuredIds.includes(item.id));
 
   return (
-    <section className="py-20 bg-gradient-to-b from-navy-950 via-navy-900 to-navy-950 border-b border-navy-800 relative">
+    <section className="py-20 bg-white dark:bg-gradient-to-b dark:from-navy-950 dark:via-navy-900 dark:to-navy-950 border-b border-slate-200 dark:border-navy-800 relative transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div className="space-y-3 text-left max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-navy-800/80 border border-accent-orange/40 text-accent-gold text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-navy-800/80 border border-slate-200 dark:border-accent-orange/40 text-slate-700 dark:text-accent-gold text-xs font-bold uppercase tracking-wider">
               <Camera className="w-3.5 h-3.5 text-accent-orange" />
               <span>{language === "hi" ? "जमीनी एवं तकनीकी कार्यप्रणाली" : "Field & Operational Proof"}</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl font-black text-white font-hindi leading-tight">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white font-hindi leading-tight">
               {language === "hi" ? (
                 <>
                   वास्तविक वार रूम, स्टूडियो एवं <br />
@@ -40,7 +40,7 @@ export default function GalleryTeaser() {
               )}
             </h2>
 
-            <p className="text-sm sm:text-base text-slate-300 font-hindi">
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 font-hindi">
               {language === "hi"
                 ? "हमारी क्षमता केवल बयानों में नहीं, हमारे काम में दिखती है — 1000+ प्रोफेशनल्स, हाई-टेक कॉलिंग सेंटर, आधुनिक मीडिया पॉडकास्ट स्टूडियो और राज्यव्यापी जमीनी उपस्थिति।"
                 : "Our operational depth is evidenced on the ground — multi-seat war rooms, dedicated media studios, and verified voter research teams across key states."}
@@ -64,7 +64,7 @@ export default function GalleryTeaser() {
             <Link
               key={item.id}
               href="/gallery"
-              className="group relative rounded-2xl overflow-hidden bg-navy-900 border border-navy-800 hover:border-accent-orange/60 shadow-xl transition-all duration-300 flex flex-col"
+              className="group relative rounded-2xl overflow-hidden bg-slate-50 dark:bg-navy-900 border border-slate-200 dark:border-navy-800 hover:border-accent-orange/60 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col"
             >
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-900">
                 <Image
@@ -91,10 +91,10 @@ export default function GalleryTeaser() {
               </div>
 
               <div className="p-4 flex-1 flex flex-col justify-between text-left space-y-1.5">
-                <h3 className="text-sm font-bold text-white group-hover:text-accent-gold transition-colors font-hindi line-clamp-1">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-accent-orange dark:group-hover:text-accent-gold transition-colors font-hindi line-clamp-1">
                   {language === "hi" ? item.titleHi : item.titleEn}
                 </h3>
-                <p className="text-xs text-slate-400 font-hindi line-clamp-2 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-400 font-hindi line-clamp-2 leading-relaxed">
                   {language === "hi" ? item.descHi : item.descEn}
                 </p>
               </div>
@@ -104,21 +104,21 @@ export default function GalleryTeaser() {
 
         {/* Quick Highlights Strip */}
         <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="p-4 rounded-xl bg-navy-900/60 border border-navy-800 text-left">
-            <span className="text-xl sm:text-2xl font-black text-white font-mono">1000+</span>
-            <span className="text-xs text-slate-400 block mt-0.5 font-hindi">प्रोफेशनल्स पैन इंडिया</span>
+          <div className="p-4 rounded-xl bg-slate-50 dark:bg-navy-900/60 border border-slate-200 dark:border-navy-800 text-left">
+            <span className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-mono">1000+</span>
+            <span className="text-xs text-slate-600 dark:text-slate-400 block mt-0.5 font-hindi">प्रोफेशनल्स पैन इंडिया</span>
           </div>
-          <div className="p-4 rounded-xl bg-navy-900/60 border border-navy-800 text-left">
-            <span className="text-xl sm:text-2xl font-black text-accent-gold font-mono">50+</span>
-            <span className="text-xs text-slate-400 block mt-0.5 font-hindi">सफल चुनावी अभियान</span>
+          <div className="p-4 rounded-xl bg-slate-50 dark:bg-navy-900/60 border border-slate-200 dark:border-navy-800 text-left">
+            <span className="text-xl sm:text-2xl font-black text-amber-600 dark:text-accent-gold font-mono">50+</span>
+            <span className="text-xs text-slate-600 dark:text-slate-400 block mt-0.5 font-hindi">सफल चुनावी अभियान</span>
           </div>
-          <div className="p-4 rounded-xl bg-navy-900/60 border border-navy-800 text-left">
-            <span className="text-xl sm:text-2xl font-black text-sky-400 font-mono">4+</span>
-            <span className="text-xs text-slate-400 block mt-0.5 font-hindi">राज्यों में सक्रिय उपस्थिति</span>
+          <div className="p-4 rounded-xl bg-slate-50 dark:bg-navy-900/60 border border-slate-200 dark:border-navy-800 text-left">
+            <span className="text-xl sm:text-2xl font-black text-sky-600 dark:text-sky-400 font-mono">4+</span>
+            <span className="text-xs text-slate-600 dark:text-slate-400 block mt-0.5 font-hindi">राज्यों में सक्रिय उपस्थिति</span>
           </div>
-          <div className="p-4 rounded-xl bg-navy-900/60 border border-navy-800 text-left">
-            <span className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">24x7</span>
-            <span className="text-xs text-slate-400 block mt-0.5 font-hindi">वार रूम एवं त्वरित एक्शन</span>
+          <div className="p-4 rounded-xl bg-slate-50 dark:bg-navy-900/60 border border-slate-200 dark:border-navy-800 text-left">
+            <span className="text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">24x7</span>
+            <span className="text-xs text-slate-600 dark:text-slate-400 block mt-0.5 font-hindi">वार रूम एवं त्वरित एक्शन</span>
           </div>
         </div>
 

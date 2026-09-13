@@ -227,15 +227,24 @@ html.light header .hover\:bg-navy-800\/80:hover {
 }
 
 /* Section backgrounds in light mode */
-html.light section.bg-navy-950,
-html.light main.bg-navy-950,
-html.light div.bg-navy-950:not(.keep-dark):not(.keep-dark *) {
-  background-color: #F8FAFC;
+html.light section:not(.keep-dark):not(.keep-dark *):not(.announcement-bar-dark),
+html.light main:not(.keep-dark):not(.keep-dark *) {
+  background-image: none !important;
 }
 
-html.light section.bg-navy-900,
-html.light main.bg-navy-900 {
-  background-color: #FFFFFF;
+html.light section.bg-navy-950:not(.keep-dark):not(.keep-dark *),
+html.light section[class*="from-navy-"]:not(.keep-dark):not(.keep-dark *),
+html.light main.bg-navy-950:not(.keep-dark):not(.keep-dark *),
+html.light main[class*="from-navy-"]:not(.keep-dark):not(.keep-dark *),
+html.light div.bg-navy-950:not(.keep-dark):not(.keep-dark *) {
+  background-color: #F8FAFC !important;
+  background-image: none !important;
+}
+
+html.light section.bg-navy-900:not(.keep-dark):not(.keep-dark *),
+html.light main.bg-navy-900:not(.keep-dark):not(.keep-dark *) {
+  background-color: #FFFFFF !important;
+  background-image: none !important;
 }
 
 html.light .bg-navy-900\/90:not(.keep-dark):not(.keep-dark *),
@@ -259,15 +268,23 @@ html.light [class*="bg-navy-850"]:not(.keep-dark):not(.keep-dark *) {
   background-color: #FFFFFF;
 }
 
-/* Card gradients in light mode */
-html.light [class*="from-navy-"]:not(.keep-dark):not(.keep-dark *):not(section):not([class*="pointer-events-none"]):not([class*="absolute"]):not(.image-overlay),
+/* Card & section gradients in light mode */
+html.light [class*="from-navy-"]:not(.keep-dark):not(.keep-dark *):not([class*="pointer-events-none"]):not([class*="absolute"]):not(.image-overlay),
 html.light .bg-gradient-to-b.from-navy-850.to-navy-950:not(.keep-dark):not(.keep-dark *),
 html.light .bg-gradient-to-b.from-navy-900.via-navy-950.to-navy-950:not(.keep-dark):not(.keep-dark *),
 html.light .bg-gradient-to-b.from-navy-850.via-navy-900.to-navy-950:not(.keep-dark):not(.keep-dark *),
 html.light .bg-gradient-to-b.from-navy-850\/95.to-navy-950\/95:not(.keep-dark):not(.keep-dark *) {
   background: #FFFFFF !important;
+  background-image: none !important;
   border-color: #E2E8F0 !important;
   box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light section.bg-grid-pattern,
+html.light .bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px) !important;
 }
 
 /* Headings in light mode */
@@ -525,7 +542,8 @@ html.light select:focus {
 
 /* Final CTA Section light mode background */
 html.light .final-cta-section {
-  background: linear-gradient(to bottom, #F8FAFC 0%, #EDF2F7 70%, #071A33 100%) !important;
+  background: #F8FAFC !important;
+  background-image: none !important;
 }
 
 /* Footer remains deep navy corporate anchor */

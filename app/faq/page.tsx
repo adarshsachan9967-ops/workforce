@@ -59,9 +59,9 @@ export default function FaqPage() {
         </div>
       </section>
 
-      {/* Main FAQ Container */}
+      {/* Main FAQ Container - Full Width */}
       <section className="py-16 bg-navy-950">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Search & Filter Controls */}
           <div className="space-y-4 mb-10">
