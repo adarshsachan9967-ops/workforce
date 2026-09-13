@@ -1,16 +1,21 @@
 import React from "react";
 import Hero from "@/components/home/Hero";
+import BannerSlider from "@/components/home/BannerSlider";
 import TrustStrip from "@/components/home/TrustStrip";
+import TrackRecordVictories from "@/components/home/TrackRecordVictories";
 import AboutTeaser from "@/components/home/AboutTeaser";
+import FounderMessageSection from "@/components/home/FounderMessageSection";
 import ServicesGrid from "@/components/home/ServicesGrid";
 import OneAgencyPillars from "@/components/home/OneAgencyPillars";
 import ProcessTimeline from "@/components/home/ProcessTimeline";
 import CommandCenterPreview from "@/components/home/CommandCenterPreview";
+import StudioWarRoomShowcase from "@/components/home/StudioWarRoomShowcase";
 import InteractiveUpMap from "@/components/home/InteractiveUpMap";
 import TechStackShowcase from "@/components/home/TechStackShowcase";
 import TeamSection from "@/components/home/TeamSection";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import SolutionShowcase from "@/components/home/SolutionShowcase";
+import GalleryTeaser from "@/components/home/GalleryTeaser";
 import ComplianceSection from "@/components/home/ComplianceSection";
 import FaqPreview from "@/components/home/FaqPreview";
 import FinalCta from "@/components/home/FinalCta";
@@ -24,49 +29,64 @@ export const metadata = {
 export default function HomePage() {
   return (
     <main className="flex-1 flex flex-col w-full overflow-hidden">
-      {/* 3 & 4. Hero Section & Campaign Intelligence Dashboard */}
+      {/* 1. Hero Section & Campaign Intelligence */}
       <Hero />
 
-      {/* 5. Trust / Stat Strip */}
+      {/* 2. Top Interactive Banners Carousel (3 High-Impact Visual Banners) */}
+      <BannerSlider />
+
+      {/* 3. Trust & Operational Stat Strip */}
       <TrustStrip />
 
-      {/* 6. About Workforce */}
+      {/* 4. Proven Track Record & Winning Candidates Showcase (PDF Content) */}
+      <TrackRecordVictories />
+
+      {/* 5. Founder & CEO Message (Anuj Tiwari - Vision & Commitment) */}
+      <FounderMessageSection />
+
+      {/* 6. About Workforce Infotech */}
       <AboutTeaser />
 
-      {/* 7. 11 Services Grid */}
+      {/* 7. 11 Integrated Services Grid */}
       <ServicesGrid />
 
-      {/* 8. One Agency — Complete Campaign */}
+      {/* 8. One Agency — Complete Campaign Infrastructure */}
       <OneAgencyPillars />
 
-      {/* 9. Data -> Strategy -> Content -> Communication -> Ground -> Monitoring -> Reporting */}
+      {/* 9. Campaign Methodology: Data -> Strategy -> Ground -> Victory */}
       <ProcessTimeline />
 
-      {/* 10. Campaign Command Center Split-Screen */}
+      {/* 10. In-House Media Studio & 24/7 Central War Room Facilities */}
+      <StudioWarRoomShowcase />
+
+      {/* 11. Campaign Command Center Split-Screen */}
       <CommandCenterPreview />
 
-      {/* 11. Interactive Uttar Pradesh Strategic Map */}
+      {/* 12. Interactive Uttar Pradesh Strategic Map */}
       <InteractiveUpMap />
 
-      {/* 12. Technology Powered Campaign Management */}
+      {/* 13. Technology Powered Campaign Stack */}
       <TechStackShowcase />
 
-      {/* 13. 1000+ Professional Workforce / Team */}
+      {/* 14. 1000+ Professional Workforce Pool */}
       <TeamSection />
 
-      {/* 14. Why Workforce Infotech */}
+      {/* 15. Why Workforce Infotech */}
       <WhyChooseUs />
 
-      {/* 15. Campaign Solution Examples (Illustrative Showcases) */}
+      {/* 16. Solution Showcases & Case Studies */}
       <SolutionShowcase />
 
-      {/* 16. Responsible & Rule-Compliant Campaigning (Compliance) */}
+      {/* 17. Authentic Ground & War Room Photo Gallery Showcase */}
+      <GalleryTeaser />
+
+      {/* 18. Responsible & Rule-Compliant Campaigning (ECI / TRAI / DPDP) */}
       <ComplianceSection />
 
-      {/* 17. FAQ Preview */}
+      {/* 19. FAQ Preview */}
       <FaqPreview />
 
-      {/* 18. Final High-Impact CTA */}
+      {/* 20. Final High-Impact CTA */}
       <FinalCta />
     </main>
   );

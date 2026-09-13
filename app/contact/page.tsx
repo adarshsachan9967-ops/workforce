@@ -124,64 +124,147 @@ export default function ContactPage() {
 
               <div className="space-y-4">
                 {/* Phone 1 */}
-                <div className="p-5 rounded-2xl bg-white dark:bg-navy-900/80 border border-slate-200 dark:border-navy-800 shadow-sm flex items-start gap-4 hover:border-accent-orange/50 transition">
-                  <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 flex items-center justify-center text-accent-orange flex-shrink-0">
+                <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-navy-900/80 border border-slate-200 dark:border-navy-800 shadow-sm flex items-start gap-4 hover:border-accent-orange/50 transition">
+                  <div className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 flex items-center justify-center text-accent-orange flex-shrink-0">
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
                     <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono block">
-                      {settings.phone1LabelHi || "हेल्पलाइन 1 (कॉल व व्हाट्सएप)"}
+                      हेल्पलाइन 1 (कॉल व व्हाट्सएप)
                     </span>
-                    <a href={`tel:${settings.phone1 || "9621762121"}`} className="text-lg font-bold text-navy-950 dark:text-white hover:text-accent-orange font-mono block mt-0.5 transition-colors">
-                      +91 {settings.phone1 || "9621762121"}
+                    <a href="tel:9621762121" className="text-base sm:text-lg font-bold text-navy-950 dark:text-white hover:text-accent-orange font-mono block mt-0.5 transition-colors">
+                      +91 96217 62121
                     </a>
                     <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
-                      {settings.phone1SubHi || "उपलब्ध 24/7 चुनावी सहायता"}
+                      उपलब्ध 24/7 चुनावी सहायता
                     </span>
                   </div>
                 </div>
 
-                {/* Phone 2 */}
-                <div className="p-5 rounded-2xl bg-white dark:bg-navy-900/80 border border-slate-200 dark:border-navy-800 shadow-sm flex items-start gap-4 hover:border-accent-orange/50 transition">
-                  <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 flex items-center justify-center text-accent-gold flex-shrink-0">
+                {/* Phone 2 & 3 */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-navy-900/80 border border-slate-200 dark:border-navy-800 shadow-sm flex items-start gap-4 hover:border-accent-orange/50 transition">
+                  <div className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 flex items-center justify-center text-accent-gold flex-shrink-0">
                     <Phone className="w-5 h-5" />
                   </div>
                   <div>
                     <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono block">
-                      {settings.phone2LabelHi || "हेल्पलाइन 2"}
+                      हेल्पलाइन 2 & वार रूम डेस्क
                     </span>
-                    <a href={`tel:${settings.phone2 || "8467060042"}`} className="text-lg font-bold text-navy-950 dark:text-white hover:text-accent-orange font-mono block mt-0.5 transition-colors">
-                      +91 {settings.phone2 || "8467060042"}
+                    <a href="tel:7839922507" className="text-base sm:text-lg font-bold text-navy-950 dark:text-white hover:text-accent-orange font-mono block mt-0.5 transition-colors">
+                      +91 78399 22507
                     </a>
-                    <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                      {settings.phone2SubHi || "वरिष्ठ रणनीतिकार डेस्क"}
-                    </span>
+                    <a href="tel:9336949111" className="text-xs text-slate-500 dark:text-slate-400 hover:text-white font-mono block mt-0.5">
+                      अतिरिक्त लाइन: +91 93369 49111
+                    </a>
                   </div>
                 </div>
 
-                {/* Email */}
-                <div className="p-5 rounded-2xl bg-white dark:bg-navy-900/80 border border-slate-200 dark:border-navy-800 shadow-sm flex items-start gap-4 hover:border-accent-orange/50 transition">
-                  <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 flex items-center justify-center text-sky-500 dark:text-sky-400 flex-shrink-0">
-                    <Mail className="w-5 h-5" />
+                {/* Google Location 1: Kanpur Head Office */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-navy-900/80 border border-slate-200 dark:border-navy-800 shadow-sm space-y-2 hover:border-accent-orange/50 transition text-left">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-accent-gold/10 border border-accent-gold/30 flex items-center justify-center text-accent-gold">
+                        <MapPin className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <span className="text-xs font-bold text-navy-950 dark:text-white block font-hindi">
+                          1st: हेड ऑफिस (कानपुर H.O.)
+                        </span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                          Workforce Infotech Pvt Ltd - An Election Management Company
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono block">ईमेल संपर्क</span>
-                    <a href={`mailto:${settings.email || "contact@workforceinfotech.com"}`} className="text-sm font-bold text-navy-950 dark:text-white hover:text-accent-orange block mt-0.5 transition-colors">
-                      {settings.email || "contact@workforceinfotech.com"}
+                  <p className="text-xs text-slate-600 dark:text-slate-300 font-hindi">
+                    117/Q/710, शारदा नगर, काकादेव, कानपुर, उत्तर प्रदेश - 208025
+                  </p>
+                  <a
+                    href="https://share.google/BUJO7DKz5m14jQsAi"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-navy-100 dark:bg-navy-950 hover:bg-accent-orange hover:text-white text-accent-orange dark:text-accent-gold text-xs font-semibold transition-all border border-slate-200 dark:border-navy-700"
+                  >
+                    <MapPin className="w-3.5 h-3.5" />
+                    <span>गूगल लोकेशन देखें व दिशा-निर्देश प्राप्त करें (Google Map ↗)</span>
+                  </a>
+                </div>
+
+                {/* Google Location 2: Lucknow Branch Office */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-navy-900/80 border border-slate-200 dark:border-navy-800 shadow-sm space-y-2 hover:border-accent-orange/50 transition text-left">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                        <MapPin className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <span className="text-xs font-bold text-navy-950 dark:text-white block font-hindi">
+                          2nd: ब्रांच ऑफिस एवं वार रूम (लखनऊ B.O.)
+                        </span>
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                          Workforce Infotech Pvt Ltd - Election Management Company
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 font-hindi">
+                    11th Floor, Summit Building, गोमती नगर, लखनऊ, उत्तर प्रदेश - 226010
+                  </p>
+                  <a
+                    href="https://share.google/lhxxqqHpoxBeYkLOO"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-navy-100 dark:bg-navy-950 hover:bg-accent-orange hover:text-white text-emerald-600 dark:text-emerald-400 text-xs font-semibold transition-all border border-slate-200 dark:border-navy-700"
+                  >
+                    <MapPin className="w-3.5 h-3.5" />
+                    <span>गूगल लोकेशन देखें व दिशा-निर्देश प्राप्त करें (Google Map ↗)</span>
+                  </a>
+                </div>
+
+                {/* Social Channels Strip */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-navy-900/80 border border-slate-200 dark:border-navy-800 shadow-sm space-y-3 text-left">
+                  <span className="text-xs font-bold text-navy-950 dark:text-white block font-hindi">
+                    आधिकारिक डिजिटल चैनल्स
+                  </span>
+                  <div className="grid grid-cols-2 gap-2">
+                    <a
+                      href="https://www.facebook.com/workforceInfotechpvtltd"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2.5 rounded-xl bg-slate-100 dark:bg-navy-950 hover:bg-[#1877F2] hover:text-white text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-navy-700 flex items-center gap-2 text-xs font-semibold transition-all"
+                    >
+                      <svg className="w-4 h-4 fill-current text-[#1877F2] group-hover:text-white" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                      </svg>
+                      <span>Facebook</span>
                     </a>
-                    <span className="text-[11px] text-slate-500 dark:text-slate-400">आधिकारिक पत्राचार</span>
+
+                    <a
+                      href="https://youtu.be/jVrADlfb3os?si=7cEKMDZ81Do_fTuP"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2.5 rounded-xl bg-slate-100 dark:bg-navy-950 hover:bg-[#FF0000] hover:text-white text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-navy-700 flex items-center gap-2 text-xs font-semibold transition-all"
+                    >
+                      <svg className="w-4 h-4 fill-current text-[#FF0000] group-hover:text-white" viewBox="0 0 24 24">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                      </svg>
+                      <span>YouTube</span>
+                    </a>
                   </div>
                 </div>
 
-                {/* Website */}
-                <div className="p-5 rounded-2xl bg-white dark:bg-navy-900/80 border border-slate-200 dark:border-navy-800 shadow-sm flex items-start gap-4 hover:border-accent-orange/50 transition">
-                  <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-navy-950 border border-slate-200 dark:border-navy-700 flex items-center justify-center text-emerald-500 dark:text-emerald-400 flex-shrink-0">
-                    <Globe className="w-5 h-5" />
+                {/* Email & Website */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="p-3 rounded-xl bg-white dark:bg-navy-900/80 border border-slate-200 dark:border-navy-800 text-xs">
+                    <span className="text-[10px] text-slate-400 block font-mono">ईमेल</span>
+                    <a href="mailto:contact@workforceinfotech.com" className="font-bold text-accent-gold truncate block mt-0.5">
+                      contact@workforceinfotech.com
+                    </a>
                   </div>
-                  <div>
-                    <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono block">आधिकारिक वेबसाइट</span>
-                    <a href={settings.website?.startsWith("http") ? settings.website : `https://${settings.website || "workforceinfotech.com"}`} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-navy-950 dark:text-white hover:text-accent-orange block mt-0.5 transition-colors">
-                      {settings.website || "workforceinfotech.com"}
+                  <div className="p-3 rounded-xl bg-white dark:bg-navy-900/80 border border-slate-200 dark:border-navy-800 text-xs">
+                    <span className="text-[10px] text-slate-400 block font-mono">वेबसाइट</span>
+                    <a href="https://workforceinfotech.com" target="_blank" rel="noopener noreferrer" className="font-bold text-emerald-400 truncate block mt-0.5">
+                      workforceinfotech.com
                     </a>
                   </div>
                 </div>

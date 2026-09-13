@@ -48,7 +48,12 @@ export interface SiteSettings {
   email: string;
   website: string;
   headOffice: string;
+  branchOffice?: string;
   warRoomAddress: string;
+  googleLocation1Url?: string;
+  googleLocation1Title?: string;
+  googleLocation2Url?: string;
+  googleLocation2Title?: string;
 
   // Social Links
   facebookUrl: string;
@@ -346,20 +351,25 @@ export const defaultSettings: SiteSettings = {
   phone1: "9621762121",
   phone1LabelHi: "हेल्पलाइन 1 (कॉल व व्हाट्सएप)",
   phone1SubHi: "उपलब्ध 24/7 चुनावी सहायता",
-  phone2: "8467060042",
+  phone2: "7839922507",
   phone2LabelHi: "हेल्पलाइन 2",
   phone2SubHi: "वरिष्ठ रणनीतिकार डेस्क",
   whatsappNumber: "919621762121",
   whatsappDefaultMessage: "नमस्कार! मैं उत्तर प्रदेश विधानसभा चुनाव 2027 के लिए वर्कफोर्स इन्फोटेक की चुनाव प्रबंधन सेवाओं के संबंध में चर्चा करना चाहता/चाहती हूँ।",
   email: "contact@workforceinfotech.com",
   website: "workforceinfotech.com",
-  headOffice: "गोमती नगर विस्तार, सेक्टर-4, लखनऊ, उत्तर प्रदेश - 226010",
-  warRoomAddress: "विधानसभा मार्ग, हजरतगंज, लखनऊ, उत्तर प्रदेश - 226001",
-  facebookUrl: "https://facebook.com/workforceinfotech",
+  headOffice: "117/Q/710, शारदा नगर, काकादेव, कानपुर, उत्तर प्रदेश",
+  branchOffice: "11th Floor, Summit Building, गोमती नगर, लखनऊ, उत्तर प्रदेश",
+  warRoomAddress: "11th Floor, Summit Building, गोमती नगर, लखनऊ, उत्तर प्रदेश",
+  googleLocation1Url: "https://share.google/BUJO7DKz5m14jQsAi",
+  googleLocation1Title: "Workforce Infotech Pvt Ltd - An Election Management Company (Kanpur H.O.)",
+  googleLocation2Url: "https://share.google/lhxxqqHpoxBeYkLOO",
+  googleLocation2Title: "Workforce Infotech Pvt Ltd - Election Management Company (Lucknow B.O.)",
+  facebookUrl: "https://www.facebook.com/workforceInfotechpvtltd",
   twitterUrl: "https://twitter.com/workforceinfo",
   instagramUrl: "https://instagram.com/workforceinfotech",
   linkedinUrl: "https://linkedin.com/company/workforceinfotech",
-  youtubeUrl: "https://youtube.com/@workforceinfotech",
+  youtubeUrl: "https://youtu.be/jVrADlfb3os?si=7cEKMDZ81Do_fTuP",
   announcementTextHi: "उत्तर प्रदेश विधानसभा चुनाव 2027 | प्रोफेशनल चुनाव प्रबंधन एवं प्रचार अभियान समाधान",
   announcementTextEn: "UP Assembly Election 2027 | Professional Election Campaign Management Solutions",
   announcementCtaHi: "अभी संपर्क करें →",
@@ -387,10 +397,11 @@ export const defaultNavigation: NavigationItem[] = [
   { id: "nav-2", labelHi: "हमारे बारे में", labelEn: "About Us", url: "/about", order: 2, active: true },
   { id: "nav-3", labelHi: "चुनावी सेवाएं", labelEn: "Services", url: "/services", order: 3, active: true },
   { id: "nav-4", labelHi: "हमारी कार्यप्रणाली", labelEn: "Process", url: "/process", order: 4, active: true },
-  { id: "nav-5", labelHi: "टेक्नोलॉजी", labelEn: "Technology", url: "/technology", order: 5, active: true },
-  { id: "nav-6", labelHi: "सॉल्यूशंस", labelEn: "Solutions", url: "/solutions", order: 6, active: true },
-  { id: "nav-7", labelHi: "FAQ", labelEn: "FAQ", url: "/faq", order: 7, active: true },
-  { id: "nav-8", labelHi: "संपर्क", labelEn: "Contact", url: "/contact", order: 8, active: true }
+  { id: "nav-5", labelHi: "गैलरी", labelEn: "Gallery", url: "/gallery", order: 5, active: true },
+  { id: "nav-6", labelHi: "टेक्नोलॉजी", labelEn: "Technology", url: "/technology", order: 6, active: true },
+  { id: "nav-7", labelHi: "सॉल्यूशंस", labelEn: "Solutions", url: "/solutions", order: 7, active: true },
+  { id: "nav-8", labelHi: "FAQ", labelEn: "FAQ", url: "/faq", order: 8, active: true },
+  { id: "nav-9", labelHi: "संपर्क", labelEn: "Contact", url: "/contact", order: 9, active: true }
 ];
 
 export const defaultHomepage: HomepageContent = {

@@ -8,6 +8,9 @@ import TeamSection from "@/components/home/TeamSection";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import ComplianceSection from "@/components/home/ComplianceSection";
 import FinalCta from "@/components/home/FinalCta";
+import FounderMessageSection from "@/components/home/FounderMessageSection";
+import TrackRecordVictories from "@/components/home/TrackRecordVictories";
+import StudioWarRoomShowcase from "@/components/home/StudioWarRoomShowcase";
 import EnquiryModal from "@/components/shared/EnquiryModal";
 import { Shield, Users, Database, Cpu, CheckCircle2, ArrowRight } from "lucide-react";
 
@@ -177,6 +180,15 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Founder Message */}
+      <FounderMessageSection />
+
+      {/* Proven Track Record & Winning Candidates from PDF */}
+      <TrackRecordVictories />
+
+      {/* In-House Media Studio & War Room Facilities */}
+      <StudioWarRoomShowcase />
 
       {/* Team Structure */}
       <TeamSection />

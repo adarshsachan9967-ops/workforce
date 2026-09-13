@@ -10,6 +10,7 @@ export interface TranslationDictionary {
     home: string;
     about: string;
     services: string;
+    gallery: string;
     process: string;
     technology: string;
     creative: string;
@@ -161,6 +162,7 @@ export const dictionary: Record<Language, TranslationDictionary> = {
       home: "होम",
       about: "हमारे बारे में",
       services: "चुनावी सेवाएं",
+      gallery: "गैलरी",
       process: "हमारी कार्यप्रणाली",
       technology: "टेक्नोलॉजी",
       creative: "मीडिया एवं क्रिएटिव",
@@ -342,6 +344,7 @@ export const dictionary: Record<Language, TranslationDictionary> = {
       home: "Home",
       about: "About Us",
       services: "Electoral Services",
+      gallery: "Gallery",
       process: "Our Methodology",
       technology: "Technology",
       creative: "Media & Creative",

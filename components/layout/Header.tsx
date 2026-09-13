@@ -74,6 +74,7 @@ export default function Header() {
     { href: "/", label: t.nav.home },
     { href: "/about", label: t.nav.about },
     { href: "/process", label: t.nav.process },
+    { href: "/gallery", label: t.nav.gallery },
     { href: "/technology", label: t.nav.technology },
     { href: "/solutions", label: t.nav.solutions },
     { href: "/faq", label: t.nav.faq },
@@ -191,6 +192,15 @@ export default function Header() {
               }`}
             >
               {t.nav.process}
+            </Link>
+
+            <Link
+              href="/gallery"
+              className={`hover:text-accent-gold transition-colors ${
+                pathname === "/gallery" ? "text-accent-orange font-semibold" : ""
+              }`}
+            >
+              {t.nav.gallery}
             </Link>
 
             <Link
@@ -318,6 +328,12 @@ export default function Header() {
                 className="block px-3 py-2.5 rounded-lg text-sm font-medium text-slate-200 hover:bg-navy-900"
               >
                 {t.nav.process}
+              </Link>
+              <Link
+                href="/gallery"
+                className="block px-3 py-2.5 rounded-lg text-sm font-medium text-slate-200 hover:bg-navy-900"
+              >
+                {t.nav.gallery}
               </Link>
               <Link
                 href="/technology"
