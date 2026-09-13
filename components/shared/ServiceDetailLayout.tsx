@@ -86,8 +86,9 @@ export default function ServiceDetailLayout({ service }: ServiceDetailLayoutProp
 
               <a
                 href="tel:9621762121"
-                className="px-6 py-4 rounded-xl bg-navy-800/90 hover:bg-navy-750 text-slate-200 hover:text-white border border-navy-700 font-semibold text-sm transition-all"
+                className="px-6 py-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-300 dark:bg-navy-800 dark:hover:bg-navy-750 dark:text-white dark:border-navy-700 font-bold text-sm transition-all flex items-center gap-2 shadow-sm"
               >
+                <PhoneCall className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span>{language === "hi" ? "हेल्पलाइन: 9621762121" : "Helpline: 9621762121"}</span>
               </a>
             </div>
@@ -362,10 +363,10 @@ export default function ServiceDetailLayout({ service }: ServiceDetailLayoutProp
 
             <a
               href="tel:9621762121"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-navy-800 hover:bg-navy-750 text-white font-bold text-sm border border-navy-700 transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-300 dark:bg-navy-800 dark:hover:bg-navy-750 dark:text-white dark:border-navy-700 font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-sm"
             >
-              <PhoneCall className="w-4 h-4 text-emerald-400" />
-              <span>9621762121</span>
+              <PhoneCall className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <span>{language === "hi" ? "हेल्पलाइन: 9621762121" : "Helpline: 9621762121"}</span>
             </a>
           </div>
         </div>

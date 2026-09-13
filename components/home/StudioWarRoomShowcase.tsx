@@ -54,10 +54,11 @@ export default function StudioWarRoomShowcase() {
                     src="/images/gallery/gallery-21.jpeg"
                     alt="Limelight with Anuj Podcast Studio"
                     fill
+                    unoptimized={true}
                     sizes="(max-width: 1024px) 50vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/80 text-[10px] font-bold text-accent-gold">
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/85 text-[10px] font-bold text-accent-gold keep-dark">
                     पॉडकास्ट स्टूडियो
                   </div>
                 </div>
@@ -66,10 +67,11 @@ export default function StudioWarRoomShowcase() {
                     src="/images/gallery/gallery-26.jpeg"
                     alt="Professional Video Shoot & Multi-Cam Studio"
                     fill
+                    unoptimized={true}
                     sizes="(max-width: 1024px) 50vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/80 text-[10px] font-bold text-sky-400">
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/85 text-[10px] font-bold text-sky-400 keep-dark">
                     मल्टी-कैम शूट रूम
                   </div>
                 </div>
@@ -125,10 +127,11 @@ export default function StudioWarRoomShowcase() {
                     src="/images/gallery/gallery-16.jpeg"
                     alt="Central Election War Room Operations"
                     fill
+                    unoptimized={true}
                     sizes="(max-width: 1024px) 50vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/80 text-[10px] font-bold text-emerald-400">
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/85 text-[10px] font-bold text-emerald-400 keep-dark">
                     केंद्रीय वार रूम
                   </div>
                 </div>
@@ -137,10 +140,11 @@ export default function StudioWarRoomShowcase() {
                     src="/images/gallery/gallery-17.jpeg"
                     alt="Tele-Calling Command Center"
                     fill
+                    unoptimized={true}
                     sizes="(max-width: 1024px) 50vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/80 text-[10px] font-bold text-sky-400">
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/85 text-[10px] font-bold text-sky-400 keep-dark">
                     टेली-कॉलिंग सेंटर
                   </div>
                 </div>

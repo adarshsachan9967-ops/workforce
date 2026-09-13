@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { useContent } from "@/context/ContentContext";
@@ -91,18 +92,24 @@ export default function Header() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Logo */}
+          {/* Official Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-royal-blue to-navy-950 border border-accent-orange/40 flex items-center justify-center text-accent-gold shadow-lg shadow-navy-950 group-hover:border-accent-orange transition-all">
-              <Shield className="w-6 h-6 text-accent-orange fill-accent-orange/15" />
+            <div className="relative h-11 sm:h-12 w-36 sm:w-44 bg-white rounded-xl p-1 shadow-md border border-slate-200/80 flex items-center justify-center overflow-hidden transition-all group-hover:shadow-lg flex-shrink-0">
+              <Image
+                src="/logo.png"
+                alt="Workforce Infotech Pvt. Ltd."
+                fill
+                priority
+                unoptimized
+                className="object-contain p-0.5"
+              />
             </div>
-            <div className="flex flex-col">
-              <span className="text-base sm:text-lg font-extrabold tracking-wider text-white uppercase group-hover:text-accent-gold transition-colors leading-tight">
-                {settings.brandName || "WORKFORCE"}
-                <span className="text-accent-orange ml-1">{settings.brandSuffix || "INFOTECH"}</span>
+            <div className="hidden lg:flex flex-col">
+              <span className="text-xs font-bold text-accent-gold uppercase tracking-wider">
+                {language === "hi" ? "उत्तर प्रदेश चुनाव 2027" : "UP Elections 2027"}
               </span>
-              <span className="text-[10px] sm:text-[11px] font-medium text-slate-400 tracking-wider">
-                {language === "hi" ? settings.brandTaglineHi : settings.brandTaglineEn}
+              <span className="text-[10px] text-slate-400 font-mono tracking-wider">
+                {language === "hi" ? "चुनाव प्रबंधन संस्थान" : "Election Management"}
               </span>
             </div>
           </Link>

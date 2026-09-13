@@ -204,20 +204,21 @@ export default function GalleryPage() {
                   className="group relative rounded-2xl overflow-hidden bg-navy-900 border border-navy-800 hover:border-accent-orange/60 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col"
                 >
                   {/* Image Frame */}
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-navy-950">
+                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-900">
                     <Image
                       src={item.src}
                       alt={item.titleHi}
                       fill
+                      unoptimized={true}
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
                     />
                     
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                    {/* Hover Overlay - Only darkens on hover, zero haze in standard view */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none image-overlay" />
 
                     {/* Tag badge */}
-                    <div className="absolute top-3 left-3 z-10">
+                    <div className="absolute top-3 left-3 z-10 keep-dark">
                       <span className="px-2.5 py-1 rounded-lg bg-navy-950/85 backdrop-blur-md border border-navy-700/80 text-[10px] font-bold text-accent-gold uppercase tracking-wider">
                         {item.tag}
                       </span>
@@ -231,7 +232,7 @@ export default function GalleryPage() {
                     </div>
 
                     {/* Image Number ID */}
-                    <div className="absolute bottom-3 right-3 z-10 text-[10px] font-mono font-bold text-slate-400 bg-navy-950/70 px-2 py-0.5 rounded">
+                    <div className="absolute bottom-3 right-3 z-10 text-[10px] font-mono font-bold text-white bg-navy-950/80 px-2 py-0.5 rounded keep-dark">
                       #{item.id}
                     </div>
                   </div>
@@ -298,7 +299,7 @@ export default function GalleryPage() {
           onClick={() => setSelectedItem(null)}
         >
           <div 
-            className="relative max-w-5xl w-full max-h-[92vh] flex flex-col bg-navy-950 rounded-2xl sm:rounded-3xl border border-navy-700 overflow-hidden shadow-2xl"
+            className="relative max-w-5xl w-full max-h-[92vh] flex flex-col bg-navy-950 rounded-2xl sm:rounded-3xl border border-navy-700 overflow-hidden shadow-2xl keep-dark"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Lightbox Header Bar */}
@@ -334,7 +335,7 @@ export default function GalleryPage() {
             </div>
 
             {/* Lightbox Image Preview */}
-            <div className="relative flex-1 min-h-[320px] sm:min-h-[500px] w-full bg-black/90 flex items-center justify-center p-2">
+            <div className="relative flex-1 min-h-[320px] sm:min-h-[500px] w-full bg-black flex items-center justify-center p-2">
               <div className="relative w-full h-full min-h-[300px] sm:min-h-[480px]">
                 <Image
                   src={selectedItem.src}
@@ -343,6 +344,7 @@ export default function GalleryPage() {
                   sizes="100vw"
                   className="object-contain"
                   priority
+                  unoptimized={true}
                 />
               </div>
 

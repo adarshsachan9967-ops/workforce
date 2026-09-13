@@ -127,8 +127,8 @@ export default function BannerSlider() {
         {/* Banner Frame */}
         <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-navy-700/80 shadow-2xl bg-navy-900 group">
           
-          {/* Main Visual Carousel */}
-          <div className="relative w-full aspect-[21/9] sm:aspect-[24/9] md:aspect-[2.6/1] max-h-[500px]">
+          {/* Main Visual Carousel - Exact 1600:592 Native Aspect Ratio */}
+          <div className="relative w-full aspect-[1600/592] min-h-[180px] sm:min-h-[260px] md:min-h-[320px] bg-navy-950">
             {slides.map((slide, idx) => (
               <div
                 key={slide.id}
@@ -140,14 +140,11 @@ export default function BannerSlider() {
                   src={slide.src}
                   alt={slide.alt}
                   fill
-                  priority={idx === 0}
+                  priority={true}
+                  unoptimized={true}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 95vw, 1280px"
-                  className="object-cover object-center transform scale-100 group-hover:scale-[1.01] transition-transform duration-700"
+                  className="object-cover sm:object-contain md:object-cover object-center transform scale-100 group-hover:scale-[1.01] transition-transform duration-700"
                 />
-
-                {/* Subtle vignette gradient at edges for depth without obscuring banner copy */}
-                <div className="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-transparent to-navy-950/20 pointer-events-none" />
-                <div className="absolute inset-0 bg-gradient-to-r from-navy-950/40 via-transparent to-navy-950/40 pointer-events-none" />
               </div>
             ))}
           </div>
@@ -173,13 +170,13 @@ export default function BannerSlider() {
           <div className="absolute bottom-3 sm:bottom-4 left-0 right-0 z-20 flex items-center justify-between px-4 sm:px-6">
             
             {/* Quick Badge */}
-            <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-navy-950/90 border border-navy-700 backdrop-blur-md text-[11px] font-semibold text-accent-gold shadow-lg">
+            <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-navy-950/90 border border-navy-700 backdrop-blur-md text-[11px] font-semibold text-accent-gold shadow-lg keep-dark">
               <ShieldCheck className="w-3.5 h-3.5 text-accent-orange" />
               <span>{language === "hi" ? active.badgeHi : active.badgeEn}</span>
             </div>
 
             {/* Slide Dots */}
-            <div className="flex items-center gap-2 mx-auto sm:mx-0 bg-navy-950/80 px-3 py-1.5 rounded-full border border-navy-800 backdrop-blur-md">
+            <div className="flex items-center gap-2 mx-auto sm:mx-0 bg-navy-950/90 px-3 py-1.5 rounded-full border border-navy-800 backdrop-blur-md keep-dark">
               {slides.map((_, idx) => (
                 <button
                   key={idx}
@@ -199,7 +196,7 @@ export default function BannerSlider() {
                 className="ml-1 text-slate-400 hover:text-white p-0.5"
                 title={isPaused ? "Play slideshow" : "Pause slideshow"}
               >
-                {isPaused ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
+                {isPaused ? <Play className="w-3 h-3 text-white" /> : <Pause className="w-3 h-3 text-white" />}
               </button>
             </div>
 
@@ -218,16 +215,16 @@ export default function BannerSlider() {
 
         </div>
 
-        {/* Dynamic Context Card below Banner on Mobile */}
-        <div className="mt-3 p-3.5 sm:p-4 rounded-xl bg-navy-900/90 border border-navy-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left">
+        {/* Dynamic Context Card below Banner */}
+        <div className="mt-3 p-3.5 sm:p-4 rounded-xl bg-slate-100 dark:bg-navy-900/90 border border-slate-200 dark:border-navy-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-accent-orange animate-pulse" />
-              <span className="text-xs font-bold text-white font-hindi">
+              <span className="text-xs font-bold text-slate-900 dark:text-white font-hindi">
                 {language === "hi" ? active.titleHi : active.titleEn}
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-hindi line-clamp-1">
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 font-hindi line-clamp-1">
               {language === "hi" ? active.subtitleHi : active.subtitleEn}
             </p>
           </div>
@@ -242,7 +239,7 @@ export default function BannerSlider() {
             </Link>
             <Link
               href="/gallery"
-              className="px-3 py-1.5 rounded-lg bg-navy-800 hover:bg-navy-750 text-slate-300 hover:text-white border border-navy-700 text-xs font-medium transition-colors"
+              className="px-3 py-1.5 rounded-lg bg-white dark:bg-navy-800 hover:bg-slate-50 dark:hover:bg-navy-750 text-slate-700 dark:text-slate-300 dark:hover:text-white border border-slate-300 dark:border-navy-700 text-xs font-semibold transition-colors"
             >
               {language === "hi" ? "गैलरी (26+)" : "Gallery (26+)"}
             </Link>

@@ -66,17 +66,18 @@ export default function GalleryTeaser() {
               href="/gallery"
               className="group relative rounded-2xl overflow-hidden bg-navy-900 border border-navy-800 hover:border-accent-orange/60 shadow-xl transition-all duration-300 flex flex-col"
             >
-              <div className="relative aspect-[4/3] w-full overflow-hidden bg-navy-950">
+              <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-900">
                 <Image
                   src={item.src}
                   alt={item.titleHi}
                   fill
+                  unoptimized={true}
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/30 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none image-overlay" />
                 
-                <div className="absolute top-3 left-3 z-10">
+                <div className="absolute top-3 left-3 z-10 keep-dark">
                   <span className="px-2.5 py-1 rounded-lg bg-navy-950/85 backdrop-blur-md border border-navy-700/80 text-[10px] font-bold text-accent-gold uppercase">
                     {item.tag}
                   </span>

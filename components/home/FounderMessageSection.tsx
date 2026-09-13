@@ -23,21 +23,21 @@ export default function FounderMessageSection() {
                   src="/images/gallery/gallery-1.jpeg"
                   alt="अनुज तिवारी (Anuj Tiwari) - Founder & CEO, Workforce Infotech Pvt. Ltd."
                   fill
+                  priority={true}
+                  unoptimized={true}
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   className="object-cover object-top"
                 />
                 
-                <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/20 to-transparent" />
-                
                 {/* Badge Overlay */}
-                <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-navy-950/90 backdrop-blur-md border border-navy-700">
+                <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-navy-950/90 backdrop-blur-md border border-navy-700 shadow-xl keep-dark">
                   <h3 className="text-xl font-black text-white font-hindi">
                     अनुज तिवारी (Anuj Tiwari)
                   </h3>
                   <p className="text-xs text-accent-gold font-semibold uppercase tracking-wider mt-0.5">
                     Founder & CEO // राजनीतिक रणनीतिकार
                   </p>
-                  <p className="text-[11px] text-slate-300 font-hindi mt-1">
+                  <p className="text-[11px] text-slate-200 font-hindi mt-1">
                     वर्कफोर्स इन्फोटेक प्राइवेट लिमिटेड (Workforce Infotech Pvt. Ltd.)
                   </p>
                 </div>

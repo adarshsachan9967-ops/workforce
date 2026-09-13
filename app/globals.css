@@ -253,12 +253,14 @@ html.light .bg-navy-950\/70:not(.keep-dark):not(.keep-dark *) {
 }
 
 html.light .bg-navy-850:not(.keep-dark):not(.keep-dark *),
-html.light .bg-navy-800:not(.keep-dark):not(.keep-dark *) {
+html.light .bg-navy-800:not(.keep-dark):not(.keep-dark *),
+html.light [class*="bg-navy-800"]:not(.keep-dark):not(.keep-dark *),
+html.light [class*="bg-navy-850"]:not(.keep-dark):not(.keep-dark *) {
   background-color: #FFFFFF;
 }
 
 /* Card gradients in light mode */
-html.light [class*="from-navy-"]:not(.keep-dark):not(.keep-dark *):not(section),
+html.light [class*="from-navy-"]:not(.keep-dark):not(.keep-dark *):not(section):not([class*="pointer-events-none"]):not([class*="absolute"]):not(.image-overlay),
 html.light .bg-gradient-to-b.from-navy-850.to-navy-950:not(.keep-dark):not(.keep-dark *),
 html.light .bg-gradient-to-b.from-navy-900.via-navy-950.to-navy-950:not(.keep-dark):not(.keep-dark *),
 html.light .bg-gradient-to-b.from-navy-850.via-navy-900.to-navy-950:not(.keep-dark):not(.keep-dark *),
@@ -345,6 +347,24 @@ html.light .bg-gradient-to-r.from-accent-orange.to-accent-orange-hover * {
 html.light a.text-white:not(.keep-dark):not(.keep-dark *):not([class*="accent-orange"]):not([class*="from-accent-orange"]):not([class*="bg-royal-blue"]):not([class*="from-navy-"]):not(.btn-primary),
 html.light button.text-white:not(.keep-dark):not(.keep-dark *):not([class*="accent-orange"]):not([class*="from-accent-orange"]):not([class*="bg-royal-blue"]):not([class*="from-navy-"]):not(.btn-primary) {
   color: #071A33 !important;
+}
+
+/* Telephone & Helpline button styling in light mode */
+html.light a[href^="tel:"]:not(.keep-dark):not(.keep-dark *) {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+html.light a[href^="tel:"]:not(.keep-dark):not(.keep-dark *):hover {
+  background-color: #E2E8F0 !important;
+  border-color: #EA580C !important;
+  color: #EA580C !important;
+}
+html.light a[href^="tel:"]:not(.keep-dark):not(.keep-dark *) span {
+  color: #0F172A !important;
+}
+html.light a[href^="tel:"]:not(.keep-dark):not(.keep-dark *):hover span {
+  color: #EA580C !important;
 }
 
 /* Service selection buttons in light mode forms */

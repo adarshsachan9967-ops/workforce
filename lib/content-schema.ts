@@ -380,7 +380,7 @@ export const defaultSettings: SiteSettings = {
   brandSuffix: "PVT. LTD.",
   brandTaglineHi: "उत्तर प्रदेश चुनाव 2027 | चुनाव प्रबंधन",
   brandTaglineEn: "UP Election 2027 | Campaign Management",
-  logoUrl: "/icon.svg",
+  logoUrl: "/logo.png",
   faviconUrl: "/icon.svg",
   headerCtaHi: "अभियान पर चर्चा करें",
   headerCtaEn: "Discuss Campaign",
