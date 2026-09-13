@@ -586,7 +586,10 @@ html.light footer a.text-slate-300:hover {
 
 html.dark .dark-logo-glow,
 .dark .dark-logo-glow,
-.keep-dark .dark-logo-glow {
-  filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 8px rgba(255, 255, 255, 0.45));
+.keep-dark .dark-logo-glow,
+footer .dark-logo-glow {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.85)) 
+          drop-shadow(0 0 16px rgba(242, 140, 40, 0.35)) 
+          drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
 }
 

@@ -33,18 +33,18 @@ export default function Footer() {
       <div className="border-b border-navy-800/80 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
-              <div className="relative h-12 sm:h-14 w-44 sm:w-52 flex items-center justify-start flex-shrink-0">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-7">
+              <div className="relative h-16 sm:h-20 w-64 sm:w-80 flex items-center justify-start flex-shrink-0">
                 <Image
-                  src="/logo.png"
+                  src="/logo-dark.png"
                   alt="Workforce Infotech Pvt. Ltd."
                   fill
                   unoptimized
-                  className="object-contain object-left dark-logo-glow"
+                  className="object-contain object-left dark-logo-glow transition-transform duration-300 hover:scale-105"
                 />
               </div>
-              <div className="sm:border-l sm:border-navy-700/80 sm:pl-5 space-y-1">
-                <h3 className="text-xl sm:text-2xl font-black tracking-wider text-white uppercase">
+              <div className="sm:border-l sm:border-navy-700/80 sm:pl-6 space-y-1.5">
+                <h3 className="text-xl sm:text-2xl font-black tracking-wider text-white uppercase leading-tight">
                   {brandName} <span className="text-accent-orange">{brandSuffix}</span>
                 </h3>
                 <p className="text-xs sm:text-sm text-accent-gold font-medium">
