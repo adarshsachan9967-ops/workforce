@@ -95,21 +95,23 @@ export default function Header() {
           {/* Official Logo */}
           <Link href="/" className="flex items-center gap-3 sm:gap-4 group flex-shrink-0">
             <div className="relative h-12 sm:h-14 lg:h-[56px] w-48 sm:w-56 lg:w-60 flex items-center justify-start flex-shrink-0">
-              <Image
-                src="/logo.png"
-                alt="Workforce Infotech Pvt. Ltd."
-                fill
-                priority
-                unoptimized
-                className="object-contain object-left block dark:hidden transition-transform duration-300 group-hover:scale-105"
-              />
+              {/* Dark mode logo: Crisp pure white text with electoral glow */}
               <Image
                 src="/logo-dark.png"
                 alt="Workforce Infotech Pvt. Ltd."
                 fill
                 priority
                 unoptimized
-                className="object-contain object-left hidden dark:block dark-logo-glow transition-transform duration-300 group-hover:scale-105"
+                className="object-contain object-left logo-dark-img dark-logo-glow transition-transform duration-300 group-hover:scale-105"
+              />
+              {/* Light mode logo: Original dark navy text */}
+              <Image
+                src="/logo.png"
+                alt="Workforce Infotech Pvt. Ltd."
+                fill
+                priority
+                unoptimized
+                className="object-contain object-left logo-light-img transition-transform duration-300 group-hover:scale-105"
               />
             </div>
             <div className="hidden lg:flex flex-col justify-center border-l border-slate-300 dark:border-navy-700 pl-3 leading-tight">

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
 @theme {
   --color-navy-950: #040e1c;
@@ -587,9 +588,36 @@ html.light footer a.text-slate-300:hover {
 html.dark .dark-logo-glow,
 .dark .dark-logo-glow,
 .keep-dark .dark-logo-glow,
-footer .dark-logo-glow {
+footer .dark-logo-glow,
+header .dark-logo-glow {
   filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.85)) 
           drop-shadow(0 0 16px rgba(242, 140, 40, 0.35)) 
           drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
+}
+
+/* Header & site logo theme switching */
+.logo-dark-img {
+  display: block !important;
+}
+.logo-light-img {
+  display: none !important;
+}
+
+html.light .logo-dark-img,
+[data-theme="light"] .logo-dark-img {
+  display: none !important;
+}
+html.light .logo-light-img,
+[data-theme="light"] .logo-light-img {
+  display: block !important;
+}
+
+html.dark .logo-dark-img,
+[data-theme="dark"] .logo-dark-img {
+  display: block !important;
+}
+html.dark .logo-light-img,
+[data-theme="dark"] .logo-light-img {
+  display: none !important;
 }
 
