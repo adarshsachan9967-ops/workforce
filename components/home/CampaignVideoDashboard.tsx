@@ -16,48 +16,34 @@ import {
   TrendingUp,
   MapPin,
   Users,
-  Activity,
-  Sparkles
+  Activity
 } from "lucide-react";
 
 interface CampaignVideoDashboardProps {
-  videoUrl?: string;
-  youtubeId?: string;
+  videoSrc?: string;
+  audioSrc?: string;
+  youtubeUrl?: string;
 }
 
 export default function CampaignVideoDashboard({
-  videoUrl = "https://youtube.com/shorts/5bCg8EKiHSM",
-  youtubeId = "5bCg8EKiHSM"
+  videoSrc = "/videos/campaign-video.mp4",
+  audioSrc = "/videos/campaign-audio.m4a",
+  youtubeUrl = "https://youtube.com/shorts/5bCg8EKiHSM"
 }: CampaignVideoDashboardProps) {
   const { language } = useLanguage();
   const { homepage } = useContent();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const hideControlsTimer = useRef<NodeJS.Timeout | null>(null);
 
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [showControls, setShowControls] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [timeStr, setTimeStr] = useState("18:30:00");
-  const [origin, setOrigin] = useState("");
-
-  // Extract YouTube ID if URL passed
-  const extractYouTubeId = (urlOrId: string): string => {
-    if (!urlOrId) return "5bCg8EKiHSM";
-    const match = urlOrId.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/)|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
-    return match ? match[1] : (urlOrId.length === 11 ? urlOrId : "5bCg8EKiHSM");
-  };
-
-  const finalVideoId = extractYouTubeId(youtubeId || videoUrl);
-
-  // Set window origin safely for YouTube postMessage API
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setOrigin(window.location.origin);
-    }
-  }, []);
 
   // Live IST Clock updater
   useEffect(() => {
@@ -68,63 +54,65 @@ export default function CampaignVideoDashboard({
     return () => clearInterval(timer);
   }, []);
 
-  // Send command to YouTube iframe via postMessage
-  const postIframeCommand = useCallback((command: string, args: string | number = "") => {
-    if (iframeRef.current && iframeRef.current.contentWindow) {
-      iframeRef.current.contentWindow.postMessage(
-        JSON.stringify({
-          event: "command",
-          func: command,
-          args: args ? [args] : []
-        }),
-        "*"
-      );
+  // Permanent autoplay on mount
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = isMuted;
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch(() => {
+          // If browser policy blocks, ensure muted and retry
+          video.muted = true;
+          setIsMuted(true);
+          video.play().catch(() => {
+            setIsPlaying(false);
+          });
+        });
+    }
+  }, [isMuted, videoSrc]);
+
+  // Sync audio with video
+  const syncAudio = useCallback((playing: boolean, muted: boolean) => {
+    const audio = audioRef.current;
+    const video = videoRef.current;
+    if (!audio || !video) return;
+
+    audio.muted = muted;
+    if (playing && !muted) {
+      audio.currentTime = video.currentTime % (audio.duration || 1);
+      audio.play().catch(() => {});
+    } else {
+      audio.pause();
     }
   }, []);
 
-  // Listen to messages from YouTube iframe to stay in sync
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      try {
-        if (typeof event.data === "string") {
-          const data = JSON.parse(event.data);
-          if (data.event === "infoDelivery" && data.info) {
-            if (data.info.playerState === 1) setIsPlaying(true);
-            if (data.info.playerState === 2) setIsPlaying(false);
-            if (typeof data.info.muted === "boolean") setIsMuted(data.info.muted);
-            if (data.info.playerState === 0) {
-              // Video ended -> replay immediately for permanent loop
-              postIframeCommand("playVideo");
-            }
-          }
-        }
-      } catch {
-        // Ignore unparseable non-YT messages
-      }
-    };
+  // Video time update for progress bar and loop sync
+  const handleTimeUpdate = () => {
+    const video = videoRef.current;
+    if (video) {
+      const current = video.currentTime;
+      const duration = video.duration || 1;
+      setProgress((current / duration) * 100);
 
-    window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
-  }, [postIframeCommand]);
-
-  // Periodic heartbeat to keep playing permanently on loop
-  useEffect(() => {
-    const loopInterval = setInterval(() => {
-      // Re-trigger play and listen command
-      postIframeCommand("listening");
-      if (isPlaying) {
-        postIframeCommand("playVideo");
+      const audio = audioRef.current;
+      if (audio && !isMuted && Math.abs(audio.currentTime - video.currentTime) > 0.3) {
+        audio.currentTime = video.currentTime;
       }
-    }, 4000);
-    return () => clearInterval(loopInterval);
-  }, [isPlaying, postIframeCommand]);
+    }
+  };
 
   // Schedule auto-hide for controls
   const scheduleHideControls = useCallback(() => {
     if (hideControlsTimer.current) clearTimeout(hideControlsTimer.current);
     hideControlsTimer.current = setTimeout(() => {
       setShowControls(false);
-    }, 3200);
+    }, 3000);
   }, []);
 
   // Mouse hover & drag cursor triggers controls to appear
@@ -161,12 +149,18 @@ export default function CampaignVideoDashboard({
   // Play / Pause toggle
   const togglePlay = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    if (isPlaying) {
-      postIframeCommand("pauseVideo");
-      setIsPlaying(false);
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (video.paused) {
+      video.play().then(() => {
+        setIsPlaying(true);
+        syncAudio(true, isMuted);
+      }).catch(() => setIsPlaying(false));
     } else {
-      postIframeCommand("playVideo");
-      setIsPlaying(true);
+      video.pause();
+      setIsPlaying(false);
+      syncAudio(false, isMuted);
     }
     scheduleHideControls();
   };
@@ -174,13 +168,13 @@ export default function CampaignVideoDashboard({
   // Mute / Unmute toggle
   const toggleMute = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    if (isMuted) {
-      postIframeCommand("unMute");
-      setIsMuted(false);
-    } else {
-      postIframeCommand("mute");
-      setIsMuted(true);
-    }
+    const video = videoRef.current;
+    if (!video) return;
+
+    const nextMuted = !isMuted;
+    video.muted = nextMuted;
+    setIsMuted(nextMuted);
+    syncAudio(isPlaying, nextMuted);
     scheduleHideControls();
   };
 
@@ -217,18 +211,25 @@ export default function CampaignVideoDashboard({
         "कॉल सेंटर डेस्क: 2,410 कॉल्स डिस्पैच (सकारात्मक 78%)"
       ];
 
-  const iframeSrc = `https://www.youtube-nocookie.com/embed/${finalVideoId}?autoplay=1&mute=1&loop=1&playlist=${finalVideoId}&controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1&iv_load_policy=3&disablekb=1&fs=0${origin ? `&origin=${encodeURIComponent(origin)}` : ""}`;
-
   return (
     <div 
       ref={containerRef}
       className="relative rounded-2xl sm:rounded-3xl border border-navy-700/80 bg-gradient-to-b from-navy-900/95 via-navy-950/95 to-navy-950 p-4 sm:p-5 shadow-2xl backdrop-blur-xl text-slate-200 overflow-hidden dashboard-container"
     >
-      {/* Ambient Glowing Highlights */}
+      {/* Ambient Highlights */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent-orange/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-royal-blue/25 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Dashboard Header Bar */}
+      {/* Hidden Audio Element for synchronized sound when unmuted */}
+      <audio
+        ref={audioRef}
+        src={audioSrc}
+        loop
+        muted={isMuted}
+        preload="auto"
+      />
+
+      {/* Dashboard Top Header Bar */}
       <div className="flex items-center justify-between pb-3 mb-3 border-b border-navy-800/80">
         <div className="flex items-center gap-2.5">
           <span className="relative flex h-2.5 w-2.5">
@@ -249,7 +250,7 @@ export default function CampaignVideoDashboard({
           {/* Live Feed Status Pill */}
           <span className="inline-flex items-center gap-1.5 text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
             <Radio className="w-2.5 h-2.5 animate-pulse" />
-            <span>LIVE STREAM</span>
+            <span>LIVE FEED</span>
           </span>
           <span className="text-xs font-mono font-semibold text-slate-400">
             {timeStr} IST
@@ -257,54 +258,50 @@ export default function CampaignVideoDashboard({
         </div>
       </div>
 
-      {/* Main Video Monitor Container */}
+      {/* Entire Black Screen Video Monitor: Video fills 100% of this entire area */}
       <div 
-        className="relative w-full aspect-[4/3] sm:aspect-[16/11] rounded-xl sm:rounded-2xl overflow-hidden bg-navy-950 border border-navy-800 shadow-inner group select-none cursor-pointer flex items-center justify-center"
+        className="relative w-full aspect-[4/3] sm:aspect-[16/10] rounded-xl sm:rounded-2xl overflow-hidden bg-black border border-navy-800 shadow-2xl group select-none cursor-pointer"
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={handleTouchOrClick}
         onTouchStart={handleTouchOrClick}
       >
-        {/* Ambient Blurred Background from Video Poster */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-30 filter blur-2xl scale-110 pointer-events-none"
-          style={{ backgroundImage: `url(/images/campaign-video-poster.jpg)` }}
+        {/* Native Full-Bleed Video: Fills 100% of the entire black screen */}
+        <video
+          ref={videoRef}
+          src={videoSrc}
+          poster="/images/campaign-video-poster.jpg"
+          autoPlay
+          loop
+          muted={isMuted}
+          playsInline
+          onTimeUpdate={handleTimeUpdate}
+          className="absolute inset-0 w-full h-full object-cover object-center pointer-events-auto"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/20 to-navy-950/60 pointer-events-none" />
 
-        {/* Embedded YouTube Frame (Permanent Autoplay & Loop) */}
-        <div className="relative w-full h-full max-w-[340px] sm:max-w-[420px] flex items-center justify-center overflow-hidden">
-          <iframe
-            ref={iframeRef}
-            id="campaign-youtube-iframe"
-            src={iframeSrc}
-            title="Workforce Infotech Campaign Video"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            className="w-full h-full object-cover scale-[1.03] pointer-events-auto"
-          />
-        </div>
+        {/* Subtle cinematic gradient vignette along edges */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/40 pointer-events-none" />
 
         {/* Top Badges inside Video (Always visible) */}
         <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none z-10">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-navy-950/85 backdrop-blur-md border border-navy-700/80 text-[10px] font-bold text-white shadow-lg">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-md border border-white/20 text-[10px] font-bold text-white shadow-lg">
               <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
               <span>WORKFORCE INFOTECH (IPR)</span>
             </span>
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-accent-orange/20 border border-accent-orange/40 text-[10px] font-mono text-accent-gold backdrop-blur-md">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-accent-orange/30 border border-accent-orange/50 text-[10px] font-mono text-accent-gold backdrop-blur-md">
               PERMANENT AUTO-LOOP
             </span>
           </div>
         </div>
 
-        {/* Floating Controls Overlay (Appears on Hover / Cursor Drag or Mobile Tap) */}
+        {/* Floating Controls Overlay (Fades in when dragging cursor or tapping on mobile) */}
         <div 
-          className={`absolute inset-0 bg-navy-950/45 backdrop-blur-[2px] flex flex-col justify-between p-3 sm:p-4 transition-opacity duration-300 z-20 pointer-events-auto ${
+          className={`absolute inset-0 bg-black/40 backdrop-blur-[2px] flex flex-col justify-between p-3 sm:p-4 transition-opacity duration-300 z-20 pointer-events-auto ${
             showControls ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
@@ -315,7 +312,7 @@ export default function CampaignVideoDashboard({
             <button
               onClick={togglePlay}
               aria-label={isPlaying ? "Pause Video" : "Play Video"}
-              className="w-13 h-13 sm:w-15 sm:h-15 rounded-full bg-accent-orange hover:bg-accent-orange-hover text-white flex items-center justify-center shadow-2xl shadow-accent-orange/40 transform hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer border-2 border-white/25"
+              className="w-13 h-13 sm:w-15 sm:h-15 rounded-full bg-accent-orange hover:bg-accent-orange-hover text-white flex items-center justify-center shadow-2xl shadow-accent-orange/50 transform hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer border-2 border-white/30"
               title={isPlaying ? "Pause Video" : "Play Video"}
             >
               {isPlaying ? (
@@ -333,7 +330,7 @@ export default function CampaignVideoDashboard({
             <div className="flex items-center gap-2">
               <button
                 onClick={togglePlay}
-                className="px-3 py-1.5 rounded-lg bg-navy-900/95 hover:bg-navy-800 text-white text-xs font-semibold border border-navy-700/80 backdrop-blur-md flex items-center gap-1.5 transition-all cursor-pointer shadow"
+                className="px-3 py-1.5 rounded-lg bg-black/85 hover:bg-navy-900 text-white text-xs font-semibold border border-white/20 backdrop-blur-md flex items-center gap-1.5 transition-all cursor-pointer shadow"
               >
                 {isPlaying ? (
                   <>
@@ -350,7 +347,7 @@ export default function CampaignVideoDashboard({
 
               <button
                 onClick={toggleMute}
-                className="px-3 py-1.5 rounded-lg bg-navy-900/95 hover:bg-navy-800 text-white text-xs font-semibold border border-navy-700/80 backdrop-blur-md flex items-center gap-1.5 transition-all cursor-pointer shadow"
+                className="px-3 py-1.5 rounded-lg bg-black/85 hover:bg-navy-900 text-white text-xs font-semibold border border-white/20 backdrop-blur-md flex items-center gap-1.5 transition-all cursor-pointer shadow"
                 title={isMuted ? "Unmute Audio" : "Mute Audio"}
               >
                 {isMuted ? (
@@ -370,10 +367,10 @@ export default function CampaignVideoDashboard({
             {/* Right side controls: Fullscreen & YouTube Direct Link */}
             <div className="flex items-center gap-1.5">
               <a
-                href={`https://youtube.com/shorts/${finalVideoId}`}
+                href={youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-lg bg-navy-900/95 hover:bg-navy-800 text-slate-300 hover:text-white border border-navy-700/80 backdrop-blur-md transition-colors cursor-pointer"
+                className="p-2 rounded-lg bg-black/85 hover:bg-navy-900 text-slate-300 hover:text-white border border-white/20 backdrop-blur-md transition-colors cursor-pointer"
                 title="Watch on YouTube"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -382,7 +379,7 @@ export default function CampaignVideoDashboard({
 
               <button
                 onClick={toggleFullscreen}
-                className="p-2 rounded-lg bg-navy-900/95 hover:bg-navy-800 text-slate-300 hover:text-white border border-navy-700/80 backdrop-blur-md transition-colors cursor-pointer"
+                className="p-2 rounded-lg bg-black/85 hover:bg-navy-900 text-slate-300 hover:text-white border border-white/20 backdrop-blur-md transition-colors cursor-pointer"
                 title="Toggle Fullscreen"
               >
                 {isFullscreen ? (
@@ -394,12 +391,20 @@ export default function CampaignVideoDashboard({
             </div>
 
           </div>
+
+          {/* Progress Bar along bottom of video */}
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-accent-orange to-accent-gold transition-all duration-150"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
         </div>
 
         {/* Small Touch/Hover Hint indicator when controls are hidden */}
         {!showControls && (
           <div className="absolute bottom-2.5 right-2.5 z-10 pointer-events-none">
-            <span className="text-[10px] text-slate-300 bg-navy-950/80 px-2.5 py-1 rounded backdrop-blur-md border border-navy-700/80 font-hindi shadow">
+            <span className="text-[10px] text-slate-300 bg-black/80 px-2.5 py-1 rounded backdrop-blur-md border border-white/20 font-hindi shadow">
               {language === "hi" ? "कर्सर लाएं या टैप करें • Pause / Mute" : "Hover / Tap for Pause & Mute"}
             </span>
           </div>
