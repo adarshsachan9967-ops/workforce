@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { servicesData } from "@/data/servicesData";
 import { X, Send, CheckCircle2, AlertCircle, Shield } from "lucide-react";
+import ConstituencySelector from "@/components/shared/ConstituencySelector";
 
 interface EnquiryModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ export default function EnquiryModal({ isOpen, onClose, defaultService }: Enquir
     email: "",
     assembly: "",
     district: "",
+    state: "",
     services: defaultService ? [defaultService] : [],
     campaignRequirement: "",
     preferredTime: "किसी भी समय",
@@ -133,35 +135,23 @@ export default function EnquiryModal({ isOpen, onClose, defaultService }: Enquir
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                {t.forms.assembly}
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.assembly}
-                onChange={(e) => setFormData({ ...formData, assembly: e.target.value })}
-                placeholder="उदा. 172 - अयोध्या या सदर"
-                className="w-full px-3.5 py-2.5 rounded-lg bg-navy-950/70 border border-navy-700 focus:border-accent-orange focus:ring-1 focus:ring-accent-orange text-white text-sm outline-none transition"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
-                {t.forms.district}
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.district}
-                onChange={(e) => setFormData({ ...formData, district: e.target.value })}
-                placeholder="उदा. लखनऊ, वाराणसी, गोरखपुर..."
-                className="w-full px-3.5 py-2.5 rounded-lg bg-navy-950/70 border border-navy-700 focus:border-accent-orange focus:ring-1 focus:ring-accent-orange text-white text-sm outline-none transition"
-              />
-            </div>
-          </div>
+          <ConstituencySelector
+            selectedAssembly={formData.assembly}
+            selectedDistrict={formData.district}
+            onSelect={(item) => {
+              setFormData((prev) => ({
+                ...prev,
+                assembly: item.assembly,
+                district: item.district,
+                state: item.state
+              }));
+            }}
+            onAssemblyChange={(val) => setFormData((prev) => ({ ...prev, assembly: val }))}
+            onDistrictChange={(val) => setFormData((prev) => ({ ...prev, district: val }))}
+            assemblyLabel={t.forms.assembly}
+            districtLabel={t.forms.district}
+            theme="dark"
+          />
 
           <div>
             <label className="block text-xs font-medium text-slate-300 mb-1.5">

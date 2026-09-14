@@ -304,6 +304,7 @@ export default function AdminDashboardPage() {
       e.phone.toLowerCase().includes(query) ||
       e.assembly.toLowerCase().includes(query) ||
       e.district.toLowerCase().includes(query) ||
+      (e.state && e.state.toLowerCase().includes(query)) ||
       e.services.some((s) => s.toLowerCase().includes(query));
 
     return matchesStatus && matchesQuery;
@@ -674,7 +675,10 @@ export default function AdminDashboardPage() {
 
                             <td className="py-4 px-4 font-hindi">
                               <div className="text-accent-gold font-semibold">{e.assembly}</div>
-                              <div className="text-xs text-slate-400">{e.district}</div>
+                              <div className="text-xs text-slate-400">
+                                {e.district}
+                                {e.state && <span className="ml-1 text-[10px] text-emerald-400">({e.state})</span>}
+                              </div>
                             </td>
 
                             <td className="py-4 px-4">
@@ -802,6 +806,7 @@ export default function AdminDashboardPage() {
                     </h2>
                     <p className="text-sm text-accent-gold font-hindi mt-0.5">
                       {selectedLead.assembly} • जिला: {selectedLead.district}
+                      {selectedLead.state && <span> ({selectedLead.state})</span>}
                     </p>
                   </div>
 

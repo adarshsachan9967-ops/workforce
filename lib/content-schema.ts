@@ -5,6 +5,7 @@ export interface Enquiry {
   email?: string;
   assembly: string;
   district: string;
+  state?: string;
   services: string[];
   campaignRequirement?: string;
   preferredTime?: string;

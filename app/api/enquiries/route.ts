@@ -5,7 +5,7 @@ import { getAdminSession } from "@/lib/auth";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, phone, email, assembly, district, services, campaignRequirement, preferredTime, message } = body;
+    const { name, phone, email, assembly, district, state, services, campaignRequirement, preferredTime, message } = body;
 
     if (!name || typeof name !== "string" || name.trim().length < 2) {
       return NextResponse.json({ error: "कृपया सही नाम दर्ज करें।" }, { status: 400 });
@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
       email: email?.trim() || undefined,
       assembly: assembly.trim(),
       district: district.trim(),
+      state: state?.trim() || undefined,
       services: servicesList,
       campaignRequirement: campaignRequirement?.trim() || undefined,
       preferredTime: preferredTime?.trim() || undefined,
