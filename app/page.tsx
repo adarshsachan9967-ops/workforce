@@ -29,11 +29,11 @@ export const metadata = {
 export default function HomePage() {
   return (
     <main className="flex-1 flex flex-col w-full overflow-hidden">
-      {/* 1. Hero Section & Campaign Intelligence */}
-      <Hero />
-
-      {/* 2. Top Interactive Banners Carousel (3 High-Impact Visual Banners) */}
+      {/* 1. Top Interactive Banners Carousel (3 High-Impact Visual Banners) */}
       <BannerSlider />
+
+      {/* 2. Hero Section & Campaign Intelligence Dashboard */}
+      <Hero />
 
       {/* 3. Trust & Operational Stat Strip */}
       <TrustStrip />

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { useContent } from "@/context/ContentContext";
 import WarRoomDashboard from "./WarRoomDashboard";
+import CampaignVideoDashboard from "./CampaignVideoDashboard";
 import EnquiryModal from "@/components/shared/EnquiryModal";
 import {
   ArrowRight,
@@ -137,13 +138,16 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right Column: Hero Floating Data Panel */}
+          {/* Right Column: Hero Floating Data Panel & Permanent Video Stream */}
           <div className="lg:col-span-5 relative">
             <div className="relative">
               {/* Outer decorative border glow */}
               <div className="absolute -inset-1 bg-gradient-to-r from-accent-orange/30 via-royal-blue/30 to-accent-gold/20 rounded-3xl blur-lg opacity-70 group-hover:opacity-100 transition duration-1000 pointer-events-none" />
               
-              <WarRoomDashboard />
+              <CampaignVideoDashboard 
+                videoUrl={(homepage?.hero as Record<string, unknown> | undefined)?.videoUrl as string | undefined || "https://youtube.com/shorts/5bCg8EKiHSM"} 
+                youtubeId={(homepage?.hero as Record<string, unknown> | undefined)?.youtubeId as string | undefined || "5bCg8EKiHSM"} 
+              />
             </div>
           </div>
 
