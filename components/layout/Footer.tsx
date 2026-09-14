@@ -271,6 +271,94 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* SEO Keywords & Regional Service Hubs Directory */}
+      <div className="border-t border-navy-800/80 bg-navy-950/70 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-navy-800/60 pb-3">
+            <h5 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-accent-orange"></span>
+              <span>{language === "hi" ? "चुनावी प्रबंधन एवं रणनीति सेवाएं — प्रमुख कीवर्ड्स (SEO Directory)" : "Election Management & Strategy Services — SEO Directory"}</span>
+            </h5>
+            <span className="text-[11px] text-slate-400 font-medium">
+              Uttar Pradesh • Kanpur H.O. • Lucknow B.O. • Pan-India
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-[11px] text-slate-400">
+            {/* Primary & Strategy */}
+            <div className="space-y-2">
+              <p className="font-semibold text-slate-200 uppercase tracking-wider text-[10px] text-accent-gold">
+                {language === "hi" ? "चुनाव प्रबंधन व रणनीति" : "Election Strategy & Consulting"}
+              </p>
+              <ul className="space-y-1.5 leading-relaxed">
+                <li><Link href="/services" className="hover:text-accent-orange transition-colors">Election Management Company in India</Link></li>
+                <li><Link href="/services" className="hover:text-accent-orange transition-colors">Political Campaign Management Company</Link></li>
+                <li><Link href="/services" className="hover:text-accent-orange transition-colors">Election Strategy Consultant & Advisory</Link></li>
+                <li><Link href="/services" className="hover:text-accent-orange transition-colors">Political Consulting Company & Services</Link></li>
+                <li><Link href="/services" className="hover:text-accent-orange transition-colors">Best Election Management Company</Link></li>
+                <li><Link href="/contact" className="hover:text-accent-orange transition-colors">Hire Election Campaign Consultant</Link></li>
+              </ul>
+            </div>
+
+            {/* Campaign Services & Surveys */}
+            <div className="space-y-2">
+              <p className="font-semibold text-slate-200 uppercase tracking-wider text-[10px] text-accent-gold">
+                {language === "hi" ? "वॉर रूम, डेटा व सर्वे" : "War Room & Data Analytics"}
+              </p>
+              <ul className="space-y-1.5 leading-relaxed">
+                <li><Link href="/services/war-room" className="hover:text-accent-orange transition-colors">Election War Room Management</Link></li>
+                <li><Link href="/services/voter-data" className="hover:text-accent-orange transition-colors">Voter Data & Booth Level Management</Link></li>
+                <li><Link href="/services/survey" className="hover:text-accent-orange transition-colors">Election Survey Company & Opinion Polls</Link></li>
+                <li><Link href="/services/survey" className="hover:text-accent-orange transition-colors">Constituency Survey & Ground Feedback</Link></li>
+                <li><Link href="/services/voter-data" className="hover:text-accent-orange transition-colors">Political Data Analytics & Voter Mapping</Link></li>
+                <li><Link href="/services/cadre-booth" className="hover:text-accent-orange transition-colors">Booth Management & Panna Pramukh Grid</Link></li>
+              </ul>
+            </div>
+
+            {/* Digital & Ground Operations */}
+            <div className="space-y-2">
+              <p className="font-semibold text-slate-200 uppercase tracking-wider text-[10px] text-accent-gold">
+                {language === "hi" ? "डिजिटल एवं ग्राउंड कैंपेन" : "Digital & Ground Campaign"}
+              </p>
+              <ul className="space-y-1.5 leading-relaxed">
+                <li><Link href="/services/digital-media" className="hover:text-accent-orange transition-colors">Political Digital Marketing Agency</Link></li>
+                <li><Link href="/services/digital-media" className="hover:text-accent-orange transition-colors">Election Social Media Campaign</Link></li>
+                <li><Link href="/services/digital-media" className="hover:text-accent-orange transition-colors">Candidate Branding & Political PR</Link></li>
+                <li><Link href="/services/ground-campaign" className="hover:text-accent-orange transition-colors">Election Ground Campaign Management</Link></li>
+                <li><Link href="/services/ground-campaign" className="hover:text-accent-orange transition-colors">Door to Door Campaign Management</Link></li>
+                <li><Link href="/services/telecalling" className="hover:text-accent-orange transition-colors">Election Call Center & Voter Calling</Link></li>
+              </ul>
+            </div>
+
+            {/* Regional Hubs: UP, Kanpur, Lucknow */}
+            <div className="space-y-2">
+              <p className="font-semibold text-slate-200 uppercase tracking-wider text-[10px] text-emerald-400">
+                {language === "hi" ? "क्षेत्रीय उपस्थिति (UP • कानपुर • लखनऊ)" : "Regional Presence (UP • Kanpur • Lucknow)"}
+              </p>
+              <ul className="space-y-1.5 leading-relaxed">
+                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">Election Management Company in Uttar Pradesh</Link></li>
+                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">Political Consulting Company in Uttar Pradesh</Link></li>
+                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">Election Management Company in Kanpur (H.O.)</Link></li>
+                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">Political Digital Marketing Agency in Kanpur</Link></li>
+                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">Election Management Company in Lucknow (B.O.)</Link></li>
+                <li><Link href="/contact" className="hover:text-emerald-400 transition-colors">Election Survey Company in Lucknow & Kanpur</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="pt-3 border-t border-navy-800/50 flex flex-wrap items-center gap-1.5 text-[10px] text-slate-500">
+            <span className="font-semibold text-slate-400">Workforce Infotech Brand Services:</span>
+            <span className="hover:text-slate-300">Workforce Infotech Election Management</span> •
+            <span className="hover:text-slate-300">Workforce Infotech Political Consulting</span> •
+            <span className="hover:text-slate-300">Workforce Infotech Kanpur</span> •
+            <span className="hover:text-slate-300">Workforce Infotech Lucknow</span> •
+            <span className="hover:text-slate-300">Political Volunteer Management</span> •
+            <span className="hover:text-slate-300">Constituency Campaign Management</span> •
+            <span className="hover:text-slate-300">Political Website Development</span>
+          </div>
+        </div>
+      </div>
+
       {/* Compliance & Copyright Disclaimer */}
       <div className="border-t border-navy-800/80 bg-navy-950 py-6 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left text-xs text-slate-500">

@@ -24,17 +24,107 @@ export async function generateMetadata({
     };
   }
 
+  // Vertical-specific keyword mapping for maximum Google SEO relevance
+  const slugKeywordMap: Record<string, string[]> = {
+    "social-media-management": [
+      "Political Social Media Management",
+      "Election Social Media Management",
+      "Political Digital Marketing",
+      "Political Social Media Campaign",
+      "Political Video Production",
+      "Political Advertising Agency"
+    ],
+    "election-data-research": [
+      "Election Data Management",
+      "Voter Data Management",
+      "Political Data Analytics",
+      "Voter Survey Company",
+      "Constituency Data Analytics"
+    ],
+    "booth-ground-management": [
+      "Booth Management",
+      "Booth Level Management",
+      "Booth Management Services",
+      "Election Ground Campaign Management",
+      "Door to Door Campaign Management",
+      "Voter Contact Program"
+    ],
+    "election-war-room": [
+      "Election War Room Management",
+      "Election Campaign Management Company",
+      "Political War Room Operations",
+      "Election Strategy Company",
+      "Election War Room Lucknow"
+    ],
+    "candidate-branding": [
+      "Candidate Branding",
+      "Political Branding",
+      "Political Campaign Consultant",
+      "Political Image Management",
+      "Leader Branding Uttar Pradesh"
+    ],
+    "political-strategy": [
+      "Political Campaign Strategy",
+      "Election Campaign Strategy",
+      "Political Consulting Company",
+      "Election Strategy Consultant",
+      "Election Consultant in India"
+    ],
+    "voter-survey-opinion-polls": [
+      "Election Survey Company",
+      "Voter Survey Company",
+      "Political Survey Services",
+      "Election Ground Survey",
+      "Constituency Survey",
+      "Candidate Survey"
+    ],
+    "media-studio-video-production": [
+      "Political Video Production",
+      "Election Video Production",
+      "Political Content Creation",
+      "Election Advertising Services"
+    ],
+    "call-center-telecalling": [
+      "Election Call Center",
+      "Political Call Center",
+      "Election Telecalling Services",
+      "Voter Calling Services",
+      "Voter Outreach Campaign"
+    ],
+    "it-solutions-digital-tools": [
+      "Political Website Development",
+      "Election Website Development",
+      "Political Campaign Technology",
+      "Election IT Solutions"
+    ],
+    "volunteer-training": [
+      "Election Volunteer Management",
+      "Political Volunteer Management",
+      "Booth Level Campaign Management",
+      "Cadre Training Political Campaign"
+    ]
+  };
+
+  const targetedKeywords = slugKeywordMap[slug] || [
+    "Election Campaign Management",
+    "Political Campaign Management Company",
+    "Election Management Services"
+  ];
+
   return {
-    title: `${service.titleHi} (${service.titleEn}) | Workforce Infotech UP 2027`,
-    description: `${service.heroSubHi} - ${service.shortDescHi}`,
+    title: `${service.titleEn} | ${service.titleHi} | Workforce Infotech Election Management`,
+    description: `${service.shortDescEn} — ${service.shortDescHi}`,
     keywords: [
       service.titleEn,
       service.titleHi,
-      "UP Election 2027",
-      "Workforce Infotech",
-      "Election Campaign Management",
-      service.tagEn
-    ]
+      ...targetedKeywords,
+      "Workforce Infotech Pvt Ltd",
+      "Election Management Company in Uttar Pradesh",
+      "UP Election 2027"
+    ],
+    alternates: {
+      canonical: `/services/${slug}`
+    }
   };
 }
 

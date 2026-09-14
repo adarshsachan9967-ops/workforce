@@ -6,8 +6,26 @@ import FinalCta from "@/components/home/FinalCta";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "हमारी चुनावी सेवाएं | Workforce Infotech Pvt. Ltd.",
-  description: "उत्तर प्रदेश विधानसभा चुनाव 2027 के लिए सभी 11 संपूर्ण चुनाव प्रबंधन सेवाएं — सोशल मीडिया, डेटा, बूथ, कॉल सेंटर, तकनीक, वीडियो, पीआर, आउटडोर, रैलियां, ब्रांडिंग और वार रूम।",
+  title: "Election Management Services | Political Campaign Consulting | Workforce Infotech",
+  description: "Explore Workforce Infotech's 360° Election Management Services in India & Uttar Pradesh: Voter Data Management, War Room Operations, Booth Management, Ground Surveys, Political Digital Marketing, and Candidate Branding for UP Elections 2027.",
+  keywords: [
+    "Election Management Services",
+    "Election Campaign Management",
+    "Political Campaign Management",
+    "Election War Room Management",
+    "Election Data Management",
+    "Voter Data Management",
+    "Booth Management",
+    "Booth Level Management",
+    "Constituency Management",
+    "Election Survey Company",
+    "Political Consulting Services India",
+    "Election Campaign Consultant India",
+    "Election Campaign Management Services"
+  ],
+  alternates: {
+    canonical: "/services"
+  }
 };
 
 export default function ServicesIndexPage() {

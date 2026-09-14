@@ -57,6 +57,7 @@ import {
 import HomepageCms from "@/components/admin/HomepageCms";
 import PagesCms from "@/components/admin/PagesCms";
 import MediaManagerCms from "@/components/admin/MediaManagerCms";
+import GoogleAnalyticsCms from "@/components/admin/GoogleAnalyticsCms";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -71,7 +72,7 @@ export default function AdminDashboardPage() {
 
   // Active Navigation Tab
   const [activeTab, setActiveTab] = useState<
-    "leads" | "header" | "contact" | "home" | "pages" | "faqs" | "footer" | "media" | "security"
+    "leads" | "header" | "contact" | "home" | "pages" | "faqs" | "footer" | "media" | "security" | "analytics"
   >("leads");
 
   // Core Data Stores
@@ -506,6 +507,19 @@ export default function AdminDashboardPage() {
           >
             <Key className="w-4 h-4" />
             <span>सुरक्षा व पासवर्ड</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("analytics")}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+              activeTab === "analytics"
+                ? "bg-accent-orange text-white shadow-md shadow-accent-orange/25"
+                : "text-slate-400 hover:text-white hover:bg-navy-800"
+            }`}
+          >
+            <TrendingUp className="w-4 h-4 text-emerald-400" />
+            <span>Google Tracking & GA4</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           </button>
         </div>
       </div>
@@ -1907,6 +1921,16 @@ export default function AdminDashboardPage() {
               </form>
             </div>
           </div>
+        )}
+
+        {/* GOOGLE ANALYTICS, GTM & SEARCH CONSOLE TAB */}
+        {activeTab === "analytics" && (
+          <GoogleAnalyticsCms
+            settings={settings}
+            setSettings={setSettings}
+            onSave={() => saveSection("settings", settings)}
+            saving={saving}
+          />
         )}
       </main>
     </div>

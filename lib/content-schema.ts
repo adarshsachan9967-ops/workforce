@@ -87,6 +87,11 @@ export interface SiteSettings {
   complianceTextHi: string;
   complianceTextEn: string;
   copyrightText: string;
+
+  // Google Analytics, GTM & Tracking
+  googleAnalyticsId?: string;
+  googleTagManagerId?: string;
+  googleSearchConsoleCode?: string;
 }
 
 export interface HomepageContent {
@@ -389,7 +394,10 @@ export const defaultSettings: SiteSettings = {
   footerBioEn: "Workforce Infotech Private Limited — Premier election management, data research, voter communication, digital media and war room consulting firm for UP Assembly Election 2027.",
   complianceTextHi: "वर्कफोर्स इन्फोटेक प्राइवेट लिमिटेड भारत निर्वाचन आयोग (ECI) के आदर्श आचार संहिता, ट्राई (TRAI/DLT) दूरसंचार नियमों तथा DPDP Act 2023 का पूर्ण अनुपालन सुनिश्चित करता है।",
   complianceTextEn: "Workforce Infotech Pvt. Ltd. fully complies with ECI Model Code of Conduct, TRAI/DLT regulations, and the DPDP Act 2023.",
-  copyrightText: "© 2027 WORKFORCE INFOTECH PRIVATE LIMITED. ALL RIGHTS RESERVED."
+  copyrightText: "© 2027 WORKFORCE INFOTECH PRIVATE LIMITED. ALL RIGHTS RESERVED.",
+  googleAnalyticsId: "G-9DQBS54NTL",
+  googleTagManagerId: "",
+  googleSearchConsoleCode: ""
 };
 
 export const defaultNavigation: NavigationItem[] = [

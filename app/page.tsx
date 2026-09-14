@@ -21,9 +21,25 @@ import FaqPreview from "@/components/home/FaqPreview";
 import FinalCta from "@/components/home/FinalCta";
 
 export const metadata = {
-  title: "उत्तर प्रदेश चुनाव प्रबंधन 2027 | Workforce Infotech Pvt. Ltd.",
-  description: "उत्तर प्रदेश विधानसभा चुनाव 2027 के लिए चुनाव प्रबंधन, डेटा एवं रिसर्च, डिजिटल मीडिया, बूथ प्रबंधन, कॉल सेंटर, तकनीकी समाधान, मीडिया, क्रिएटिव और वार रूम सेवाएं।",
-  keywords: "Election Campaign Management Uttar Pradesh, Political Campaign Management UP 2027, Election Data Research, Booth Management, Political Digital Marketing, Election War Room, Candidate Branding, Political Campaign Technology",
+  title: "Election Management Company | Political Campaign Management & Strategy | Workforce Infotech Pvt. Ltd.",
+  description: "Workforce Infotech Pvt. Ltd. is India's leading Election Management Company & Political Consulting Firm in Uttar Pradesh (Lucknow & Kanpur). Specializing in Election Strategy, Voter Data Management, War Room Operations, Booth Management, Ground Surveys, and Political Digital Marketing for UP Elections 2027.",
+  keywords: [
+    "Election Management Company",
+    "Election Management Company in India",
+    "Election Management Services",
+    "Election Campaign Management Company",
+    "Political Campaign Management Company",
+    "Election Strategy Company",
+    "Political Consulting Company",
+    "Best Election Management Company",
+    "Workforce Infotech Pvt Ltd",
+    "Workforce Infotech Election Management Company",
+    "Election Management Company in Uttar Pradesh",
+    "Election Management Company in Lucknow",
+    "Election Management Company in Kanpur",
+    "Political Campaign Management in Uttar Pradesh",
+    "Hire Election Management Company"
+  ]
 };
 
 export default function HomePage() {
