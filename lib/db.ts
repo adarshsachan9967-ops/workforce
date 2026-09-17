@@ -12,11 +12,13 @@ import {
   DatabaseSchema,
   GalleryContent,
   TrackRecordContent,
+  HiringContent,
   defaultSettings,
   defaultNavigation,
   defaultHomepage,
   defaultStudioWarRoom,
   defaultGallery,
+  defaultHiring,
   defaultPages,
   defaultFaqs
 } from "./content-schema";
@@ -54,6 +56,7 @@ function getLocalDatabase(): DatabaseSchema {
         ...(parsed.homepage || {}),
         bannerSlider: { ...defaultHomepage.bannerSlider, ...(parsed.homepage?.bannerSlider || {}) },
         studioWarRoom: { ...defaultStudioWarRoom, ...(parsed.homepage?.studioWarRoom || {}) },
+        hiring: { ...defaultHiring, ...(parsed.homepage?.hiring || {}) },
         hero: { ...defaultHomepage.hero, ...(parsed.homepage?.hero || {}) },
         telemetry: { ...defaultHomepage.telemetry, ...(parsed.homepage?.telemetry || {}) },
         trustStrip: { ...defaultHomepage.trustStrip, ...(parsed.homepage?.trustStrip || {}) },
@@ -477,6 +480,15 @@ export const db = {
       ...data.homepage,
       ...content,
       studioWarRoom: { ...(data.homepage.studioWarRoom || defaultStudioWarRoom), ...(content.studioWarRoom || {}) },
+      hiring: content.hiring
+        ? {
+            ...(data.homepage.hiring || defaultHiring),
+            ...content.hiring,
+            positions: content.hiring.positions ? content.hiring.positions : (data.homepage.hiring?.positions || defaultHiring.positions),
+            offersHi: content.hiring.offersHi ? content.hiring.offersHi : (data.homepage.hiring?.offersHi || defaultHiring.offersHi),
+            offersEn: content.hiring.offersEn ? content.hiring.offersEn : (data.homepage.hiring?.offersEn || defaultHiring.offersEn)
+          }
+        : (data.homepage.hiring || defaultHiring),
       trackRecord: content.trackRecord
         ? {
             ...(data.homepage.trackRecord || defaultHomepage.trackRecord!),
@@ -511,6 +523,15 @@ export const db = {
       ...data.homepage,
       ...content,
       studioWarRoom: { ...(data.homepage.studioWarRoom || defaultStudioWarRoom), ...(content.studioWarRoom || {}) },
+      hiring: content.hiring
+        ? {
+            ...(data.homepage.hiring || defaultHiring),
+            ...content.hiring,
+            positions: content.hiring.positions ? content.hiring.positions : (data.homepage.hiring?.positions || defaultHiring.positions),
+            offersHi: content.hiring.offersHi ? content.hiring.offersHi : (data.homepage.hiring?.offersHi || defaultHiring.offersHi),
+            offersEn: content.hiring.offersEn ? content.hiring.offersEn : (data.homepage.hiring?.offersEn || defaultHiring.offersEn)
+          }
+        : (data.homepage.hiring || defaultHiring),
       trackRecord: content.trackRecord
         ? {
             ...(data.homepage.trackRecord || defaultHomepage.trackRecord!),
@@ -719,6 +740,47 @@ export const db = {
     return data.homepage.trackRecord;
   },
 
+  // === HIRING & CAREERS CONTENT ===
+  async getHiringAsync(): Promise<HiringContent> {
+    const content = await this.getAllContentAsync();
+    return content.homepage.hiring || defaultHiring;
+  },
+
+  getHiring(): HiringContent {
+    const data = getLocalDatabase();
+    return data.homepage.hiring || defaultHiring;
+  },
+
+  async updateHiringAsync(hiring: Partial<HiringContent>): Promise<HiringContent> {
+    const data = getLocalDatabase();
+    const current = data.homepage.hiring || defaultHiring;
+    data.homepage.hiring = {
+      ...current,
+      ...hiring,
+      positions: hiring.positions ? hiring.positions : current.positions,
+      offersHi: hiring.offersHi ? hiring.offersHi : current.offersHi,
+      offersEn: hiring.offersEn ? hiring.offersEn : current.offersEn
+    };
+    saveLocalDatabase(data);
+    await syncToMongo("content", { homepage: data.homepage });
+    return data.homepage.hiring;
+  },
+
+  updateHiring(hiring: Partial<HiringContent>): HiringContent {
+    const data = getLocalDatabase();
+    const current = data.homepage.hiring || defaultHiring;
+    data.homepage.hiring = {
+      ...current,
+      ...hiring,
+      positions: hiring.positions ? hiring.positions : current.positions,
+      offersHi: hiring.offersHi ? hiring.offersHi : current.offersHi,
+      offersEn: hiring.offersEn ? hiring.offersEn : current.offersEn
+    };
+    saveLocalDatabase(data);
+    syncToMongo("content", { homepage: data.homepage });
+    return data.homepage.hiring;
+  },
+
   // === COMPLETE DYNAMIC SITE CONTENT BUNDLE ===
   async getAllContentAsync() {
     try {
@@ -735,6 +797,17 @@ export const db = {
               ...(doc.homepage || {}),
               bannerSlider: { ...defaultHomepage.bannerSlider, ...(doc.homepage?.bannerSlider || {}) },
               studioWarRoom: { ...defaultStudioWarRoom, ...(doc.homepage?.studioWarRoom || {}) },
+              hiring: doc.homepage?.hiring
+                ? {
+                    ...defaultHiring,
+                    ...doc.homepage.hiring,
+                    positions: Array.isArray(doc.homepage.hiring.positions) && doc.homepage.hiring.positions.length > 0
+                      ? doc.homepage.hiring.positions
+                      : (local.homepage?.hiring?.positions || defaultHiring.positions),
+                    offersHi: Array.isArray(doc.homepage.hiring.offersHi) ? doc.homepage.hiring.offersHi : defaultHiring.offersHi,
+                    offersEn: Array.isArray(doc.homepage.hiring.offersEn) ? doc.homepage.hiring.offersEn : defaultHiring.offersEn
+                  }
+                : (local.homepage?.hiring || defaultHiring),
               trackRecord: doc.homepage?.trackRecord
                 ? {
                     ...defaultHomepage.trackRecord,

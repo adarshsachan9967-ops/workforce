@@ -188,6 +188,14 @@ export default function Footer() {
                   <span>📄 {language === "hi" ? "कंपनी प्रोफाइल (PDF)" : "Company Profile (PDF)"}</span>
                 </a>
               </li>
+              <li className="pt-1">
+                <Link
+                  href="/careers"
+                  className="text-accent-orange hover:underline font-semibold flex items-center gap-1"
+                >
+                  <span>🚀 {language === "hi" ? "करियर व भर्ती (Careers)" : "Careers (We're Hiring)"}</span>
+                </Link>
+              </li>
             </ul>
           </div>
 

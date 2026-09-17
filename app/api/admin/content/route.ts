@@ -56,6 +56,9 @@ export async function PUT(req: NextRequest) {
       case "trackRecord":
         await db.updateTrackRecordAsync(data);
         break;
+      case "hiring":
+        await db.updateHiringAsync(data);
+        break;
       default:
         // If full content payload provided
         if (body.settings) await db.updateSettingsAsync(body.settings);
@@ -64,6 +67,7 @@ export async function PUT(req: NextRequest) {
         if (body.navigation) await db.saveNavigationAsync(body.navigation);
         if (body.gallery) await db.updateGalleryAsync(body.gallery);
         if (body.trackRecord) await db.updateTrackRecordAsync(body.trackRecord);
+        if (body.hiring) await db.updateHiringAsync(body.hiring);
         break;
     }
 

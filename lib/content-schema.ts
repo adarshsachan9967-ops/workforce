@@ -227,9 +227,38 @@ export interface StudioWarRoomContent {
   };
 }
 
+export interface JobPositionItem {
+  id: string;
+  title: string;
+  icon: string;
+  category: string;
+  location: string;
+  type: string;
+  experience: string;
+}
+
+export interface HiringContent {
+  badgeHi: string;
+  badgeEn: string;
+  headingHi: string;
+  headingEn: string;
+  taglineHi: string;
+  taglineEn: string;
+  location: string;
+  phone: string;
+  email1: string;
+  email2: string;
+  eligibilityNoteHi: string;
+  eligibilityNoteEn: string;
+  offersHi: string[];
+  offersEn: string[];
+  positions: JobPositionItem[];
+}
+
 export interface HomepageContent {
   bannerSlider?: BannerSliderContent;
   studioWarRoom?: StudioWarRoomContent;
+  hiring?: HiringContent;
   hero: {
     eyebrow: string;
     title1: string;
@@ -642,8 +671,101 @@ export const defaultGallery: GalleryContent = {
   items: galleryItems
 };
 
+export const defaultHiring: HiringContent = {
+  badgeHi: "🚀 करियर एवं भर्ती | Join Our Team",
+  badgeEn: "🚀 We're Hiring | Join Our Team",
+  headingHi: "We're Hiring | वर्कफोर्स इन्फोटेक से जुड़ें",
+  headingEn: "We're Hiring | Join Workforce Infotech Pvt. Ltd.",
+  taglineHi: "क्या आप रचनात्मकता, मार्केटिंग, सेल्स या मीडिया के प्रति जुनूनी हैं? हम अपनी टीम का विस्तार कर रहे हैं और हमारे साथ आगे बढ़ने के लिए प्रतिभाशाली प्रोफेशनल्स की तलाश कर रहे हैं।",
+  taglineEn: "Are you passionate about creativity, marketing, sales, or media? We're expanding our team and looking for talented professionals to grow with us.",
+  location: "कानपुर, उत्तर प्रदेश (Kanpur, Uttar Pradesh)",
+  phone: "9621762121",
+  email1: "sales@workforceinfotech.com",
+  email2: "election@workforceinfotech.com",
+  eligibilityNoteHi: "कौशल युक्त फ्रेशर्स एवं अनुभवी उम्मीदवार दोनों सादर आमंत्रित हैं।",
+  eligibilityNoteEn: "Freshers with skills and experienced candidates are both welcome to apply.",
+  offersHi: [
+    "आकर्षक वेतन + प्रदर्शन आधारित प्रोत्साहन (Attractive Salary + Performance Incentives)",
+    "पेशेवर एवं सौहार्दपूर्ण कार्य वातावरण (Professional & Friendly Work Environment)",
+    "करियर में तीव्र प्रगति के अवसर (Career Growth Opportunities)",
+    "डिजिटल मार्केटिंग, मीडिया एवं लाइव प्रोजेक्ट्स का वास्तविक अनुभव (Hands-on Experience)"
+  ],
+  offersEn: [
+    "Attractive Salary + Performance Incentives",
+    "Professional & Friendly Work Environment",
+    "Career Growth Opportunities",
+    "Hands-on Experience with Digital Marketing, Media & Business Projects"
+  ],
+  positions: [
+    {
+      id: "pos-1",
+      title: "Social Media Handler",
+      icon: "📱",
+      category: "सोशल मीडिया एवं डिजिटल",
+      location: "Kanpur, UP",
+      type: "Full Time / On-Site",
+      experience: "Freshers & Experienced"
+    },
+    {
+      id: "pos-2",
+      title: "Graphic Designer",
+      icon: "🎨",
+      category: "क्रिएटिव एवं विजुअल डिजाइन",
+      location: "Kanpur, UP",
+      type: "Full Time / On-Site",
+      experience: "Freshers & Experienced"
+    },
+    {
+      id: "pos-3",
+      title: "Video Editor",
+      icon: "🎥",
+      category: "वीडियो प्रोडक्शन एवं रील्स",
+      location: "Kanpur, UP",
+      type: "Full Time / On-Site",
+      experience: "Freshers & Experienced"
+    },
+    {
+      id: "pos-4",
+      title: "Cameraman",
+      icon: "📸",
+      category: "फील्ड शूट एवं मीडिया कवरेज",
+      location: "Kanpur, UP",
+      type: "Full Time / Field",
+      experience: "Freshers & Experienced"
+    },
+    {
+      id: "pos-5",
+      title: "Tele Caller",
+      icon: "☎️",
+      category: "वोटर आउटरीच एवं कॉलिंग",
+      location: "Kanpur, UP",
+      type: "Full Time / On-Site",
+      experience: "Freshers & Experienced"
+    },
+    {
+      id: "pos-6",
+      title: "IT Sales Executive / Sales Person",
+      icon: "💼",
+      category: "आईटी एवं पॉलिटिकल सेल्स",
+      location: "Kanpur, UP",
+      type: "Full Time / Field",
+      experience: "Freshers & Experienced"
+    },
+    {
+      id: "pos-7",
+      title: "Hotel Manager",
+      icon: "🏨",
+      category: "हॉस्पिटैलिटी एवं ऑपरेशंस",
+      location: "Kanpur, UP",
+      type: "Full Time / On-Site",
+      experience: "Freshers & Experienced"
+    }
+  ]
+};
+
 export const defaultHomepage: HomepageContent = {
   studioWarRoom: defaultStudioWarRoom,
+  hiring: defaultHiring,
   bannerSlider: {
     slides: [
       {

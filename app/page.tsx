@@ -16,6 +16,7 @@ import TeamSection from "@/components/home/TeamSection";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import SolutionShowcase from "@/components/home/SolutionShowcase";
 import GalleryTeaser from "@/components/home/GalleryTeaser";
+import HiringSection from "@/components/home/HiringSection";
 import ComplianceSection from "@/components/home/ComplianceSection";
 import FaqPreview from "@/components/home/FaqPreview";
 import FinalCta from "@/components/home/FinalCta";
@@ -96,7 +97,10 @@ export default function HomePage() {
       {/* 17. Authentic Ground & War Room Photo Gallery Showcase */}
       <GalleryTeaser />
 
-      {/* 18. Responsible & Rule-Compliant Campaigning (ECI / TRAI / DPDP) */}
+      {/* 18. Careers & Talent Acquisition — We Are Hiring (7 Open Roles) */}
+      <HiringSection />
+
+      {/* 19. Responsible & Rule-Compliant Campaigning (ECI / TRAI / DPDP) */}
       <ComplianceSection />
 
       {/* 19. FAQ Preview */}

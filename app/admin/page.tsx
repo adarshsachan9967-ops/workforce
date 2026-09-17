@@ -16,9 +16,11 @@ import {
   defaultHomepage,
   defaultPages,
   defaultFaqs,
-  defaultGallery
+  defaultGallery,
+  defaultHiring
 } from "@/lib/content-schema";
 import {
+  Briefcase,
   Shield,
   Users,
   CheckCircle2,
@@ -62,6 +64,7 @@ import HomepageCms from "@/components/admin/HomepageCms";
 import PagesCms from "@/components/admin/PagesCms";
 import GalleryCms from "@/components/admin/GalleryCms";
 import TrackRecordCms from "@/components/admin/TrackRecordCms";
+import HiringCms from "@/components/admin/HiringCms";
 import MediaManagerCms from "@/components/admin/MediaManagerCms";
 import GoogleAnalyticsCms from "@/components/admin/GoogleAnalyticsCms";
 
@@ -78,7 +81,7 @@ export default function AdminDashboardPage() {
 
   // Active Navigation Tab
   const [activeTab, setActiveTab] = useState<
-    "leads" | "header" | "contact" | "home" | "victories" | "pages" | "gallery" | "faqs" | "footer" | "media" | "security" | "analytics"
+    "leads" | "header" | "contact" | "home" | "victories" | "hiring" | "pages" | "gallery" | "faqs" | "footer" | "media" | "security" | "analytics"
   >("leads");
 
   // Core Data Stores
@@ -468,6 +471,18 @@ export default function AdminDashboardPage() {
           >
             <Trophy className="w-4 h-4 text-accent-gold" />
             <span>चुनावी ट्रैक रिकॉर्ड व परिणाम</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("hiring")}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+              activeTab === "hiring"
+                ? "bg-accent-orange text-white shadow-md shadow-accent-orange/25"
+                : "text-slate-400 hover:text-white hover:bg-navy-800"
+            }`}
+          >
+            <Briefcase className="w-4 h-4 text-accent-gold" />
+            <span>करियर व भर्ती (Hiring CMS)</span>
           </button>
 
           <button
@@ -1581,6 +1596,23 @@ export default function AdminDashboardPage() {
               setHomepage({
                 ...homepage,
                 trackRecord: updatedTr
+              });
+            }}
+            saveSection={saveSection}
+            saving={saving}
+          />
+        )}
+
+        {/* =========================================================
+            TAB 4.6: HIRING & CAREERS CMS (DEDICATED CMS)
+            ========================================================= */}
+        {activeTab === "hiring" && (
+          <HiringCms
+            hiring={homepage.hiring || defaultHiring}
+            setHiring={(updatedHiring) => {
+              setHomepage({
+                ...homepage,
+                hiring: updatedHiring
               });
             }}
             saveSection={saveSection}
