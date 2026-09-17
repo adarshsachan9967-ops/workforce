@@ -95,7 +95,94 @@ export interface SiteSettings {
   googleSearchConsoleCode?: string;
 }
 
+export interface BannerSlideItem {
+  id: number;
+  src: string;
+  alt: string;
+  titleHi: string;
+  titleEn: string;
+  subtitleHi: string;
+  subtitleEn: string;
+  ctaTextHi: string;
+  ctaTextEn: string;
+  ctaLink: string;
+  badgeHi: string;
+  badgeEn: string;
+}
+
+export interface BannerSliderContent {
+  slides: BannerSlideItem[];
+  tickerHeadingHi: string;
+  tickerHeadingEn: string;
+  tickerServicesHi: string;
+  tickerServicesEn: string;
+  button1TextHi: string;
+  button1TextEn: string;
+  button1Link: string;
+  button2TextHi: string;
+  button2TextEn: string;
+  button2Link: string;
+}
+
+export interface VictoryLeaderItem {
+  id: string;
+  name: string;
+  roleHi: string;
+  roleEn: string;
+  constituency: string;
+  election: string;
+  partyBadge?: string;
+  status: "winner" | "runner-up" | "featured";
+  votes?: string;
+  highlight?: string;
+}
+
+export interface TrackRecordContent {
+  badgeHi: string;
+  badgeEn: string;
+  headingHi: string;
+  headingEn: string;
+  subHi: string;
+  subEn: string;
+  items: VictoryLeaderItem[];
+}
+
+export interface FounderMessageContent {
+  badgeHi: string;
+  badgeEn: string;
+  headingHi: string;
+  headingEn: string;
+  photoUrl: string;
+  founderName: string;
+  founderRoleHi: string;
+  founderRoleEn: string;
+  companyName: string;
+  stat1Value: string;
+  stat1LabelHi: string;
+  stat1LabelEn: string;
+  stat2Value: string;
+  stat2LabelHi: string;
+  stat2LabelEn: string;
+  salutationHi: string;
+  salutationEn: string;
+  p1Hi: string;
+  p1En: string;
+  p2Hi: string;
+  p2En: string;
+  p3Hi: string;
+  p3En: string;
+  quoteBoxHi: string;
+  quoteBoxEn: string;
+  button1TextHi: string;
+  button1TextEn: string;
+  button1Link: string;
+  button2TextHi: string;
+  button2TextEn: string;
+  button2Link: string;
+}
+
 export interface HomepageContent {
+  bannerSlider?: BannerSliderContent;
   hero: {
     eyebrow: string;
     title1: string;
@@ -105,6 +192,8 @@ export interface HomepageContent {
     primaryCta: string;
     secondaryCta: string;
     teamBadge: string;
+    teamSubtitle?: string;
+    tags?: string[];
   };
   telemetry: {
     coveragePercent: string;
@@ -112,6 +201,19 @@ export interface HomepageContent {
     activeFieldTeams: string;
     loggedActivities: string;
     tickerEvents: string[];
+    dashboardTitle?: string;
+    dashboardSubtitle?: string;
+    liveFeedBadge?: string;
+    videoSrc?: string;
+    audioSrc?: string;
+    youtubeUrl?: string;
+    videoWatermark?: string;
+    stat1Sub?: string;
+    stat2Sub?: string;
+    stat3Sub?: string;
+    stat4Sub?: string;
+    footerNote1?: string;
+    footerNote2?: string;
   };
   trustStrip: {
     items: {
@@ -122,6 +224,8 @@ export interface HomepageContent {
       descEn: string;
     }[];
   };
+  trackRecord?: TrackRecordContent;
+  founderMessage?: FounderMessageContent;
   aboutTeaser: {
     badgeHi: string;
     badgeEn: string;
@@ -414,6 +518,62 @@ export const defaultNavigation: NavigationItem[] = [
 ];
 
 export const defaultHomepage: HomepageContent = {
+  bannerSlider: {
+    slides: [
+      {
+        id: 1,
+        src: "/images/banners/banner-1.jpeg",
+        alt: "Taking Your Message To Every Voter - Workforce Infotech",
+        titleHi: "हर मतदाता तक आपका संदेश — ऑन ग्राउंड, ऑन स्क्रीन, ऑनलाइन",
+        titleEn: "Taking Your Message To Every Voter — On Ground, Screen & Online",
+        subtitleHi: "एलईडी प्रचार वैन • मीडिया बाइट्स • इन्फ्लुएंसर इंटरव्यू • सोशल मीडिया अभियान • जमीनी सक्रियता • चुनावी डेटा सपोर्ट",
+        subtitleEn: "LED Campaign Vans • Media Bytes • Influencer Interviews • Social Media • Grassroots Activation • Data Analytics",
+        ctaTextHi: "अभियान सेवाएँ देखें",
+        ctaTextEn: "Explore Campaign Verticals",
+        ctaLink: "/services",
+        badgeHi: "360° चुनावी प्रचार समाधान",
+        badgeEn: "360° Integrated Campaign"
+      },
+      {
+        id: 2,
+        src: "/images/banners/banner-2.jpeg",
+        alt: "Turning Political Vision Into People's Victory - UP Elections 2027",
+        titleHi: "राजनीतिक विजन को जन-विजय में बदलना — उत्तर प्रदेश चुनाव 2027",
+        titleEn: "Turning Political Vision Into People's Victory — UP Elections 2027",
+        subtitleHi: "वोटर डेटा मैनेजमेंट • सोशल मीडिया • चुनावी रणनीति • वीडियो प्रोडक्शन • ग्राउंड टीम • ओपिनियन पोल • वार रूम सपोर्ट",
+        subtitleEn: "Voter Data • Strategic Planning • Video Production • Ground Teams • Opinion Polls • Training & War Room IT",
+        ctaTextHi: "वार रूम परामर्श बुक करें",
+        ctaTextEn: "Book War Room Consultation",
+        ctaLink: "/contact",
+        badgeHi: "मिशन यूपी विधानसभा 2027",
+        badgeEn: "Mission UP Assembly 2027"
+      },
+      {
+        id: 3,
+        src: "/images/banners/banner-3.jpeg",
+        alt: "Social Media Management For A Stronger Democracy - Workforce Infotech",
+        titleHi: "मजबूत लोकतंत्र के लिए सोशल मीडिया प्रबंधन व डिजिटल कैंपेन",
+        titleEn: "Social Media Management & Digital Dominance for Victory",
+        subtitleHi: "पेज मैनेजमेंट • रील्स व वीडियो एडिटिंग • एआई वीडियो क्रिएशन • पॉलिटिकल नैरेटिव • वेरिफिकेशन • फॉलोअर ग्रोथ",
+        subtitleEn: "Page Management • Viral Reels & Video Editing • AI Content • Narrative Architecture • Verification & Growth",
+        ctaTextHi: "फोटो व वीडियो गैलरी देखें",
+        ctaTextEn: "View Campaign Gallery",
+        ctaLink: "/gallery",
+        badgeHi: "डिजिटल व सोशल मीडिया संभाग",
+        badgeEn: "Digital & Social Wing"
+      }
+    ],
+    tickerHeadingHi: "हर मतदाता तक आपका संदेश — ऑन ग्राउंड, ऑन स्क्रीन, ऑनलाइन",
+    tickerHeadingEn: "Taking Your Message To Every Voter — On Ground, On Screen, Online",
+    tickerServicesHi: "एलईडी प्रचार वैन • मीडिया बाइट्स • इन्फ्लुएंसर इंटरव्यू • सोशल मीडिया अभियान • जमीनी सक्रियता • चुनावी डेटा सपोर्ट",
+    tickerServicesEn: "LED Campaign Vans • Media Bytes • Influencer Interviews • Social Media • Grassroots Activation • Data Analytics",
+    button1TextHi: "अभियान सेवाएँ देखें",
+    button1TextEn: "Explore Services",
+    button1Link: "/services",
+    button2TextHi: "गैलरी (26+)",
+    button2TextEn: "Gallery (26+)",
+    button2Link: "/gallery"
+  },
   hero: {
     eyebrow: "उत्तर प्रदेश विधानसभा चुनाव 2027",
     title1: "आपका चुनाव।",
@@ -422,7 +582,9 @@ export const defaultHomepage: HomepageContent = {
     tagline: "आप जनता से जुड़िए, चुनाव प्रबंधन की जिम्मेदारी हमें दीजिए।",
     primaryCta: "अभियान पर चर्चा करें",
     secondaryCta: "हमारी सेवाएं देखें",
-    teamBadge: "1000+ प्रोफेशनल टीम"
+    teamBadge: "1000+ प्रोफेशनल टीम",
+    teamSubtitle: "उत्तर प्रदेश अभियान",
+    tags: ["Data & Research", "Digital Campaign", "Ground Execution", "War Room", "Media PR"]
   },
   telemetry: {
     coveragePercent: "87%",
@@ -433,17 +595,227 @@ export const defaultHomepage: HomepageContent = {
       "बूथ #312: वोटर पर्ची वितरण 92% पूर्ण",
       "एलईडी वैन #04: सेक्टर-B चौपाल वीडियो स्क्रीनिंग लाइव",
       "कॉल सेंटर डेस्क: 2,410 कॉल्स डिस्पैच (सकारात्मक 78%)"
-    ]
+    ],
+    dashboardTitle: "CAMPAIGN INTELLIGENCE DASHBOARD",
+    dashboardSubtitle: "UP-AC2027 // WAR ROOM ENGINE",
+    liveFeedBadge: "LIVE FEED",
+    videoSrc: "/videos/campaign-video.mp4",
+    audioSrc: "/videos/campaign-audio.m4a",
+    youtubeUrl: "https://youtube.com/shorts/5bCg8EKiHSM",
+    videoWatermark: "WORKFORCE INFOTECH (IPR)",
+    stat1Sub: "+4.2% आज",
+    stat2Sub: "100% एक्टिव",
+    stat3Sub: "GPS ट्रैक्ड",
+    stat4Sub: "लॉग्ड",
+    footerNote1: "निजी एवं कस्टमाइज्ड क्लाउड आर्किटेक्चर",
+    footerNote2: "सचित्र लाइव फीड (Live Illustrative)"
   },
   trustStrip: {
     items: [
       { stat: "1000+", labelHi: "प्रोफेशनल टीम", labelEn: "Professional Team", descHi: "रणनीति, रिसर्च एवं फील्ड विशेषज्ञ", descEn: "Strategy, research & field ops" },
       { stat: "DATA", labelHi: "आधारित रणनीति", labelEn: "Data Strategy", descHi: "बूथ-वार सांख्यिकी एवं जनसांख्यिकी", descEn: "Booth analytics & demographic profiling" },
       { stat: "DIGITAL", labelHi: "मल्टी-चैनल अभियान", labelEn: "Multi-Channel", descHi: "मेटा, यूट्यूब, रील्स एवं नैरेटिव", descEn: "Meta, YouTube, Reels & Narrative" },
-      { stat: "GROUND", labelHi: "फील्ड एक्सीक्यूशन", labelEn: "Ground Execution", descHi: "बूथ समिति एवं डोर-टू-डोर संपर्क", descEn: "Booth committees & door-to-door" },
+      { stat: "GROUND", labelHi: "फील्ड एक्सीक्यूशन", labelEn: "Ground Execution", descHi: "बूथ कमेटियां, बस्ता व डोर-टू-डोर", descEn: "Booth committees & door-to-door" },
       { stat: "TECHNOLOGY", labelHi: "रियल-टाइम मॉनिटरिंग", labelEn: "Real-time Tech", descHi: "डैशबोर्ड एवं कार्यकर्ता मोबाइल ऐप", descEn: "Executive dashboards & field apps" },
       { stat: "MEDIA", labelHi: "पब्लिक कम्युनिकेशन", labelEn: "Public Media", descHi: "प्रेस, पीआर, पॉडकास्ट एवं आउटडोर", descEn: "Press notes, PR, podcasts & LED vans" }
     ]
+  },
+  trackRecord: {
+    badgeHi: "ट्रैक रिकॉर्ड व चुनावी सफलताएं (TRACK RECORD)",
+    badgeEn: "Electoral Track Record & Proven Victories",
+    headingHi: "हमारे क्लाइंट्स एवं समर्थित जनप्रतिनिधियों की विजय यात्रा",
+    headingEn: "Victorious Journey of Our Clients & Supported Leaders",
+    subHi: "लोकसभा, विधानसभा, विधान परिषद, नगर निकाय और त्रिस्तरीय पंचायत चुनावों में वर्कफोर्स इन्फोटेक की चुनावी रणनीति का ऐतिहासिक परिणाम।",
+    subEn: "Proven strategic excellence delivering landmark victories across Lok Sabha, Vidhan Sabha, MLC, and Urban Local Body elections.",
+    items: [
+      {
+        id: "tr-1",
+        name: "जय प्रकाश रावत",
+        roleHi: "सांसद (MP) — हरदोई लोकसभा 2024",
+        roleEn: "Member of Parliament — Hardoi Lok Sabha 2024",
+        constituency: "हरदोई (Hardoi)",
+        election: "लोकसभा चुनाव 2024",
+        partyBadge: "BJP",
+        status: "winner",
+        highlight: "विजयी सांसद"
+      },
+      {
+        id: "tr-2",
+        name: "आलोक मिश्र",
+        roleHi: "लोकसभा प्रत्याशी — कानपुर लोकसभा 2024",
+        roleEn: "Lok Sabha Candidate — Kanpur Lok Sabha 2024",
+        constituency: "कानपुर नगर (Kanpur)",
+        election: "लोकसभा चुनाव 2024",
+        partyBadge: "INDIA / INC",
+        status: "runner-up",
+        highlight: "उपविजेता"
+      },
+      {
+        id: "tr-3",
+        name: "संगीता राजवंशी",
+        roleHi: "लोकसभा प्रत्याशी — मिश्रिख लोकसभा 2024",
+        roleEn: "Lok Sabha Candidate — Misrikh Lok Sabha 2024",
+        constituency: "मिश्रिख (Misrikh)",
+        election: "लोकसभा चुनाव 2024",
+        partyBadge: "SP",
+        status: "runner-up",
+        highlight: "उपविजेता"
+      },
+      {
+        id: "tr-4",
+        name: "अजीत सिंह पाल",
+        roleHi: "राज्यमंत्री, उत्तर प्रदेश सरकार",
+        roleEn: "Minister of State, Government of UP",
+        constituency: "सिकंदरा (Sikandra)",
+        election: "यूपी विधानसभा चुनाव 2022",
+        partyBadge: "BJP",
+        status: "winner",
+        highlight: "विजयी विधायक एवं राज्यमंत्री"
+      },
+      {
+        id: "tr-5",
+        name: "सरोज कुरील",
+        roleHi: "विधायक — 218 घाटमपुर विधानसभा",
+        roleEn: "MLA — 218 Ghatampur Assembly",
+        constituency: "218 घाटमपुर (Ghatampur)",
+        election: "यूपी विधानसभा चुनाव 2022",
+        partyBadge: "Apna Dal (S)",
+        status: "winner",
+        highlight: "विजयी विधायक"
+      },
+      {
+        id: "tr-6",
+        name: "सतीश कुमार निगम",
+        roleHi: "पूर्व विधायक — कल्याणपुर विधानसभा",
+        roleEn: "Former MLA — Kalyanpur Assembly",
+        constituency: "कल्याणपुर, कानपुर",
+        election: "यूपी विधानसभा चुनाव 2022",
+        partyBadge: "SP",
+        status: "winner",
+        highlight: "विजयी विधायक"
+      },
+      {
+        id: "tr-7",
+        name: "चौधरी सागर सिंह",
+        roleHi: "विधानसभा प्रत्याशी — महोबा विधानसभा 230",
+        roleEn: "Assembly Candidate — Mahoba 230",
+        constituency: "महोबा 230 (Mahoba)",
+        election: "यूपी विधानसभा चुनाव 2022",
+        partyBadge: "INC",
+        status: "featured",
+        highlight: "मजबूत जनअभियान"
+      },
+      {
+        id: "tr-8",
+        name: "डॉ. रतनपाल सिंह",
+        roleHi: "एम.एल.सी. — देवरिया, कुशीनगर",
+        roleEn: "MLC — Deoria & Kushinagar",
+        constituency: "देवरिया-कुशीनगर (Deoria)",
+        election: "यूपी विधान परिषद (MLC) चुनाव",
+        partyBadge: "BJP",
+        status: "winner",
+        highlight: "विजयी एमएलसी (पूर्व अध्यक्ष छात्र सभा, गोरखुपर वि.वि.)"
+      },
+      {
+        id: "tr-9",
+        name: "अविनाश सिंह चौहान",
+        roleHi: "एम.एल.सी. — कानपुर, फतेहपुर",
+        roleEn: "MLC — Kanpur & Fatehpur",
+        constituency: "कानपुर-फतेहपुर (Kanpur)",
+        election: "यूपी विधान परिषद (MLC) चुनाव",
+        partyBadge: "BJP",
+        status: "winner",
+        highlight: "विजयी एमएलसी"
+      },
+      {
+        id: "tr-10",
+        name: "वन्दना बाजपेई",
+        roleHi: "पूर्व महापौर प्रत्याशी — कानपुर नगर",
+        roleEn: "Mayor Candidate — Kanpur Nagar",
+        constituency: "कानपुर नगर निगम",
+        election: "नगर निगम चुनाव उत्तर प्रदेश",
+        partyBadge: "SP",
+        status: "runner-up",
+        votes: "2,82,000+ मत",
+        highlight: "प्राप्त मत: 2,82,000 (उपविजेता)"
+      },
+      {
+        id: "tr-11",
+        name: "कार्तिकेय शुक्ला",
+        roleHi: "जिला पंचायत सदस्य (निर्विरोध निर्वाचित)",
+        roleEn: "Zila Panchayat Member (Uncontested Winner)",
+        constituency: "कानपुर नगर",
+        election: "जिला पंचायत 2020 उत्तर प्रदेश",
+        partyBadge: "SP",
+        status: "winner",
+        highlight: "निर्विरोध विजयी सदस्य"
+      },
+      {
+        id: "tr-12",
+        name: "राजू दिवाकर",
+        roleHi: "जिला पंचायत सदस्य — कानपुर नगर",
+        roleEn: "Zila Panchayat Member — Kanpur Nagar",
+        constituency: "कानपुर नगर",
+        election: "जिला पंचायत 2020 उत्तर प्रदेश",
+        partyBadge: "SP",
+        status: "winner",
+        highlight: "विजयी सदस्य"
+      },
+      {
+        id: "tr-13",
+        name: "रामजी गुप्ता",
+        roleHi: "अध्यक्ष — नगर पंचायत रूरा",
+        roleEn: "Chairman — Nagar Panchayat Rura",
+        constituency: "रूरा, कानपुर देहात",
+        election: "नगर निकाय चुनाव उत्तर प्रदेश",
+        partyBadge: "BJP",
+        status: "winner",
+        highlight: "विजयी अध्यक्ष"
+      },
+      {
+        id: "tr-14",
+        name: "अंकित मौर्य",
+        roleHi: "पार्षद — वार्ड नं. 04, ग्वालटोली कानपुर",
+        roleEn: "Corporator — Ward 04 Gwaltoli",
+        constituency: "ग्वालटोली, कानपुर",
+        election: "नगर निगम चुनाव उत्तर प्रदेश",
+        status: "winner",
+        highlight: "विजयी पार्षद"
+      }
+    ]
+  },
+  founderMessage: {
+    badgeHi: "संस्थापक संदेश (FOUNDER'S DESK)",
+    badgeEn: "Founder & CEO's Message",
+    headingHi: "“लोकतंत्र केवल चुनाव जीतने का माध्यम नहीं, जनता के विश्वास व विकास का आधार है।”",
+    headingEn: "“Democracy is Not Just About Winning, It Is Grounded in People’s Trust & Progress.”",
+    photoUrl: "/images/gallery/gallery-1.jpeg",
+    founderName: "अनुज तिवारी (Anuj Tiwari)",
+    founderRoleHi: "FOUNDER & CEO // राजनीतिक रणनीतिकार",
+    founderRoleEn: "Founder & CEO // Political Strategist",
+    companyName: "वर्कफोर्स इन्फोटेक प्राइवेट लिमिटेड (Workforce Infotech Pvt. Ltd.)",
+    stat1Value: "10+ वर्ष",
+    stat1LabelHi: "चुनावी रणनीति अनुभव",
+    stat1LabelEn: "Strategic Consulting Experience",
+    stat2Value: "50+ चुनाव",
+    stat2LabelHi: "सफल अभियान प्रबंधन",
+    stat2LabelEn: "Campaigns Successfully Managed",
+    salutationHi: "प्रिय साथियों व भावी जनप्रतिनिधियों,",
+    salutationEn: "Dear Leaders, Colleagues & Future Representatives,",
+    p1Hi: "इसी सोच के साथ Workforce Infotech Pvt. Ltd. की स्थापना की गई, ताकि आधुनिक तकनीक, सटीक रणनीति और समर्पित टीम के माध्यम से चुनावी अभियानों को नई दिशा और नई पहचान दी जा सके।",
+    p1En: "With this core vision, Workforce Infotech Pvt. Ltd. was founded to usher a new standard of excellence in electoral consulting through modern tech, empirical data science, and dedicated on-ground forces.",
+    p2Hi: "आज हमें गर्व है कि हमारी टीम ने देश के विभिन्न राज्यों में अनेक चुनावी अभियानों, डिजिटल कैंपेन, जनसंपर्क, सर्वे, मीडिया मैनेजमेंट और ग्राउंड के माध्यम से अपनी विश्वसनीय पहचान बनाई है। यह उपलब्धि हमारी टीम की मेहनत, हमारे सहयोगियों के विश्वास और हमारे क्लाइंट्स के निरंतर समर्थन का परिणाम है।",
+    p2En: "Today, we take immense pride in having delivered successful campaigns across states through digital media, voter surveys, media management, and disciplined booth operations.",
+    p3Hi: "हमारा उद्देश्य केवल चुनाव प्रबंधन करना नहीं, बल्कि प्रत्येक उम्मीदवार, राजनीतिक दल और संगठन के लिए ऐसी कार्ययोजना तैयार करना है, जो जनता से सीधा संवाद स्थापित करे, उनकी अपेक्षाओं को समझे और लोकतांत्रिक मूल्यों को मज़बूत बनाए।",
+    p3En: "Our mission transcends mere campaign management; we engineer strategic blueprints that connect candidates authentically with their electorate and strengthen democratic values.",
+    quoteBoxHi: "“भविष्य में भी हम नवाचार, पारदर्शिता और उत्कृष्टता के साथ चुनाव प्रबंधन के क्षेत्र में नए मानक स्थापित करने के लिए प्रतिबद्ध रहेंगे। आपका विश्वास ही हमारी सबसे बड़ी ताकत है।”",
+    quoteBoxEn: "“We remain steadfastly committed to setting new benchmarks in electoral consulting with innovation, transparency, and uncompromised dedication.”",
+    button1TextHi: "रणनीतिकार टीम से सीधा संवाद करें",
+    button1TextEn: "Consult Strategy Team",
+    button1Link: "/contact",
+    button2TextHi: "कंपनी परिचय पढ़ें",
+    button2TextEn: "Company Profile",
+    button2Link: "/about"
   },
   aboutTeaser: {
     badgeHi: "संस्थागत विजन",

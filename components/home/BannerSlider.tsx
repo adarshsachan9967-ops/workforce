@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Pause, Play, Sparkles, ArrowRight, ShieldCheck } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useContent } from "@/context/ContentContext";
 
 interface BannerSlide {
   id: number;
@@ -21,7 +22,7 @@ interface BannerSlide {
   badgeEn: string;
 }
 
-const slides: BannerSlide[] = [
+const defaultSlides: BannerSlide[] = [
   {
     id: 1,
     src: "/images/banners/banner-1.jpeg",
@@ -68,6 +69,10 @@ const slides: BannerSlide[] = [
 
 export default function BannerSlider() {
   const { language } = useLanguage();
+  const { homepage } = useContent();
+  const bannerData = homepage?.bannerSlider;
+  const slides = (bannerData?.slides && bannerData.slides.length > 0) ? bannerData.slides : defaultSlides;
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -221,27 +226,37 @@ export default function BannerSlider() {
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-accent-orange animate-pulse" />
               <span className="text-xs font-bold text-slate-900 dark:text-white font-hindi">
-                {language === "hi" ? active.titleHi : active.titleEn}
+                {language === "hi" 
+                  ? (bannerData?.tickerHeadingHi || active.titleHi)
+                  : (bannerData?.tickerHeadingEn || active.titleEn)}
               </span>
             </div>
             <p className="text-[11px] text-slate-600 dark:text-slate-400 font-hindi line-clamp-1">
-              {language === "hi" ? active.subtitleHi : active.subtitleEn}
+              {language === "hi"
+                ? (bannerData?.tickerServicesHi || active.subtitleHi)
+                : (bannerData?.tickerServicesEn || active.subtitleEn)}
             </p>
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
             <Link
-              href={active.ctaLink}
+              href={bannerData?.button1Link || active.ctaLink}
               className="px-3.5 py-1.5 rounded-lg bg-accent-orange hover:bg-accent-orange-hover text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow"
             >
-              <span>{language === "hi" ? active.ctaTextHi : active.ctaTextEn}</span>
+              <span>
+                {language === "hi" 
+                  ? (bannerData?.button1TextHi || active.ctaTextHi)
+                  : (bannerData?.button1TextEn || active.ctaTextEn)}
+              </span>
               <ArrowRight className="w-3 h-3" />
             </Link>
             <Link
-              href="/gallery"
+              href={bannerData?.button2Link || "/gallery"}
               className="px-3 py-1.5 rounded-lg bg-white dark:bg-navy-800 hover:bg-slate-50 dark:hover:bg-navy-750 text-slate-700 dark:text-slate-300 dark:hover:text-white border border-slate-300 dark:border-navy-700 text-xs font-semibold transition-colors"
             >
-              {language === "hi" ? "गैलरी (26+)" : "Gallery (26+)"}
+              {language === "hi"
+                ? (bannerData?.button2TextHi || "गैलरी (26+)")
+                : (bannerData?.button2TextEn || "Gallery (26+)")}
             </Link>
           </div>
         </div>

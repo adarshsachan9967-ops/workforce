@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { HomepageContent } from "@/lib/content-schema";
+import {
+  HomepageContent,
+  defaultHomepage,
+  BannerSlideItem,
+  VictoryLeaderItem
+} from "@/lib/content-schema";
 import {
   Save,
   Layers,
@@ -19,7 +24,15 @@ import {
   PhoneCall,
   CheckCircle2,
   Plus,
-  Trash2
+  Trash2,
+  Image as ImageIcon,
+  Trophy,
+  UserCheck,
+  Upload,
+  ArrowUp,
+  ArrowDown,
+  Video,
+  ExternalLink
 } from "lucide-react";
 
 interface HomepageCmsProps {
@@ -35,24 +48,64 @@ export default function HomepageCms({
   saveSection,
   saving
 }: HomepageCmsProps) {
-  const [activeSubTab, setActiveSubTab] = useState<string>("hero");
+  const [activeSubTab, setActiveSubTab] = useState<string>("banners");
+  const [uploadingField, setUploadingField] = useState<string | null>(null);
+
+  // Safe fallback accessors
+  const bannerSlider = homepage.bannerSlider || defaultHomepage.bannerSlider!;
+  const trackRecord = homepage.trackRecord || defaultHomepage.trackRecord!;
+  const founderMessage = homepage.founderMessage || defaultHomepage.founderMessage!;
+  const telemetry = homepage.telemetry || defaultHomepage.telemetry;
+
+  const handleImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onSuccess: (url: string) => void,
+    fieldKey: string
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingField(fieldKey);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "workforce");
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok && data.success && data.url) {
+        onSuccess(data.url);
+      } else {
+        alert(data.error || "अपलोड विफल रहा। कृपया पुनः प्रयास करें।");
+      }
+    } catch (err: any) {
+      alert("अपलोड त्रुटि: " + (err.message || "नेटवर्क समस्या"));
+    } finally {
+      setUploadingField(null);
+      e.target.value = "";
+    }
+  };
 
   const subTabs = [
-    { id: "hero", label: "1. हीरो व टैगलाइन", icon: Sparkles },
-    { id: "telemetry", label: "2. लाइव टेलीमेट्री", icon: Radio },
-    { id: "trust", label: "3. ट्रस्ट स्ट्रिप (6 आंकड़े)", icon: Award },
-    { id: "about", label: "4. अबाउट टीज़र व कार्ड्स", icon: Shield },
-    { id: "services", label: "5. 11 चुनावी सेवाएं", icon: Layers },
-    { id: "pillars", label: "6. 7 मजबूत स्तंभ", icon: Workflow },
-    { id: "process", label: "7. 7-स्टेप कार्यप्रणाली", icon: Workflow },
-    { id: "command", label: "8. कमांड सेंटर मैट्रिक्स", icon: ShieldAlert },
-    { id: "map", label: "9. यूपी रणनीतिक मैप", icon: MapPin },
-    { id: "why", label: "10. वर्कफोर्स क्यों चुनें", icon: Award },
-    { id: "team", label: "11. 1000+ टीम विंग्स", icon: Users },
-    { id: "tech", label: "12. टेक अवसंरचना", icon: Cpu },
-    { id: "solutions", label: "13. सॉल्यूशंस मॉडल", icon: Sparkles },
-    { id: "compliance", label: "14. विधिक अनुपालन", icon: Scale },
-    { id: "finalCta", label: "15. फ़ाइनल बैनर", icon: PhoneCall },
+    { id: "banners", label: "1. बैनर स्लाइडर व टिकर", icon: ImageIcon },
+    { id: "hero", label: "2. मुख्य शीर्षक (Hero)", icon: Sparkles },
+    { id: "telemetry", label: "3. वॉर रूम डैशबोर्ड व वीडियो", icon: Radio },
+    { id: "victories", label: "4. चुनावी ट्रैक रिकॉर्ड व विजयी नेता", icon: Trophy },
+    { id: "founder", label: "5. संस्थापक संदेश (Founder's Desk)", icon: UserCheck },
+    { id: "trust", label: "6. 6 आंकड़े (Trust Strip)", icon: Award },
+    { id: "about", label: "7. अबाउट टीज़र व कार्ड्स", icon: Shield },
+    { id: "services", label: "8. 11 चुनावी सेवाएं", icon: Layers },
+    { id: "pillars", label: "9. 7 मजबूत स्तंभ", icon: Workflow },
+    { id: "process", label: "10. 7-स्टेप कार्यप्रणाली", icon: Workflow },
+    { id: "command", label: "11. कमांड सेंटर मैट्रिक्स", icon: ShieldAlert },
+    { id: "map", label: "12. यूपी रणनीतिक मैप", icon: MapPin },
+    { id: "why", label: "13. वर्कफोर्स क्यों चुनें", icon: Award },
+    { id: "team", label: "14. 1000+ टीम विंग्स", icon: Users },
+    { id: "tech", label: "15. टेक अवसंरचना", icon: Cpu },
+    { id: "solutions", label: "16. सॉल्यूशंस मॉडल", icon: Sparkles },
+    { id: "compliance", label: "17. विधिक अनुपालन", icon: Scale },
+    { id: "finalCta", label: "18. फ़ाइनल बैनर", icon: PhoneCall },
   ];
 
   return (
@@ -98,13 +151,519 @@ export default function HomepageCms({
       </div>
 
       {/* =======================================================
-          1. HERO & TAGLINE
+          1. BANNERS SLIDER & TICKER
+          ======================================================= */}
+      {activeSubTab === "banners" && (
+        <div className="p-6 rounded-2xl bg-navy-900 border border-navy-800 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-navy-800 pb-3">
+            <div>
+              <h4 className="text-base font-bold text-accent-gold font-hindi">1. टॉप विजुअल बैनर स्लाइडर व टिकर (Top Banner Slider & Ticker)</h4>
+              <p className="text-xs text-slate-400">होमपेज के सबसे ऊपर चलने वाले विजुअल बैनर स्लाइड्स, हेडिंग, इमेजेस, बटन और नीचे की टिकर पट्टी।</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const currentSlides = bannerSlider.slides || [];
+                const newSlide: BannerSlideItem = {
+                  id: Date.now(),
+                  src: "/images/banners/banner-1.jpeg",
+                  alt: "Campaign Banner Slide",
+                  titleHi: "नया चुनावी अभियान बैनर",
+                  titleEn: "New Campaign Banner Slide",
+                  subtitleHi: "चुनावी रणनीति • डिजिटल प्रचार • ग्राउंड एक्टिवेशन",
+                  subtitleEn: "Strategy • Digital Campaign • Ground Activation",
+                  ctaTextHi: "सेवाएं देखें",
+                  ctaTextEn: "Explore Services",
+                  ctaLink: "/services",
+                  badgeHi: "360° चुनावी प्रचार",
+                  badgeEn: "360° Campaign"
+                };
+                setHomepage({
+                  ...homepage,
+                  bannerSlider: {
+                    ...bannerSlider,
+                    slides: [...currentSlides, newSlide]
+                  }
+                });
+              }}
+              className="px-4 py-2 rounded-xl bg-accent-orange hover:bg-accent-orange-hover text-white text-xs font-bold flex items-center gap-1.5 shadow cursor-pointer self-start sm:self-auto"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>+ नया स्लाइड जोड़ें (Add Slide)</span>
+            </button>
+          </div>
+
+          {/* Slides List */}
+          <div className="space-y-6">
+            <h5 className="text-sm font-bold text-white flex items-center gap-2">
+              <ImageIcon className="w-4 h-4 text-accent-orange" />
+              <span>बैनर स्लाइड्स सूची ({bannerSlider.slides?.length || 0} स्लाइड्स)</span>
+            </h5>
+
+            {(bannerSlider.slides || []).map((slide, idx) => (
+              <div key={slide.id || idx} className="p-4 sm:p-5 rounded-2xl bg-navy-950 border border-navy-800 space-y-4 relative group">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-navy-800/80 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-1 rounded-md bg-accent-orange/20 text-accent-gold text-xs font-mono font-bold">
+                      स्लाइड #{idx + 1}
+                    </span>
+                    <span className="text-xs font-semibold text-slate-300 truncate max-w-xs sm:max-w-md">
+                      {slide.titleHi || "शीर्षक रहित स्लाइड"}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    {/* Move Up */}
+                    <button
+                      type="button"
+                      disabled={idx === 0}
+                      onClick={() => {
+                        const arr = [...bannerSlider.slides];
+                        const temp = arr[idx - 1];
+                        arr[idx - 1] = arr[idx];
+                        arr[idx] = temp;
+                        setHomepage({
+                          ...homepage,
+                          bannerSlider: { ...bannerSlider, slides: arr }
+                        });
+                      }}
+                      className="p-1.5 rounded-lg bg-navy-900 hover:bg-navy-800 text-slate-300 disabled:opacity-30 cursor-pointer"
+                      title="ऊपर ले जाएं (Move Up)"
+                    >
+                      <ArrowUp className="w-3.5 h-3.5" />
+                    </button>
+
+                    {/* Move Down */}
+                    <button
+                      type="button"
+                      disabled={idx === bannerSlider.slides.length - 1}
+                      onClick={() => {
+                        const arr = [...bannerSlider.slides];
+                        const temp = arr[idx + 1];
+                        arr[idx + 1] = arr[idx];
+                        arr[idx] = temp;
+                        setHomepage({
+                          ...homepage,
+                          bannerSlider: { ...bannerSlider, slides: arr }
+                        });
+                      }}
+                      className="p-1.5 rounded-lg bg-navy-900 hover:bg-navy-800 text-slate-300 disabled:opacity-30 cursor-pointer"
+                      title="नीचे ले जाएं (Move Down)"
+                    >
+                      <ArrowDown className="w-3.5 h-3.5" />
+                    </button>
+
+                    {/* Delete */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (confirm(`क्या आप वाकई स्लाइड #${idx + 1} को हटाना चाहते हैं?`)) {
+                          const arr = bannerSlider.slides.filter((_, i) => i !== idx);
+                          setHomepage({
+                            ...homepage,
+                            bannerSlider: { ...bannerSlider, slides: arr }
+                          });
+                        }
+                      }}
+                      className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 cursor-pointer"
+                      title="हटाएं (Delete Slide)"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Banner Image & Upload */}
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                  <div className="md:col-span-4 space-y-2">
+                    <label className="block text-xs font-semibold text-slate-300">बैनर इमेज प्रीव्यू (Banner Image)</label>
+                    <div className="relative aspect-[16/6] rounded-xl overflow-hidden bg-black/60 border border-navy-700 flex items-center justify-center group/img">
+                      {slide.src ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={slide.src}
+                          alt={slide.alt || "Banner preview"}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="text-xs text-slate-500 flex items-center gap-1.5">
+                          <ImageIcon className="w-4 h-4" />
+                          <span>कोई इमेज नहीं</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="md:col-span-8 space-y-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        इमेज URL (Image URL / Path)
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={slide.src}
+                          onChange={(e) => {
+                            const arr = [...bannerSlider.slides];
+                            arr[idx] = { ...arr[idx], src: e.target.value };
+                            setHomepage({
+                              ...homepage,
+                              bannerSlider: { ...bannerSlider, slides: arr }
+                            });
+                          }}
+                          placeholder="/images/banners/banner-1.jpeg या https://..."
+                          className="flex-1 px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white focus:border-accent-orange outline-none font-mono"
+                        />
+                        <label className="px-3.5 py-2 rounded-xl bg-navy-800 hover:bg-navy-750 text-accent-gold hover:text-white border border-navy-700 text-xs font-semibold flex items-center gap-1.5 cursor-pointer flex-shrink-0">
+                          <Upload className="w-3.5 h-3.5" />
+                          <span>{uploadingField === `slide-${idx}` ? "अपलोड..." : "अपलोड करें"}</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            disabled={uploadingField === `slide-${idx}`}
+                            onChange={(e) => handleImageUpload(e, (url) => {
+                              const arr = [...bannerSlider.slides];
+                              arr[idx] = { ...arr[idx], src: url };
+                              setHomepage({
+                                ...homepage,
+                                bannerSlider: { ...bannerSlider, slides: arr }
+                              });
+                            }, `slide-${idx}`)}
+                          />
+                        </label>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">इमेज ऑल्ट टेक्स्ट (Alt Text for SEO)</label>
+                      <input
+                        type="text"
+                        value={slide.alt || ""}
+                        onChange={(e) => {
+                          const arr = [...bannerSlider.slides];
+                          arr[idx] = { ...arr[idx], alt: e.target.value };
+                          setHomepage({
+                            ...homepage,
+                            bannerSlider: { ...bannerSlider, slides: arr }
+                          });
+                        }}
+                        className="w-full px-3 py-1.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-300"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Badges & Titles */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">स्लाइड बैज (हिंदी) [Badge Hi]</label>
+                    <input
+                      type="text"
+                      value={slide.badgeHi || ""}
+                      onChange={(e) => {
+                        const arr = [...bannerSlider.slides];
+                        arr[idx] = { ...arr[idx], badgeHi: e.target.value };
+                        setHomepage({
+                          ...homepage,
+                          bannerSlider: { ...bannerSlider, slides: arr }
+                        });
+                      }}
+                      className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">स्लाइड बैज (अंग्रेजी) [Badge En]</label>
+                    <input
+                      type="text"
+                      value={slide.badgeEn || ""}
+                      onChange={(e) => {
+                        const arr = [...bannerSlider.slides];
+                        arr[idx] = { ...arr[idx], badgeEn: e.target.value };
+                        setHomepage({
+                          ...homepage,
+                          bannerSlider: { ...bannerSlider, slides: arr }
+                        });
+                      }}
+                      className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">स्लाइड मुख्य शीर्षक (हिंदी) [Title Hi]</label>
+                    <input
+                      type="text"
+                      value={slide.titleHi || ""}
+                      onChange={(e) => {
+                        const arr = [...bannerSlider.slides];
+                        arr[idx] = { ...arr[idx], titleHi: e.target.value };
+                        setHomepage({
+                          ...homepage,
+                          bannerSlider: { ...bannerSlider, slides: arr }
+                        });
+                      }}
+                      className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi font-bold"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">स्लाइड मुख्य शीर्षक (अंग्रेजी) [Title En]</label>
+                    <input
+                      type="text"
+                      value={slide.titleEn || ""}
+                      onChange={(e) => {
+                        const arr = [...bannerSlider.slides];
+                        arr[idx] = { ...arr[idx], titleEn: e.target.value };
+                        setHomepage({
+                          ...homepage,
+                          bannerSlider: { ...bannerSlider, slides: arr }
+                        });
+                      }}
+                      className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-bold"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">उप-विवरण (हिंदी) [Subtitle Hi]</label>
+                    <textarea
+                      rows={2}
+                      value={slide.subtitleHi || ""}
+                      onChange={(e) => {
+                        const arr = [...bannerSlider.slides];
+                        arr[idx] = { ...arr[idx], subtitleHi: e.target.value };
+                        setHomepage({
+                          ...homepage,
+                          bannerSlider: { ...bannerSlider, slides: arr }
+                        });
+                      }}
+                      className="w-full p-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-300 font-hindi"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">उप-विवरण (अंग्रेजी) [Subtitle En]</label>
+                    <textarea
+                      rows={2}
+                      value={slide.subtitleEn || ""}
+                      onChange={(e) => {
+                        const arr = [...bannerSlider.slides];
+                        arr[idx] = { ...arr[idx], subtitleEn: e.target.value };
+                        setHomepage({
+                          ...homepage,
+                          bannerSlider: { ...bannerSlider, slides: arr }
+                        });
+                      }}
+                      className="w-full p-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-300"
+                    />
+                  </div>
+                </div>
+
+                {/* Slide Button CTA */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">बटन टेक्स्ट (हिंदी)</label>
+                    <input
+                      type="text"
+                      value={slide.ctaTextHi || ""}
+                      onChange={(e) => {
+                        const arr = [...bannerSlider.slides];
+                        arr[idx] = { ...arr[idx], ctaTextHi: e.target.value };
+                        setHomepage({
+                          ...homepage,
+                          bannerSlider: { ...bannerSlider, slides: arr }
+                        });
+                      }}
+                      className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">बटन टेक्स्ट (अंग्रेजी)</label>
+                    <input
+                      type="text"
+                      value={slide.ctaTextEn || ""}
+                      onChange={(e) => {
+                        const arr = [...bannerSlider.slides];
+                        arr[idx] = { ...arr[idx], ctaTextEn: e.target.value };
+                        setHomepage({
+                          ...homepage,
+                          bannerSlider: { ...bannerSlider, slides: arr }
+                        });
+                      }}
+                      className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">बटन लिंक (Link URL)</label>
+                    <input
+                      type="text"
+                      value={slide.ctaLink || ""}
+                      onChange={(e) => {
+                        const arr = [...bannerSlider.slides];
+                        arr[idx] = { ...arr[idx], ctaLink: e.target.value };
+                        setHomepage({
+                          ...homepage,
+                          bannerSlider: { ...bannerSlider, slides: arr }
+                        });
+                      }}
+                      placeholder="/services"
+                      className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom Ticker Section */}
+          <div className="p-5 rounded-2xl bg-navy-950 border border-navy-800 space-y-4">
+            <div className="border-b border-navy-800/80 pb-2">
+              <h5 className="text-sm font-bold text-accent-gold font-hindi">बैनर के नीचे की मुख्य टिकर पट्टी (Bottom Ticker & Actions Bar)</h5>
+              <p className="text-xs text-slate-400">स्लाइडर के नीचे निरंतर चलने वाला संदेश और दोनों एक्शन बटन।</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">टिकर मुख्य संदेश (हिंदी)</label>
+                <input
+                  type="text"
+                  value={bannerSlider.tickerHeadingHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    bannerSlider: { ...bannerSlider, tickerHeadingHi: e.target.value }
+                  })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">टिकर मुख्य संदेश (अंग्रेजी)</label>
+                <input
+                  type="text"
+                  value={bannerSlider.tickerHeadingEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    bannerSlider: { ...bannerSlider, tickerHeadingEn: e.target.value }
+                  })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">सेवा सूची टैगलाइन (हिंदी)</label>
+                <textarea
+                  rows={2}
+                  value={bannerSlider.tickerServicesHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    bannerSlider: { ...bannerSlider, tickerServicesHi: e.target.value }
+                  })}
+                  className="w-full p-2.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-300 font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">सेवा सूची टैगलाइन (अंग्रेजी)</label>
+                <textarea
+                  rows={2}
+                  value={bannerSlider.tickerServicesEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    bannerSlider: { ...bannerSlider, tickerServicesEn: e.target.value }
+                  })}
+                  className="w-full p-2.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-300"
+                />
+              </div>
+            </div>
+
+            {/* Ticker Buttons */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div className="p-3 rounded-xl bg-navy-900 border border-navy-800 space-y-2">
+                <span className="text-xs font-bold text-accent-orange block">बटन 1 (Button 1: मुख्य सेवा बटन)</span>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    placeholder="टेक्स्ट (हिंदी)"
+                    value={bannerSlider.button1TextHi || ""}
+                    onChange={(e) => setHomepage({
+                      ...homepage,
+                      bannerSlider: { ...bannerSlider, button1TextHi: e.target.value }
+                    })}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Text (En)"
+                    value={bannerSlider.button1TextEn || ""}
+                    onChange={(e) => setHomepage({
+                      ...homepage,
+                      bannerSlider: { ...bannerSlider, button1TextEn: e.target.value }
+                    })}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white"
+                  />
+                </div>
+                <input
+                  type="text"
+                  placeholder="लिंक (URL) e.g. /services"
+                  value={bannerSlider.button1Link || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    bannerSlider: { ...bannerSlider, button1Link: e.target.value }
+                  })}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-mono"
+                />
+              </div>
+
+              <div className="p-3 rounded-xl bg-navy-900 border border-navy-800 space-y-2">
+                <span className="text-xs font-bold text-accent-gold block">बटन 2 (Button 2: गैलरी बटन)</span>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    placeholder="टेक्स्ट (हिंदी)"
+                    value={bannerSlider.button2TextHi || ""}
+                    onChange={(e) => setHomepage({
+                      ...homepage,
+                      bannerSlider: { ...bannerSlider, button2TextHi: e.target.value }
+                    })}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Text (En)"
+                    value={bannerSlider.button2TextEn || ""}
+                    onChange={(e) => setHomepage({
+                      ...homepage,
+                      bannerSlider: { ...bannerSlider, button2TextEn: e.target.value }
+                    })}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white"
+                  />
+                </div>
+                <input
+                  type="text"
+                  placeholder="लिंक (URL) e.g. /gallery"
+                  value={bannerSlider.button2Link || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    bannerSlider: { ...bannerSlider, button2Link: e.target.value }
+                  })}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-mono"
+                />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* =======================================================
+          2. HERO & MAIN TAGLINE
           ======================================================= */}
       {activeSubTab === "hero" && (
         <div className="p-6 rounded-2xl bg-navy-900 border border-navy-800 space-y-5">
           <div className="border-b border-navy-800 pb-3">
-            <h4 className="text-base font-bold text-accent-gold font-hindi">1. होमपेज हीरो एवं मुख्य टैगलाइन</h4>
-            <p className="text-xs text-slate-400">वेबसाइट का मुख्य शीर्षक, उप-विवरण, पंचलाइन और बटन।</p>
+            <h4 className="text-base font-bold text-accent-gold font-hindi">2. होमपेज मुख्य शीर्षक एवं टैगलाइन (Hero Section)</h4>
+            <p className="text-xs text-slate-400">वेबसाइट का मुख्य शीर्षक, उप-विवरण, पंचलाइन, बटन एवं टीम टैग्स।</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -155,7 +714,7 @@ export default function HomepageCms({
                 ...homepage,
                 hero: { ...homepage.hero, subtitle: e.target.value }
               })}
-              className="w-full p-3 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white focus:border-accent-orange outline-none"
+              className="w-full p-3 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white focus:border-accent-orange outline-none font-hindi"
             />
           </div>
 
@@ -168,11 +727,11 @@ export default function HomepageCms({
                 ...homepage,
                 hero: { ...homepage.hero, tagline: e.target.value }
               })}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-navy-950 border border-accent-orange/50 text-sm font-bold text-accent-gold focus:border-accent-orange outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-navy-950 border border-accent-orange/50 text-sm font-bold text-accent-gold focus:border-accent-orange outline-none font-hindi"
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1.5">प्राथमिक CTA बटन टेक्स्ट</label>
               <input
@@ -186,7 +745,7 @@ export default function HomepageCms({
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">द्वितीयक बटन टेक्स्ट (Services)</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">द्वितीयक बटन टेक्स्ट</label>
               <input
                 type="text"
                 value={homepage.hero.secondaryCta}
@@ -198,7 +757,7 @@ export default function HomepageCms({
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">टीम आकार बैज (Team Size Badge)</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">टीम आकार बैज</label>
               <input
                 type="text"
                 value={homepage.hero.teamBadge}
@@ -206,7 +765,19 @@ export default function HomepageCms({
                   ...homepage,
                   hero: { ...homepage.hero, teamBadge: e.target.value }
                 })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white font-hindi"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">टीम उप-शीर्षक (Campaign Area)</label>
+              <input
+                type="text"
+                value={homepage.hero.teamSubtitle || "उत्तर प्रदेश अभियान"}
+                onChange={(e) => setHomepage({
+                  ...homepage,
+                  hero: { ...homepage.hero, teamSubtitle: e.target.value }
+                })}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white font-hindi"
               />
             </div>
           </div>
@@ -214,87 +785,1041 @@ export default function HomepageCms({
       )}
 
       {/* =======================================================
-          2. TELEMETRY & LIVE TICKERS
+          3. WAR ROOM VIDEO & TELEMETRY
           ======================================================= */}
       {activeSubTab === "telemetry" && (
-        <div className="p-6 rounded-2xl bg-navy-900 border border-navy-800 space-y-5">
+        <div className="p-6 rounded-2xl bg-navy-900 border border-navy-800 space-y-6">
           <div className="border-b border-navy-800 pb-3">
-            <h4 className="text-base font-bold text-accent-gold font-hindi">2. लाइव वॉर रूम टेलीमेट्री एवं टिकर</h4>
-            <p className="text-xs text-slate-400">होमपेज पर दाईं ओर प्रदर्शित होने वाले 4 प्रमुख अभियान सूचकांक व लाइव टिकर।</p>
+            <h4 className="text-base font-bold text-accent-gold font-hindi">3. वॉर रूम डैशबोर्ड, वीडियो व लाइव टेलीमेट्री</h4>
+            <p className="text-xs text-slate-400">होमपेज पर दाईं ओर ऑटो-प्ले होने वाला वॉर रूम वीडियो, ऑडियो, यूट्यूब लिंक, 4 प्रमुख आंकड़े व लाइव स्ट्रीम टिकर।</p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">विधानसभा कवरेज %</label>
-              <input
-                type="text"
-                value={homepage.telemetry.coveragePercent}
-                onChange={(e) => setHomepage({
-                  ...homepage,
-                  telemetry: { ...homepage.telemetry, coveragePercent: e.target.value }
-                })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white font-mono"
-              />
+          {/* Video, Audio, YouTube Media Box */}
+          <div className="p-5 rounded-2xl bg-navy-950 border border-navy-800 space-y-4">
+            <h5 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+              <Video className="w-4 h-4 text-accent-orange" />
+              <span>वॉर रूम वीडियो प्लेयर व ऑडियो स्रोत (Media Sources)</span>
+            </h5>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">वीडियो फाइल URL (Video Stream URL / MP4)</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={telemetry.videoSrc || "/videos/campaign-video.mp4"}
+                    onChange={(e) => setHomepage({
+                      ...homepage,
+                      telemetry: { ...homepage.telemetry, videoSrc: e.target.value }
+                    })}
+                    placeholder="/videos/campaign-video.mp4 या cdn link"
+                    className="flex-1 px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-mono"
+                  />
+                  <label className="px-3 py-2 rounded-xl bg-navy-800 hover:bg-navy-750 text-accent-gold hover:text-white border border-navy-700 text-xs font-semibold flex items-center gap-1 cursor-pointer flex-shrink-0">
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>{uploadingField === "telemetry-video" ? "अपलोड..." : "अपलोड"}</span>
+                    <input
+                      type="file"
+                      accept="video/*"
+                      className="hidden"
+                      disabled={uploadingField === "telemetry-video"}
+                      onChange={(e) => handleImageUpload(e, (url) => {
+                        setHomepage({
+                          ...homepage,
+                          telemetry: { ...homepage.telemetry, videoSrc: url }
+                        });
+                      }, "telemetry-video")}
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">सिंक ऑडियो URL (Audio Loop M4A/MP3)</label>
+                <input
+                  type="text"
+                  value={telemetry.audioSrc || "/videos/campaign-audio.m4a"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, audioSrc: e.target.value }
+                  })}
+                  placeholder="/videos/campaign-audio.m4a"
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-mono"
+                />
+              </div>
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">कुल बूथ संख्या</label>
-              <input
-                type="text"
-                value={homepage.telemetry.totalBooths}
-                onChange={(e) => setHomepage({
-                  ...homepage,
-                  telemetry: { ...homepage.telemetry, totalBooths: e.target.value }
-                })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white font-mono"
-              />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">यूट्यूब लिंक (YouTube Direct Link Button)</label>
+                <input
+                  type="text"
+                  value={telemetry.youtubeUrl || "https://youtube.com/shorts/5bCg8EKiHSM"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, youtubeUrl: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">वीडियो वॉटरमार्क टैग (Watermark Overlay Tag)</label>
+                <input
+                  type="text"
+                  value={telemetry.videoWatermark || "WORKFORCE INFOTECH (IPR)"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, videoWatermark: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-mono font-bold"
+                />
+              </div>
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">सक्रिय फील्ड टीमें</label>
-              <input
-                type="text"
-                value={homepage.telemetry.activeFieldTeams}
-                onChange={(e) => setHomepage({
-                  ...homepage,
-                  telemetry: { ...homepage.telemetry, activeFieldTeams: e.target.value }
-                })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white font-mono"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">लॉग्ड गतिविधियां</label>
-              <input
-                type="text"
-                value={homepage.telemetry.loggedActivities}
-                onChange={(e) => setHomepage({
-                  ...homepage,
-                  telemetry: { ...homepage.telemetry, loggedActivities: e.target.value }
-                })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white font-mono"
-              />
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">डैशबोर्ड मुख्य शीर्षक</label>
+                <input
+                  type="text"
+                  value={telemetry.dashboardTitle || "CAMPAIGN INTELLIGENCE DASHBOARD"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, dashboardTitle: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-mono font-bold"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">डैशबोर्ड उप-शीर्षक</label>
+                <input
+                  type="text"
+                  value={telemetry.dashboardSubtitle || "UP-AC2027 // WAR ROOM ENGINE"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, dashboardSubtitle: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-mono"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">लाइव फीड बैज</label>
+                <input
+                  type="text"
+                  value={telemetry.liveFeedBadge || "LIVE FEED"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, liveFeedBadge: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-emerald-400 font-mono font-bold"
+                />
+              </div>
             </div>
           </div>
 
-          <div className="space-y-3 pt-2">
-            <label className="block text-xs font-semibold text-slate-300">लाइव टेलीमेट्री टिकर इवेंट्स (Live Ticker Messages)</label>
-            {homepage.telemetry.tickerEvents.map((ev, idx) => (
+          {/* 4 Telemetry Metrics */}
+          <div className="p-5 rounded-2xl bg-navy-950 border border-navy-800 space-y-4">
+            <h5 className="text-xs font-bold text-slate-300 uppercase tracking-wider">4 प्रमुख अभियान सूचकांक (4 Telemetry Metric Stats)</h5>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="p-3 rounded-xl bg-navy-900 border border-navy-800 space-y-2">
+                <span className="text-xs font-semibold text-accent-orange block">1. कवरेज (Coverage)</span>
+                <input
+                  type="text"
+                  placeholder="87%"
+                  value={telemetry.coveragePercent}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, coveragePercent: e.target.value }
+                  })}
+                  className="w-full px-3 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-sm text-white font-mono font-bold"
+                />
+                <input
+                  type="text"
+                  placeholder="+4.2% आज"
+                  value={telemetry.stat1Sub || "+4.2% आज"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, stat1Sub: e.target.value }
+                  })}
+                  className="w-full px-3 py-1 rounded-lg bg-navy-950 border border-navy-700 text-xs text-emerald-400 font-mono"
+                />
+              </div>
+
+              <div className="p-3 rounded-xl bg-navy-900 border border-navy-800 space-y-2">
+                <span className="text-xs font-semibold text-accent-gold block">2. कुल बूथ (Booths)</span>
+                <input
+                  type="text"
+                  placeholder="642"
+                  value={telemetry.totalBooths}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, totalBooths: e.target.value }
+                  })}
+                  className="w-full px-3 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-sm text-white font-mono font-bold"
+                />
+                <input
+                  type="text"
+                  placeholder="100% एक्टिव"
+                  value={telemetry.stat2Sub || "100% एक्टिव"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, stat2Sub: e.target.value }
+                  })}
+                  className="w-full px-3 py-1 rounded-lg bg-navy-950 border border-navy-700 text-xs text-slate-300 font-mono"
+                />
+              </div>
+
+              <div className="p-3 rounded-xl bg-navy-900 border border-navy-800 space-y-2">
+                <span className="text-xs font-semibold text-sky-400 block">3. फील्ड टीमें (Teams)</span>
+                <input
+                  type="text"
+                  placeholder="128"
+                  value={telemetry.activeFieldTeams}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, activeFieldTeams: e.target.value }
+                  })}
+                  className="w-full px-3 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-sm text-white font-mono font-bold"
+                />
+                <input
+                  type="text"
+                  placeholder="GPS ट्रैक्ड"
+                  value={telemetry.stat3Sub || "GPS ट्रैक्ड"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, stat3Sub: e.target.value }
+                  })}
+                  className="w-full px-3 py-1 rounded-lg bg-navy-950 border border-navy-700 text-xs text-sky-400 font-mono"
+                />
+              </div>
+
+              <div className="p-3 rounded-xl bg-navy-900 border border-navy-800 space-y-2">
+                <span className="text-xs font-semibold text-rose-400 block">4. लॉग्ड गतिविधियां (Actions)</span>
+                <input
+                  type="text"
+                  placeholder="1,840+"
+                  value={telemetry.loggedActivities}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, loggedActivities: e.target.value }
+                  })}
+                  className="w-full px-3 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-sm text-white font-mono font-bold"
+                />
+                <input
+                  type="text"
+                  placeholder="लॉग्ड"
+                  value={telemetry.stat4Sub || "लॉग्ड"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, stat4Sub: e.target.value }
+                  })}
+                  className="w-full px-3 py-1 rounded-lg bg-navy-950 border border-navy-700 text-xs text-emerald-400 font-mono"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Live Events Stream Ticker */}
+          <div className="p-5 rounded-2xl bg-navy-950 border border-navy-800 space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-semibold text-slate-300">लाइव टेलीमेट्री टिकर इवेंट्स (Live Ticker Messages)</label>
+              <button
+                type="button"
+                onClick={() => {
+                  const updated = [...(telemetry.tickerEvents || []), "नया फील्ड इवेंट: लाइव एक्टिविटी"];
+                  setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, tickerEvents: updated }
+                  });
+                }}
+                className="px-2.5 py-1 rounded-lg bg-navy-800 hover:bg-navy-750 text-accent-gold text-xs font-semibold flex items-center gap-1 cursor-pointer"
+              >
+                <Plus className="w-3 h-3" />
+                <span>+ इवेंट जोड़ें</span>
+              </button>
+            </div>
+
+            {(telemetry.tickerEvents || []).map((ev, idx) => (
               <div key={idx} className="flex items-center gap-2">
-                <span className="text-xs font-mono text-accent-gold px-2 py-1 rounded bg-navy-950 border border-navy-800">#{idx + 1}</span>
+                <span className="text-xs font-mono text-accent-gold px-2 py-1.5 rounded bg-navy-900 border border-navy-800">#{idx + 1}</span>
                 <input
                   type="text"
                   value={ev}
                   onChange={(e) => {
-                    const updated = [...homepage.telemetry.tickerEvents];
+                    const updated = [...telemetry.tickerEvents];
                     updated[idx] = e.target.value;
                     setHomepage({
                       ...homepage,
                       telemetry: { ...homepage.telemetry, tickerEvents: updated }
                     });
                   }}
-                  className="w-full px-3.5 py-2 rounded-xl bg-navy-950 border border-navy-700 text-xs text-slate-200"
+                  className="w-full px-3.5 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-200"
                 />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const updated = telemetry.tickerEvents.filter((_, i) => i !== idx);
+                    setHomepage({
+                      ...homepage,
+                      telemetry: { ...homepage.telemetry, tickerEvents: updated }
+                    });
+                  }}
+                  className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 cursor-pointer"
+                  title="हटाएं"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
               </div>
             ))}
           </div>
+
+          {/* Footer Notes */}
+          <div className="p-5 rounded-2xl bg-navy-950 border border-navy-800 space-y-3">
+            <h5 className="text-xs font-bold text-slate-300 uppercase tracking-wider">डैशबोर्ड निचली सुरक्षा व आर्किटेक्चर टैगलाइन (Footer Notes)</h5>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">निचला नोट 1 (बाईं ओर)</label>
+                <input
+                  type="text"
+                  value={telemetry.footerNote1 || "निजी एवं कस्टमाइज्ड क्लाउड आर्किटेक्चर"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, footerNote1: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">निचला नोट 2 (दाईं ओर)</label>
+                <input
+                  type="text"
+                  value={telemetry.footerNote2 || "सचित्र लाइव फीड (Live Illustrative)"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    telemetry: { ...homepage.telemetry, footerNote2: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* =======================================================
+          4. TRACK RECORD & ELECTORAL VICTORIES
+          ======================================================= */}
+      {activeSubTab === "victories" && (
+        <div className="p-6 rounded-2xl bg-navy-900 border border-navy-800 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-navy-800 pb-3">
+            <div>
+              <h4 className="text-base font-bold text-accent-gold font-hindi">4. चुनावी ट्रैक रिकॉर्ड व विजयी जनप्रतिनिधि (Track Record & Victories)</h4>
+              <p className="text-xs text-slate-400">होमपेज पर प्रदर्शित होने वाले सभी विजयी सांसद, विधायक, एमएलसी व प्रत्याशियों के कार्ड और शीर्ष विवरण।</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const currentItems = trackRecord.items || [];
+                const newItem: VictoryLeaderItem = {
+                  id: `tr-${Date.now()}`,
+                  name: "नया जनप्रतिनिधि / प्रत्याशी",
+                  roleHi: "जनप्रतिनिधि / विधायक / सांसद",
+                  roleEn: "Elected Representative / Candidate",
+                  constituency: "विधानसभा / लोकसभा क्षेत्र",
+                  election: "विधानसभा चुनाव 2027",
+                  partyBadge: "BJP",
+                  status: "winner",
+                  highlight: "विजयी जनप्रतिनिधि"
+                };
+                setHomepage({
+                  ...homepage,
+                  trackRecord: {
+                    ...trackRecord,
+                    items: [newItem, ...currentItems]
+                  }
+                });
+              }}
+              className="px-4 py-2 rounded-xl bg-accent-orange hover:bg-accent-orange-hover text-white text-xs font-bold flex items-center gap-1.5 shadow cursor-pointer self-start sm:self-auto"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>+ नया विजयी नेता कार्ड जोड़ें (Add Card)</span>
+            </button>
+          </div>
+
+          {/* Section Header Inputs */}
+          <div className="p-5 rounded-2xl bg-navy-950 border border-navy-800 space-y-4">
+            <h5 className="text-xs font-bold text-slate-300 uppercase tracking-wider">अनुभाग शीर्ष विवरण (Section Headers)</h5>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">शीर्ष बैज (हिंदी)</label>
+                <input
+                  type="text"
+                  value={trackRecord.badgeHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    trackRecord: { ...trackRecord, badgeHi: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">शीर्ष बैज (अंग्रेजी)</label>
+                <input
+                  type="text"
+                  value={trackRecord.badgeEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    trackRecord: { ...trackRecord, badgeEn: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">मुख्य हेडिंग (हिंदी)</label>
+                <input
+                  type="text"
+                  value={trackRecord.headingHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    trackRecord: { ...trackRecord, headingHi: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi font-bold"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">मुख्य हेडिंग (अंग्रेजी)</label>
+                <input
+                  type="text"
+                  value={trackRecord.headingEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    trackRecord: { ...trackRecord, headingEn: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-bold"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">उप-विवरण (हिंदी)</label>
+                <textarea
+                  rows={2}
+                  value={trackRecord.subHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    trackRecord: { ...trackRecord, subHi: e.target.value }
+                  })}
+                  className="w-full p-2.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-300 font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">उप-विवरण (अंग्रेजी)</label>
+                <textarea
+                  rows={2}
+                  value={trackRecord.subEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    trackRecord: { ...trackRecord, subEn: e.target.value }
+                  })}
+                  className="w-full p-2.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-300"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Leaders Cards Grid */}
+          <div className="space-y-4">
+            <h5 className="text-sm font-bold text-white flex items-center gap-2">
+              <Trophy className="w-4 h-4 text-accent-gold" />
+              <span>विजयी नेताओं के कार्ड्स ({trackRecord.items?.length || 0} कार्ड्स)</span>
+            </h5>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(trackRecord.items || []).map((item, idx) => (
+                <div key={item.id || idx} className="p-4 rounded-xl bg-navy-950 border border-navy-800 space-y-3 relative group">
+                  <div className="flex items-center justify-between border-b border-navy-800/80 pb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-navy-900 text-accent-gold border border-navy-700">
+                        #{idx + 1}
+                      </span>
+                      <span className="text-xs font-bold text-white font-hindi truncate">
+                        {item.name || "नाम"}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        disabled={idx === 0}
+                        onClick={() => {
+                          const arr = [...trackRecord.items];
+                          const temp = arr[idx - 1];
+                          arr[idx - 1] = arr[idx];
+                          arr[idx] = temp;
+                          setHomepage({
+                            ...homepage,
+                            trackRecord: { ...trackRecord, items: arr }
+                          });
+                        }}
+                        className="p-1 rounded bg-navy-900 hover:bg-navy-800 text-slate-300 disabled:opacity-30 cursor-pointer"
+                        title="ऊपर"
+                      >
+                        <ArrowUp className="w-3 h-3" />
+                      </button>
+
+                      <button
+                        type="button"
+                        disabled={idx === trackRecord.items.length - 1}
+                        onClick={() => {
+                          const arr = [...trackRecord.items];
+                          const temp = arr[idx + 1];
+                          arr[idx + 1] = arr[idx];
+                          arr[idx] = temp;
+                          setHomepage({
+                            ...homepage,
+                            trackRecord: { ...trackRecord, items: arr }
+                          });
+                        }}
+                        className="p-1 rounded bg-navy-900 hover:bg-navy-800 text-slate-300 disabled:opacity-30 cursor-pointer"
+                        title="नीचे"
+                      >
+                        <ArrowDown className="w-3 h-3" />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (confirm(`क्या आप ${item.name} का कार्ड हटाना चाहते हैं?`)) {
+                            const arr = trackRecord.items.filter((_, i) => i !== idx);
+                            setHomepage({
+                              ...homepage,
+                              trackRecord: { ...trackRecord, items: arr }
+                            });
+                          }
+                        }}
+                        className="p-1 rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 cursor-pointer"
+                        title="हटाएं"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="text-[10px] text-slate-400 block mb-1">नेता / प्रत्याशी का नाम (Name)</label>
+                      <input
+                        type="text"
+                        value={item.name}
+                        onChange={(e) => {
+                          const arr = [...trackRecord.items];
+                          arr[idx] = { ...arr[idx], name: e.target.value };
+                          setHomepage({
+                            ...homepage,
+                            trackRecord: { ...trackRecord, items: arr }
+                          });
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-navy-900 border border-navy-700 text-xs text-white font-hindi font-bold"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] text-slate-400 block mb-1">चुनाव परिणाम स्थिति (Status)</label>
+                      <select
+                        value={item.status}
+                        onChange={(e) => {
+                          const arr = [...trackRecord.items];
+                          arr[idx] = { ...arr[idx], status: e.target.value as "winner" | "runner-up" | "featured" };
+                          setHomepage({
+                            ...homepage,
+                            trackRecord: { ...trackRecord, items: arr }
+                          });
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-navy-900 border border-navy-700 text-xs text-white cursor-pointer"
+                      >
+                        <option value="winner">🟢 WINNER (विजयी)</option>
+                        <option value="runner-up">🟡 RUNNER-UP (उपविजेता)</option>
+                        <option value="featured">🔵 FEATURED (मजबूत जनअभियान)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="text-[10px] text-slate-400 block mb-1">पद / भूमिका (हिंदी)</label>
+                      <input
+                        type="text"
+                        value={item.roleHi}
+                        onChange={(e) => {
+                          const arr = [...trackRecord.items];
+                          arr[idx] = { ...arr[idx], roleHi: e.target.value };
+                          setHomepage({
+                            ...homepage,
+                            trackRecord: { ...trackRecord, items: arr }
+                          });
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-navy-900 border border-navy-700 text-xs text-white font-hindi"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-slate-400 block mb-1">पद / भूमिका (अंग्रेजी)</label>
+                      <input
+                        type="text"
+                        value={item.roleEn}
+                        onChange={(e) => {
+                          const arr = [...trackRecord.items];
+                          arr[idx] = { ...arr[idx], roleEn: e.target.value };
+                          setHomepage({
+                            ...homepage,
+                            trackRecord: { ...trackRecord, items: arr }
+                          });
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-navy-900 border border-navy-700 text-xs text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="text-[10px] text-slate-400 block mb-1">क्षेत्र / विधानसभा / लोकसभा (Constituency)</label>
+                      <input
+                        type="text"
+                        value={item.constituency}
+                        onChange={(e) => {
+                          const arr = [...trackRecord.items];
+                          arr[idx] = { ...arr[idx], constituency: e.target.value };
+                          setHomepage({
+                            ...homepage,
+                            trackRecord: { ...trackRecord, items: arr }
+                          });
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-navy-900 border border-navy-700 text-xs text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-slate-400 block mb-1">चुनाव नाम (Election Name)</label>
+                      <input
+                        type="text"
+                        value={item.election}
+                        onChange={(e) => {
+                          const arr = [...trackRecord.items];
+                          arr[idx] = { ...arr[idx], election: e.target.value };
+                          setHomepage({
+                            ...homepage,
+                            trackRecord: { ...trackRecord, items: arr }
+                          });
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-navy-900 border border-navy-700 text-xs text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2.5">
+                    <div>
+                      <label className="text-[10px] text-slate-400 block mb-1">पार्टी बैज (Party)</label>
+                      <input
+                        type="text"
+                        value={item.partyBadge || ""}
+                        placeholder="BJP / SP / INC / ..."
+                        onChange={(e) => {
+                          const arr = [...trackRecord.items];
+                          arr[idx] = { ...arr[idx], partyBadge: e.target.value };
+                          setHomepage({
+                            ...homepage,
+                            trackRecord: { ...trackRecord, items: arr }
+                          });
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-navy-900 border border-navy-700 text-xs text-accent-gold font-bold font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-slate-400 block mb-1">हाईलाइट टैग (Badge)</label>
+                      <input
+                        type="text"
+                        value={item.highlight || ""}
+                        placeholder="विजयी सांसद / ..."
+                        onChange={(e) => {
+                          const arr = [...trackRecord.items];
+                          arr[idx] = { ...arr[idx], highlight: e.target.value };
+                          setHomepage({
+                            ...homepage,
+                            trackRecord: { ...trackRecord, items: arr }
+                          });
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-navy-900 border border-navy-700 text-xs text-white font-hindi"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-slate-400 block mb-1">वोट / प्राप्त मत (Optional)</label>
+                      <input
+                        type="text"
+                        value={item.votes || ""}
+                        placeholder="2,82,000+ मत"
+                        onChange={(e) => {
+                          const arr = [...trackRecord.items];
+                          arr[idx] = { ...arr[idx], votes: e.target.value };
+                          setHomepage({
+                            ...homepage,
+                            trackRecord: { ...trackRecord, items: arr }
+                          });
+                        }}
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-navy-900 border border-navy-700 text-xs text-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* =======================================================
+          5. FOUNDER'S DESK MESSAGE
+          ======================================================= */}
+      {activeSubTab === "founder" && (
+        <div className="p-6 rounded-2xl bg-navy-900 border border-navy-800 space-y-6">
+          <div className="border-b border-navy-800 pb-3">
+            <h4 className="text-base font-bold text-accent-gold font-hindi">5. संस्थापक संदेश (Founder's Desk Message & Profile)</h4>
+            <p className="text-xs text-slate-400">होमपेज पर संस्थापक श्री अनुज तिवारी का चित्र, क्रेडेंशियल्स, संदेश, कोट और दोनों एक्शन बटन।</p>
+          </div>
+
+          {/* Profile Card Info */}
+          <div className="p-5 rounded-2xl bg-navy-950 border border-navy-800 space-y-4">
+            <h5 className="text-xs font-bold text-slate-300 uppercase tracking-wider">संस्थापक प्रोफाइल एवं चित्र (Founder Profile)</h5>
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+              <div className="md:col-span-3 space-y-2">
+                <label className="block text-xs font-semibold text-slate-300">फोटो प्रीव्यू (Photo Preview)</label>
+                <div className="relative aspect-[3/4] max-w-[180px] rounded-xl overflow-hidden bg-black/60 border border-navy-700 flex items-center justify-center">
+                  {founderMessage.photoUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={founderMessage.photoUrl}
+                      alt={founderMessage.founderName || "Founder photo"}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="text-xs text-slate-500">फोटो नहीं है</div>
+                  )}
+                </div>
+              </div>
+
+              <div className="md:col-span-9 space-y-3">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">फोटो URL (Photo URL)</label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={founderMessage.photoUrl || ""}
+                      onChange={(e) => setHomepage({
+                        ...homepage,
+                        founderMessage: { ...founderMessage, photoUrl: e.target.value }
+                      })}
+                      className="flex-1 px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-mono"
+                    />
+                    <label className="px-3.5 py-2 rounded-xl bg-navy-800 hover:bg-navy-750 text-accent-gold hover:text-white border border-navy-700 text-xs font-semibold flex items-center gap-1.5 cursor-pointer flex-shrink-0">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>{uploadingField === "founder-photo" ? "अपलोड..." : "अपलोड करें"}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        disabled={uploadingField === "founder-photo"}
+                        onChange={(e) => handleImageUpload(e, (url) => {
+                          setHomepage({
+                            ...homepage,
+                            founderMessage: { ...founderMessage, photoUrl: url }
+                          });
+                        }, "founder-photo")}
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">संस्थापक का नाम (Founder Name)</label>
+                    <input
+                      type="text"
+                      value={founderMessage.founderName || ""}
+                      onChange={(e) => setHomepage({
+                        ...homepage,
+                        founderMessage: { ...founderMessage, founderName: e.target.value }
+                      })}
+                      className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">कंपनी का नाम (Company Name)</label>
+                    <input
+                      type="text"
+                      value={founderMessage.companyName || ""}
+                      onChange={(e) => setHomepage({
+                        ...homepage,
+                        founderMessage: { ...founderMessage, companyName: e.target.value }
+                      })}
+                      className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">पदनाम (हिंदी) [Role Hi]</label>
+                    <input
+                      type="text"
+                      value={founderMessage.founderRoleHi || ""}
+                      onChange={(e) => setHomepage({
+                        ...homepage,
+                        founderMessage: { ...founderMessage, founderRoleHi: e.target.value }
+                      })}
+                      className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">पदनाम (अंग्रेजी) [Role En]</label>
+                    <input
+                      type="text"
+                      value={founderMessage.founderRoleEn || ""}
+                      onChange={(e) => setHomepage({
+                        ...homepage,
+                        founderMessage: { ...founderMessage, founderRoleEn: e.target.value }
+                      })}
+                      className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                    />
+                  </div>
+                </div>
+
+                {/* 2 Stats below photo */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  <div className="p-2.5 rounded-xl bg-navy-900 border border-navy-800 space-y-1.5">
+                    <span className="text-[11px] font-bold text-accent-gold block">आंकड़ा 1 (Stat 1: अनुभव)</span>
+                    <div className="grid grid-cols-3 gap-2">
+                      <input
+                        type="text"
+                        placeholder="संख्या e.g. 10+ वर्ष"
+                        value={founderMessage.stat1Value || ""}
+                        onChange={(e) => setHomepage({
+                          ...homepage,
+                          founderMessage: { ...founderMessage, stat1Value: e.target.value }
+                        })}
+                        className="px-2 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-accent-orange font-bold font-mono"
+                      />
+                      <input
+                        type="text"
+                        placeholder="लेबल (हिंदी)"
+                        value={founderMessage.stat1LabelHi || ""}
+                        onChange={(e) => setHomepage({
+                          ...homepage,
+                          founderMessage: { ...founderMessage, stat1LabelHi: e.target.value }
+                        })}
+                        className="col-span-2 px-2 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-slate-300"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-navy-900 border border-navy-800 space-y-1.5">
+                    <span className="text-[11px] font-bold text-accent-gold block">आंकड़ा 2 (Stat 2: चुनाव संख्या)</span>
+                    <div className="grid grid-cols-3 gap-2">
+                      <input
+                        type="text"
+                        placeholder="संख्या e.g. 50+ चुनाव"
+                        value={founderMessage.stat2Value || ""}
+                        onChange={(e) => setHomepage({
+                          ...homepage,
+                          founderMessage: { ...founderMessage, stat2Value: e.target.value }
+                        })}
+                        className="px-2 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-accent-orange font-bold font-mono"
+                      />
+                      <input
+                        type="text"
+                        placeholder="लेबल (हिंदी)"
+                        value={founderMessage.stat2LabelHi || ""}
+                        onChange={(e) => setHomepage({
+                          ...homepage,
+                          founderMessage: { ...founderMessage, stat2LabelHi: e.target.value }
+                        })}
+                        className="col-span-2 px-2 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-slate-300"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          {/* Message Text Content */}
+          <div className="p-5 rounded-2xl bg-navy-950 border border-navy-800 space-y-4">
+            <h5 className="text-xs font-bold text-slate-300 uppercase tracking-wider">संदेश सामग्री (Message Letter Content)</h5>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">अनुभाग बैज (हिंदी)</label>
+                <input
+                  type="text"
+                  value={founderMessage.badgeHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    founderMessage: { ...founderMessage, badgeHi: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">अनुभाग बैज (अंग्रेजी)</label>
+                <input
+                  type="text"
+                  value={founderMessage.badgeEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    founderMessage: { ...founderMessage, badgeEn: e.target.value }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-accent-gold mb-1">मुख्य उद्धरण शीर्षक (Headline Quote Hindi)</label>
+              <textarea
+                rows={2}
+                value={founderMessage.headingHi || ""}
+                onChange={(e) => setHomepage({
+                  ...homepage,
+                  founderMessage: { ...founderMessage, headingHi: e.target.value }
+                })}
+                className="w-full p-2.5 rounded-xl bg-navy-900 border border-accent-gold/40 text-sm font-bold text-white font-hindi"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1">संबोधन (Salutation Hindi)</label>
+              <input
+                type="text"
+                value={founderMessage.salutationHi || ""}
+                onChange={(e) => setHomepage({
+                  ...homepage,
+                  founderMessage: { ...founderMessage, salutationHi: e.target.value }
+                })}
+                className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi font-semibold"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1">पैराग्राफ 1 (Paragraph 1 Hindi)</label>
+              <textarea
+                rows={3}
+                value={founderMessage.p1Hi || ""}
+                onChange={(e) => setHomepage({
+                  ...homepage,
+                  founderMessage: { ...founderMessage, p1Hi: e.target.value }
+                })}
+                className="w-full p-2.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-200 font-hindi"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1">पैराग्राफ 2 (Paragraph 2 Hindi)</label>
+              <textarea
+                rows={3}
+                value={founderMessage.p2Hi || ""}
+                onChange={(e) => setHomepage({
+                  ...homepage,
+                  founderMessage: { ...founderMessage, p2Hi: e.target.value }
+                })}
+                className="w-full p-2.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-200 font-hindi"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-300 mb-1">पैराग्राफ 3 (Paragraph 3 Hindi)</label>
+              <textarea
+                rows={3}
+                value={founderMessage.p3Hi || ""}
+                onChange={(e) => setHomepage({
+                  ...homepage,
+                  founderMessage: { ...founderMessage, p3Hi: e.target.value }
+                })}
+                className="w-full p-2.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-200 font-hindi"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-accent-orange mb-1">हाइलाइटेड कोट बॉक्स (Highlighted Quote Box)</label>
+              <textarea
+                rows={2}
+                value={founderMessage.quoteBoxHi || ""}
+                onChange={(e) => setHomepage({
+                  ...homepage,
+                  founderMessage: { ...founderMessage, quoteBoxHi: e.target.value }
+                })}
+                className="w-full p-2.5 rounded-xl bg-navy-900 border border-accent-orange/50 text-xs font-bold text-accent-gold font-hindi"
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div className="p-3.5 rounded-xl bg-navy-900 border border-navy-800 space-y-2">
+                <span className="text-xs font-bold text-accent-orange block">प्राथमिक बटन 1 (Primary Action CTA)</span>
+                <input
+                  type="text"
+                  placeholder="बटन टेक्स्ट (हिंदी)"
+                  value={founderMessage.button1TextHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    founderMessage: { ...founderMessage, button1TextHi: e.target.value }
+                  })}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white"
+                />
+                <input
+                  type="text"
+                  placeholder="लिंक (URL) e.g. /contact"
+                  value={founderMessage.button1Link || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    founderMessage: { ...founderMessage, button1Link: e.target.value }
+                  })}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-mono"
+                />
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-navy-900 border border-navy-800 space-y-2">
+                <span className="text-xs font-bold text-accent-gold block">द्वितीयक बटन 2 (Secondary Action CTA)</span>
+                <input
+                  type="text"
+                  placeholder="बटन टेक्स्ट (हिंदी)"
+                  value={founderMessage.button2TextHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    founderMessage: { ...founderMessage, button2TextHi: e.target.value }
+                  })}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white"
+                />
+                <input
+                  type="text"
+                  placeholder="लिंक (URL) e.g. /about"
+                  value={founderMessage.button2Link || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    founderMessage: { ...founderMessage, button2Link: e.target.value }
+                  })}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-mono"
+                />
+              </div>
+            </div>
+
+          </div>
+
         </div>
       )}
 

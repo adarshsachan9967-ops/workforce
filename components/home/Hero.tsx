@@ -112,28 +112,24 @@ export default function Hero() {
                 </div>
                 <div>
                   <span className="text-white font-bold block text-sm leading-tight">{teamBadge}</span>
-                  <span className="text-[11px] text-slate-400">उत्तर प्रदेश अभियान</span>
+                  <span className="text-[11px] text-slate-400">{heroData.teamSubtitle || "उत्तर प्रदेश अभियान"}</span>
                 </div>
               </div>
 
               <div className="h-6 w-px bg-navy-800 hidden sm:block" />
 
               <div className="flex flex-wrap items-center gap-2 text-[11px]">
-                <span className="px-2.5 py-1 rounded-md bg-navy-950 border border-navy-800 text-slate-300">
-                  Data & Research
-                </span>
-                <span className="px-2.5 py-1 rounded-md bg-navy-950 border border-navy-800 text-slate-300">
-                  Digital Campaign
-                </span>
-                <span className="px-2.5 py-1 rounded-md bg-navy-950 border border-navy-800 text-slate-300">
-                  Ground Execution
-                </span>
-                <span className="px-2.5 py-1 rounded-md bg-navy-950 border border-navy-800 text-slate-300">
-                  War Room
-                </span>
-                <span className="px-2.5 py-1 rounded-md bg-navy-950 border border-navy-800 text-slate-300">
-                  Media PR
-                </span>
+                {(heroData.tags && heroData.tags.length > 0 ? heroData.tags : [
+                  "Data & Research",
+                  "Digital Campaign",
+                  "Ground Execution",
+                  "War Room",
+                  "Media PR"
+                ]).map((tg: string, i: number) => (
+                  <span key={i} className="px-2.5 py-1 rounded-md bg-navy-950 border border-navy-800 text-slate-300">
+                    {tg}
+                  </span>
+                ))}
               </div>
             </div>
           </div>

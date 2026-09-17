@@ -47,9 +47,12 @@ function getLocalDatabase(): DatabaseSchema {
       homepage: {
         ...defaultHomepage,
         ...(parsed.homepage || {}),
+        bannerSlider: { ...defaultHomepage.bannerSlider, ...(parsed.homepage?.bannerSlider || {}) },
         hero: { ...defaultHomepage.hero, ...(parsed.homepage?.hero || {}) },
         telemetry: { ...defaultHomepage.telemetry, ...(parsed.homepage?.telemetry || {}) },
         trustStrip: { ...defaultHomepage.trustStrip, ...(parsed.homepage?.trustStrip || {}) },
+        trackRecord: { ...defaultHomepage.trackRecord, ...(parsed.homepage?.trackRecord || {}) },
+        founderMessage: { ...defaultHomepage.founderMessage, ...(parsed.homepage?.founderMessage || {}) },
         aboutTeaser: { ...defaultHomepage.aboutTeaser, ...(parsed.homepage?.aboutTeaser || {}) },
         servicesSection: { ...defaultHomepage.servicesSection, ...(parsed.homepage?.servicesSection || {}) },
         oneAgency: { ...defaultHomepage.oneAgency, ...(parsed.homepage?.oneAgency || {}) },
@@ -623,7 +626,10 @@ export const db = {
             navigation: ((doc.navigation || defaultNavigation) as NavigationItem[]).sort((a, b) => a.order - b.order),
             homepage: {
               ...defaultHomepage,
-              ...(doc.homepage || {})
+              ...(doc.homepage || {}),
+              bannerSlider: { ...defaultHomepage.bannerSlider, ...(doc.homepage?.bannerSlider || {}) },
+              trackRecord: { ...defaultHomepage.trackRecord, ...(doc.homepage?.trackRecord || {}) },
+              founderMessage: { ...defaultHomepage.founderMessage, ...(doc.homepage?.founderMessage || {}) }
             },
             pages: {
               ...defaultPages,

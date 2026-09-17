@@ -3,9 +3,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import { useContent } from "@/context/ContentContext";
 import { Award, CheckCircle2, Trophy, Star, ChevronRight, Vote, Users, ShieldCheck, MapPin } from "lucide-react";
 
 interface VictoryItem {
+  id?: string;
   name: string;
   roleHi: string;
   roleEn: string;
@@ -17,7 +19,7 @@ interface VictoryItem {
   highlight?: string;
 }
 
-const victoriesData: VictoryItem[] = [
+const defaultVictoriesData: VictoryItem[] = [
   // Lok Sabha 2024
   {
     name: "जय प्रकाश रावत",
@@ -189,15 +191,33 @@ const victoriesData: VictoryItem[] = [
 
 export default function TrackRecordVictories() {
   const { language } = useLanguage();
+  const { homepage } = useContent();
+  const trackRecord = homepage?.trackRecord;
+  const victoriesData = (trackRecord?.items && trackRecord.items.length > 0)
+    ? trackRecord.items
+    : defaultVictoriesData;
+
   const [filter, setFilter] = useState<string>("all");
 
   const filteredVictories = victoriesData.filter((item) => {
     if (filter === "all") return true;
-    if (filter === "lok-sabha") return item.election.includes("लोकसभा");
-    if (filter === "vidhan-sabha") return item.election.includes("विधानसभा") || item.election.includes("एमएलसी");
-    if (filter === "local-body") return item.election.includes("पंचायत") || item.election.includes("निगम") || item.election.includes("निकाय");
+    if (filter === "lok-sabha") return item.election?.includes("लोकसभा");
+    if (filter === "vidhan-sabha") return item.election?.includes("विधानसभा") || item.election?.includes("एमएलसी");
+    if (filter === "local-body") return item.election?.includes("पंचायत") || item.election?.includes("निगम") || item.election?.includes("निकाय");
     return true;
   });
+
+  const badge = language === "hi"
+    ? (trackRecord?.badgeHi || "सफल चुनावी अभियानों का रिकॉर्ड")
+    : (trackRecord?.badgeEn || "Proven Track Record & Victories");
+
+  const heading = language === "hi"
+    ? (trackRecord?.headingHi || "लोकसभा से विधानसभा व नगर निकाय तक सटीक रणनीति, सफल परिणाम")
+    : (trackRecord?.headingEn || "From Parliament to Assembly & Local Bodies: Precision Strategy, Measurable Victories");
+
+  const sub = language === "hi"
+    ? (trackRecord?.subHi || "हमारी विशेषज्ञ टीम उत्तर प्रदेश विधानसभा 2022, गुजरात विधानसभा 2022, दिल्ली एमसीडी, लोकसभा 2024 और यूपी नगर निगम/पंचायत चुनावों में सफल चुनावी अभियानों का प्रमाणित अनुभव रखती है।")
+    : (trackRecord?.subEn || "With active campaign management in UP Assembly 2022, Gujarat Assembly 2022, Delhi MCD, Lok Sabha 2024, and UP municipal polls, our data-backed methodologies consistently deliver.");
 
   return (
     <section className="py-20 bg-navy-950 border-b border-navy-800 text-slate-100 relative">
@@ -207,27 +227,15 @@ export default function TrackRecordVictories() {
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-navy-900 border border-accent-gold/40 text-accent-gold text-xs font-bold uppercase tracking-wider">
             <Trophy className="w-3.5 h-3.5 text-accent-orange" />
-            <span>{language === "hi" ? "सफल चुनावी अभियानों का रिकॉर्ड" : "Proven Track Record & Victories"}</span>
+            <span>{badge}</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-hindi leading-tight">
-            {language === "hi" ? (
-              <>
-                लोकसभा से विधानसभा व नगर निकाय तक <br />
-                <span className="text-accent-orange">सटीक रणनीति, सफल परिणाम</span>
-              </>
-            ) : (
-              <>
-                From Parliament to Assembly & Local Bodies: <br />
-                <span className="text-accent-orange">Precision Strategy, Measurable Victories</span>
-              </>
-            )}
+            {heading}
           </h2>
 
           <p className="text-sm sm:text-base text-slate-300 font-hindi leading-relaxed">
-            {language === "hi"
-              ? "हमारी विशेषज्ञ टीम उत्तर प्रदेश विधानसभा 2022, गुजरात विधानसभा 2022, दिल्ली एमसीडी, लोकसभा 2024 और यूपी नगर निगम/पंचायत चुनावों में सफल चुनावी अभियानों का प्रमाणित अनुभव रखती है।"
-              : "With active campaign management in UP Assembly 2022, Gujarat Assembly 2022, Delhi MCD, Lok Sabha 2024, and UP municipal polls, our data-backed methodologies consistently deliver."}
+            {sub}
           </p>
 
           {/* Filter tabs */}

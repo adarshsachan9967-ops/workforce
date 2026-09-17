@@ -32,6 +32,23 @@ export default function CampaignVideoDashboard({
 }: CampaignVideoDashboardProps) {
   const { language } = useLanguage();
   const { homepage } = useContent();
+  const telemetry = homepage?.telemetry || {};
+
+  const currentVideoSrc = telemetry.videoSrc || videoSrc;
+  const currentAudioSrc = telemetry.audioSrc || audioSrc;
+  const currentYoutubeUrl = telemetry.youtubeUrl || youtubeUrl;
+  const currentWatermark = telemetry.videoWatermark || "WORKFORCE INFOTECH (IPR)";
+  const currentTitle = telemetry.dashboardTitle || "CAMPAIGN INTELLIGENCE DASHBOARD";
+  const currentSubtitle = telemetry.dashboardSubtitle || "UP-AC2027 // WAR ROOM ENGINE";
+  const currentLiveBadge = telemetry.liveFeedBadge || "LIVE FEED";
+  const tickerEvents = (telemetry.tickerEvents && telemetry.tickerEvents.length > 0)
+    ? telemetry.tickerEvents
+    : [
+        "बूथ #312: वोटर पर्ची वितरण 92% पूर्ण",
+        "एलईडी वैन #04: सेक्टर-B चौपाल वीडियो स्क्रीनिंग लाइव"
+      ];
+  const footerNote1 = telemetry.footerNote1 || "निजी एवं कस्टमाइज्ड क्लाउड आर्किटेक्चर";
+  const footerNote2 = telemetry.footerNote2 || "सचित्र लाइव फीड (Live Illustrative)";
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -75,7 +92,7 @@ export default function CampaignVideoDashboard({
           });
         });
     }
-  }, [isMuted, videoSrc]);
+  }, [isMuted, currentVideoSrc]);
 
   // Sync audio with video
   const syncAudio = useCallback((playing: boolean, muted: boolean) => {
@@ -191,26 +208,6 @@ export default function CampaignVideoDashboard({
     }
   };
 
-  const telemetry = homepage?.telemetry || {
-    coveragePercent: "87%",
-    totalBooths: "642",
-    activeFieldTeams: "128",
-    loggedActivities: "1,840+",
-    tickerEvents: [
-      "बूथ #312: बस्ता एवं वोटर स्लिप वितरण 92% पूर्ण",
-      "एलईडी वैन #04: सेक्टर-B चौपाल वीडियो स्क्रीनिंग लाइव",
-      "कॉल सेंटर डेस्क: 2,410 कॉल्स डिस्पैच (सकारात्मक 78%)"
-    ]
-  };
-
-  const tickerEvents = telemetry.tickerEvents && telemetry.tickerEvents.length > 0
-    ? telemetry.tickerEvents
-    : [
-        "बूथ #312: बस्ता एवं वोटर स्लिप वितरण 92% पूर्ण",
-        "एलईडी वैन #04: सेक्टर-B चौपाल वीडियो स्क्रीनिंग लाइव",
-        "कॉल सेंटर डेस्क: 2,410 कॉल्स डिस्पैच (सकारात्मक 78%)"
-      ];
-
   return (
     <div 
       ref={containerRef}
@@ -223,7 +220,7 @@ export default function CampaignVideoDashboard({
       {/* Hidden Audio Element for synchronized sound when unmuted */}
       <audio
         ref={audioRef}
-        src={audioSrc}
+        src={currentAudioSrc}
         loop
         muted={isMuted}
         preload="auto"
@@ -238,10 +235,10 @@ export default function CampaignVideoDashboard({
           </span>
           <div>
             <span className="text-xs font-bold tracking-wider uppercase text-white block">
-              CAMPAIGN INTELLIGENCE DASHBOARD
+              {currentTitle}
             </span>
             <span className="text-[10px] text-slate-400 font-mono">
-              UP-AC2027 // WAR ROOM ENGINE
+              {currentSubtitle}
             </span>
           </div>
         </div>
@@ -250,7 +247,7 @@ export default function CampaignVideoDashboard({
           {/* Live Feed Status Pill */}
           <span className="inline-flex items-center gap-1.5 text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
             <Radio className="w-2.5 h-2.5 animate-pulse" />
-            <span>LIVE FEED</span>
+            <span>{currentLiveBadge}</span>
           </span>
           <span className="text-xs font-mono font-semibold text-slate-400">
             {timeStr} IST
@@ -270,7 +267,7 @@ export default function CampaignVideoDashboard({
         {/* Native Full-Bleed Video: Fills 100% of the entire black screen */}
         <video
           ref={videoRef}
-          src={videoSrc}
+          src={currentVideoSrc}
           poster="/images/campaign-video-poster.jpg"
           autoPlay
           loop
@@ -288,7 +285,7 @@ export default function CampaignVideoDashboard({
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-md border border-white/20 text-[10px] font-bold text-white shadow-lg">
               <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
-              <span>WORKFORCE INFOTECH (IPR)</span>
+              <span>{currentWatermark}</span>
             </span>
           </div>
 
@@ -367,7 +364,7 @@ export default function CampaignVideoDashboard({
             {/* Right side controls: Fullscreen & YouTube Direct Link */}
             <div className="flex items-center gap-1.5">
               <a
-                href={youtubeUrl}
+                href={currentYoutubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-black/85 hover:bg-navy-900 text-slate-300 hover:text-white border border-white/20 backdrop-blur-md transition-colors cursor-pointer"
@@ -490,9 +487,9 @@ export default function CampaignVideoDashboard({
       <div className="mt-2.5 pt-2 border-t border-navy-800/60 flex items-center justify-between text-[10px] text-slate-500">
         <div className="flex items-center gap-1">
           <ShieldCheck className="w-3 h-3 text-slate-400" />
-          <span>निजी एवं कस्टमाइज्ड क्लाउड आर्किटेक्चर</span>
+          <span>{footerNote1}</span>
         </div>
-        <span className="italic">सचित्र लाइव फीड (Live Illustrative)</span>
+        <span className="italic">{footerNote2}</span>
       </div>
 
     </div>
