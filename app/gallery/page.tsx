@@ -3,8 +3,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { galleryItems, galleryCategories, GalleryItem } from "@/data/galleryData";
+import { galleryCategories, GalleryItem } from "@/data/galleryData";
 import { useLanguage } from "@/context/LanguageContext";
+import { useContent } from "@/context/ContentContext";
+import { defaultGallery } from "@/lib/content-schema";
 import EnquiryModal from "@/components/shared/EnquiryModal";
 import {
   Camera,
@@ -26,12 +28,17 @@ import {
 
 export default function GalleryPage() {
   const { language } = useLanguage();
+  const { gallery } = useContent();
+
+  const allItems = (gallery?.items && gallery.items.length > 0) ? gallery.items : defaultGallery.items;
+  const showImageContent = gallery?.showImageContent ?? false;
+
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredItems = galleryItems.filter((item) => {
+  const filteredItems = allItems.filter((item) => {
     const matchesCategory = activeCategory === "all" || item.category === activeCategory;
     const q = searchQuery.toLowerCase().trim();
     if (!q) return matchesCategory;
@@ -115,7 +122,7 @@ export default function GalleryPage() {
             <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-medium">
               <span className="px-3 py-1.5 rounded-xl bg-navy-950/80 border border-navy-700/80 text-accent-gold flex items-center gap-1.5">
                 <Building2 className="w-3.5 h-3.5 text-accent-orange" />
-                <span>26+ प्रामाणिक तस्वीरें</span>
+                <span>{allItems.length}+ प्रामाणिक तस्वीरें</span>
               </span>
               <span className="px-3 py-1.5 rounded-xl bg-navy-950/80 border border-navy-700/80 text-slate-300 flex items-center gap-1.5">
                 <Tv className="w-3.5 h-3.5 text-sky-400" />
@@ -143,8 +150,8 @@ export default function GalleryPage() {
               {galleryCategories.map((cat) => {
                 const isSelected = activeCategory === cat.id;
                 const count = cat.id === "all" 
-                  ? galleryItems.length 
-                  : galleryItems.filter((i) => i.category === cat.id).length;
+                  ? allItems.length 
+                  : allItems.filter((i) => i.category === cat.id).length;
 
                 return (
                   <button
@@ -192,7 +199,7 @@ export default function GalleryPage() {
                 }}
                 className="text-xs text-accent-orange hover:underline font-semibold"
               >
-                {language === "hi" ? "सभी 26 तस्वीरें देखें" : "Reset Filter & Show All"}
+                {language === "hi" ? `सभी ${allItems.length} तस्वीरें देखें` : "Reset Filter & Show All"}
               </button>
             </div>
           ) : (
@@ -237,24 +244,26 @@ export default function GalleryPage() {
                     </div>
                   </div>
 
-                  {/* Caption & Description */}
-                  <div className="p-4 flex-1 flex flex-col justify-between text-left space-y-2">
-                    <div>
-                      <h3 className="text-sm font-bold text-white group-hover:text-accent-gold transition-colors font-hindi line-clamp-1">
-                        {language === "hi" ? item.titleHi : item.titleEn}
-                      </h3>
-                      <p className="text-xs text-slate-400 font-hindi line-clamp-2 mt-1 leading-relaxed">
-                        {language === "hi" ? item.descHi : item.descEn}
-                      </p>
-                    </div>
-
-                    {item.location && (
-                      <div className="pt-2 border-t border-navy-800/80 flex items-center gap-1.5 text-[11px] text-slate-400">
-                        <MapPin className="w-3 h-3 text-sky-400 flex-shrink-0" />
-                        <span className="truncate">{item.location}</span>
+                  {/* Caption & Description - Conditionally rendered based on Admin toggle */}
+                  {showImageContent && (
+                    <div className="p-4 flex-1 flex flex-col justify-between text-left space-y-2">
+                      <div>
+                        <h3 className="text-sm font-bold text-white group-hover:text-accent-gold transition-colors font-hindi line-clamp-1">
+                          {language === "hi" ? item.titleHi : item.titleEn}
+                        </h3>
+                        <p className="text-xs text-slate-400 font-hindi line-clamp-2 mt-1 leading-relaxed">
+                          {language === "hi" ? item.descHi : item.descEn}
+                        </p>
                       </div>
-                    )}
-                  </div>
+
+                      {item.location && (
+                        <div className="pt-2 border-t border-navy-800/80 flex items-center gap-1.5 text-[11px] text-slate-400">
+                          <MapPin className="w-3 h-3 text-sky-400 flex-shrink-0" />
+                          <span className="truncate">{item.location}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -373,25 +382,27 @@ export default function GalleryPage() {
             </div>
 
             {/* Lightbox Caption Footer */}
-            <div className="p-4 sm:p-6 bg-navy-900 border-t border-navy-800 text-left space-y-1.5">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[11px] font-bold text-accent-gold px-2 py-0.5 rounded bg-navy-950 border border-navy-800">
-                  {selectedItem.tag}
-                </span>
-                {selectedItem.location && (
-                  <span className="text-[11px] text-sky-400 flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
-                    <span>{selectedItem.location}</span>
+            {showImageContent && (
+              <div className="p-4 sm:p-6 bg-navy-900 border-t border-navy-800 text-left space-y-1.5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-[11px] font-bold text-accent-gold px-2 py-0.5 rounded bg-navy-950 border border-navy-800">
+                    {selectedItem.tag}
                   </span>
-                )}
+                  {selectedItem.location && (
+                    <span className="text-[11px] text-sky-400 flex items-center gap-1">
+                      <MapPin className="w-3 h-3" />
+                      <span>{selectedItem.location}</span>
+                    </span>
+                  )}
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-white font-hindi">
+                  {language === "hi" ? selectedItem.titleHi : selectedItem.titleEn}
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-300 font-hindi leading-relaxed">
+                  {language === "hi" ? selectedItem.descHi : selectedItem.descEn}
+                </p>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-white font-hindi">
-                {language === "hi" ? selectedItem.titleHi : selectedItem.titleEn}
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-300 font-hindi leading-relaxed">
-                {language === "hi" ? selectedItem.descHi : selectedItem.descEn}
-              </p>
-            </div>
+            )}
 
           </div>
         </div>

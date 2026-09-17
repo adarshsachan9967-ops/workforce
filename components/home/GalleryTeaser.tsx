@@ -4,15 +4,20 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
-import { galleryItems } from "@/data/galleryData";
+import { useContent } from "@/context/ContentContext";
+import { defaultGallery } from "@/lib/content-schema";
 import { Camera, ArrowRight, Building2, Tv, Users, ZoomIn } from "lucide-react";
 
 export default function GalleryTeaser() {
   const { language } = useLanguage();
+  const { gallery } = useContent();
+
+  const allItems = (gallery?.items && gallery.items.length > 0) ? gallery.items : defaultGallery.items;
+  const showImageContent = gallery?.showImageContent ?? false;
 
   // Curate 6 top highlight photos across war room, studio, leadership, and ground
   const featuredIds = [16, 21, 10, 26, 17, 19];
-  const featuredItems = galleryItems.filter((item) => featuredIds.includes(item.id));
+  const featuredItems = allItems.filter((item) => featuredIds.includes(item.id));
 
   return (
     <section className="py-20 bg-white dark:bg-gradient-to-b dark:from-navy-950 dark:via-navy-900 dark:to-navy-950 border-b border-slate-200 dark:border-navy-800 relative transition-colors">
@@ -90,14 +95,16 @@ export default function GalleryTeaser() {
                 </div>
               </div>
 
-              <div className="p-4 flex-1 flex flex-col justify-between text-left space-y-1.5">
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-accent-orange dark:group-hover:text-accent-gold transition-colors font-hindi line-clamp-1">
-                  {language === "hi" ? item.titleHi : item.titleEn}
-                </h3>
-                <p className="text-xs text-slate-600 dark:text-slate-400 font-hindi line-clamp-2 leading-relaxed">
-                  {language === "hi" ? item.descHi : item.descEn}
-                </p>
-              </div>
+              {showImageContent && (
+                <div className="p-4 flex-1 flex flex-col justify-between text-left space-y-1.5">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-accent-orange dark:group-hover:text-accent-gold transition-colors font-hindi line-clamp-1">
+                    {language === "hi" ? item.titleHi : item.titleEn}
+                  </h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 font-hindi line-clamp-2 leading-relaxed">
+                    {language === "hi" ? item.descHi : item.descEn}
+                  </p>
+                </div>
+              )}
             </Link>
           ))}
         </div>

@@ -187,25 +187,25 @@ export const galleryItems: GalleryItem[] = [
   },
   {
     id: 16,
-    src: "/images/gallery/gallery-16.jpeg",
+    src: "/images/showcase/kendriya-war-room.png",
     category: "war-room",
-    titleHi: "केंद्रीय डिजिटल वार रूम — ऑपरेशन एवं डेटा एनालिटिक्स",
+    titleHi: "केंद्रीय वॉर रूम — ऑपरेशन एवं डेटा एनालिटिक्स",
     titleEn: "Central Election War Room — Data Analytics & Ops",
     descHi: "वर्कफोर्स इन्फोटेक का अत्याधुनिक हाई-टेक वार रूम जहां दर्जनों डेटा विश्लेषक वास्तविक समय में बूथ डेटा की निगरानी करते हैं।",
     descEn: "High-tech operational election war room with dedicated data analysts tracking booth telemetry and caller feedback in real-time.",
     location: "लखनऊ / कानपुर वार रूम",
-    tag: "वार रूम"
+    tag: "केंद्रीय वार रूम"
   },
   {
     id: 17,
-    src: "/images/gallery/gallery-17.jpeg",
+    src: "/images/showcase/tele-calling-center.png",
     category: "war-room",
-    titleHi: "कॉल सेंटर एवं टेली-कॉलिंग मतदाता संपर्क केंद्र",
-    titleEn: "Voter Outreach & Tele-Calling Command Center",
+    titleHi: "टेली-कॉलिंग सेंटर एवं मतदाता संपर्क केंद्र",
+    titleEn: "Tele-Calling & Voter Outreach Command Center",
     descHi: "प्रशिक्षित कॉलर्स की विशाल टीम द्वारा मतदाताओं से सीधा संवाद, सर्वे वेरिफिकेशन और फीडबैक संग्रहण।",
     descEn: "Large-scale trained tele-calling facility conducting structured voter surveys, sentiment tracking, and issue logging.",
     location: "कॉल सेंटर हेडक्वार्टर",
-    tag: "कॉल सेंटर"
+    tag: "टेली-कॉलिंग सेंटर"
   },
   {
     id: 18,
@@ -297,13 +297,13 @@ export const galleryItems: GalleryItem[] = [
   },
   {
     id: 26,
-    src: "/images/gallery/gallery-26.jpeg",
+    src: "/images/showcase/chunavi-gane-nirman-kaksh.png",
     category: "media-studio",
-    titleHi: "प्रोफेशनल वीडियो शूट एवं स्टूडियो इंटरव्यू रूम",
-    titleEn: "Professional Video Shoot & Multi-Cam Studio",
-    descHi: "उच्च-स्तरीय कैमरा लाइटिंग, मल्टी-कैम सेटअप और एंकरिंग के साथ महिला व पुरुष प्रत्याशियों के नीतिगत साक्षात्कार।",
-    descEn: "State-of-the-art multi-camera broadcast set for leadership interviews, candidate profiles, and television bytes.",
-    location: "मुख्य मीडिया स्टूडियो",
-    tag: "मल्टी-कैम स्टूडियो"
+    titleHi: "चुनावी गाने निर्माण कक्ष एवं संगीत रिकॉर्डिंग स्टूडियो",
+    titleEn: "Election Songs Studio & Music Production Room",
+    descHi: "पेशेवर संगीतकारों और साउंड इंजीनियर्स द्वारा विधानसभा प्रत्याशियों के जोशीले चुनावी गीतों, नारों, कॉलर ट्यून्स और एंथम का निर्माण कक्ष।",
+    descEn: "Professional audio engineering studio producing high-impact campaign anthems, jingles, and candidate theme songs.",
+    location: "वर्कफोर्स मीडिया स्टूडियो",
+    tag: "चुनावी गाने निर्माण कक्ष"
   }
 ];

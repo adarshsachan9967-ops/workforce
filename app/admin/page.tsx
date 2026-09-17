@@ -10,11 +10,13 @@ import {
   HomepageContent,
   PagesContent,
   FaqItem,
+  GalleryContent,
   defaultSettings,
   defaultNavigation,
   defaultHomepage,
   defaultPages,
-  defaultFaqs
+  defaultFaqs,
+  defaultGallery
 } from "@/lib/content-schema";
 import {
   Shield,
@@ -52,10 +54,12 @@ import {
   Check,
   X,
   Image as ImageIcon,
-  Upload
+  Upload,
+  Camera
 } from "lucide-react";
 import HomepageCms from "@/components/admin/HomepageCms";
 import PagesCms from "@/components/admin/PagesCms";
+import GalleryCms from "@/components/admin/GalleryCms";
 import MediaManagerCms from "@/components/admin/MediaManagerCms";
 import GoogleAnalyticsCms from "@/components/admin/GoogleAnalyticsCms";
 
@@ -72,7 +76,7 @@ export default function AdminDashboardPage() {
 
   // Active Navigation Tab
   const [activeTab, setActiveTab] = useState<
-    "leads" | "header" | "contact" | "home" | "pages" | "faqs" | "footer" | "media" | "security" | "analytics"
+    "leads" | "header" | "contact" | "home" | "pages" | "gallery" | "faqs" | "footer" | "media" | "security" | "analytics"
   >("leads");
 
   // Core Data Stores
@@ -82,6 +86,7 @@ export default function AdminDashboardPage() {
   const [homepage, setHomepage] = useState<HomepageContent>(defaultHomepage);
   const [pages, setPages] = useState<PagesContent>(defaultPages);
   const [faqs, setFaqs] = useState<FaqItem[]>(defaultFaqs);
+  const [gallery, setGallery] = useState<GalleryContent>(defaultGallery);
 
   // Sub-tabs for granular section editing
   const [homeSubTab, setHomeSubTab] = useState<string>("hero");
@@ -152,6 +157,7 @@ export default function AdminDashboardPage() {
           if (cData.data.homepage) setHomepage(cData.data.homepage);
           if (cData.data.pages) setPages(cData.data.pages);
           if (cData.data.faqs) setFaqs(cData.data.faqs);
+          if (cData.data.gallery) setGallery(cData.data.gallery);
         }
       }
     } catch (err) {
@@ -460,6 +466,18 @@ export default function AdminDashboardPage() {
           >
             <FileText className="w-4 h-4" />
             <span>अन्य पेज कंटेंट</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("gallery")}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+              activeTab === "gallery"
+                ? "bg-accent-orange text-white shadow-md shadow-accent-orange/25"
+                : "text-slate-400 hover:text-white hover:bg-navy-800"
+            }`}
+          >
+            <Camera className="w-4 h-4" />
+            <span>गैलरी प्रबंधन (Gallery CMS)</span>
           </button>
 
           <button
@@ -1546,6 +1564,18 @@ export default function AdminDashboardPage() {
           <PagesCms
             pages={pages}
             setPages={setPages}
+            saveSection={saveSection}
+            saving={saving}
+          />
+        )}
+
+        {/* =========================================================
+            TAB 6: GALLERY CMS (MANAGEMENT & VISIBILITY TOGGLE)
+            ========================================================= */}
+        {activeTab === "gallery" && (
+          <GalleryCms
+            gallery={gallery}
+            setGallery={setGallery}
             saveSection={saveSection}
             saving={saving}
           />

@@ -1,3 +1,6 @@
+import { galleryItems, GalleryItem } from "@/data/galleryData";
+export type { GalleryItem };
+
 export interface Enquiry {
   id: string;
   name: string;
@@ -181,8 +184,52 @@ export interface FounderMessageContent {
   button2Link: string;
 }
 
+export interface StudioWarRoomContent {
+  badgeHi: string;
+  badgeEn: string;
+  headingHi: string;
+  headingEn: string;
+  subHi: string;
+  subEn: string;
+  studioCard: {
+    badgeHi: string;
+    badgeEn: string;
+    titleHi: string;
+    titleEn: string;
+    descHi: string;
+    descEn: string;
+    image1Src: string;
+    image1Label: string;
+    image2Src: string;
+    image2Label: string;
+    bulletsHi: string[];
+    bulletsEn: string[];
+    ctaTextHi: string;
+    ctaTextEn: string;
+    ctaLink: string;
+  };
+  warRoomCard: {
+    badgeHi: string;
+    badgeEn: string;
+    titleHi: string;
+    titleEn: string;
+    descHi: string;
+    descEn: string;
+    image1Src: string;
+    image1Label: string;
+    image2Src: string;
+    image2Label: string;
+    bulletsHi: string[];
+    bulletsEn: string[];
+    ctaTextHi: string;
+    ctaTextEn: string;
+    ctaLink: string;
+  };
+}
+
 export interface HomepageContent {
   bannerSlider?: BannerSliderContent;
+  studioWarRoom?: StudioWarRoomContent;
   hero: {
     eyebrow: string;
     title1: string;
@@ -447,6 +494,15 @@ export interface AdminCredentials {
   updatedAt: string;
 }
 
+export interface GalleryContent {
+  showImageContent: boolean; // toggle to show or hide images content on user side (default: false)
+  headingHi?: string;
+  headingEn?: string;
+  subtitleHi?: string;
+  subtitleEn?: string;
+  items: GalleryItem[];
+}
+
 export interface DatabaseSchema {
   enquiries: Enquiry[];
   settings: SiteSettings;
@@ -454,6 +510,7 @@ export interface DatabaseSchema {
   homepage: HomepageContent;
   pages: PagesContent;
   faqs: FaqItem[];
+  gallery?: GalleryContent;
   adminCredentials?: AdminCredentials;
 }
 
@@ -517,7 +574,76 @@ export const defaultNavigation: NavigationItem[] = [
   { id: "nav-9", labelHi: "संपर्क", labelEn: "Contact", url: "/contact", order: 9, active: true }
 ];
 
+export const defaultStudioWarRoom: StudioWarRoomContent = {
+  badgeHi: "इन-हाउस इंफ्रास्ट्रक्चर",
+  badgeEn: "In-House Campaign Infrastructure",
+  headingHi: "अत्याधुनिक मीडिया स्टूडियो एवं 24/7 केंद्रीय चुनावी वार रूम",
+  headingEn: "State-of-the-Art Media Production Studio & 24/7 Central Election War Room",
+  subHi: "वर्कफोर्स इन्फोटेक के पास अपने स्वयं के पेशेवर ऑडियो रिकॉर्डिंग स्टूडियो, वीडियो पॉडकास्ट सेट और विशाल कॉलिंग वार रूम हैं — जिससे आपके अभियान की गति किसी बाहरी एजेंसी पर निर्भर नहीं रहती।",
+  subEn: "With dedicated broadcast studios, acoustically treated music recording facilities, and enterprise war room floors, our campaigns run without dependency or delay.",
+  studioCard: {
+    badgeHi: "वर्कफोर्स मीडिया स्टूडियो संभाग",
+    badgeEn: "Workforce Media Studio Wing",
+    titleHi: "ऑडियो रिकॉर्डिंग, चुनावी गाने & पॉडकास्ट",
+    titleEn: "Audio Production, Campaign Songs & Podcasts",
+    descHi: "ध्वनिरोधी रिकॉर्डिंग स्टूडियो में गायक, संगीतकार और साउंड इंजीनियर्स प्रत्याशी के लिए जोशीले चुनावी गाने, कॉलर ट्यून्स, रेडियो जिंगल और सोशल मीडिया बाइट्स रिकॉर्ड करते हैं। साथ ही फ्लैगशिप वीडियो पॉडकास्ट ‘लाइमलाइट विद अनुज’ (Limelight With Anuj) में जनता के मुद्दों पर विस्तृत चर्चा प्रसारित होती है।",
+    descEn: "Acoustically treated studio suite recording high-energy campaign anthems, candidate podcasts, and viral media bytes with in-house sound engineers.",
+    image1Src: "/images/gallery/gallery-21.jpeg",
+    image1Label: "पॉडकास्ट स्टूडियो",
+    image2Src: "/images/showcase/chunavi-gane-nirman-kaksh.png",
+    image2Label: "चुनावी गाने निर्माण कक्ष",
+    bulletsHi: [
+      "प्रत्याशी-विशिष्ट चुनावी एंथम व थीम सोंग्स का संगीत निर्माण",
+      "‘लाइमलाइट विद अनुज’ व ‘संवाद कार्यक्रम’ पॉडकास्ट साक्षात्कार",
+      "प्रोफेशनल 4K वीडियो शूट, रील्स एवं सोशल मीडिया लाइव स्ट्रीमिंग"
+    ],
+    bulletsEn: [
+      "Candidate-specific campaign anthems & musical themes",
+      "'Limelight With Anuj' video podcast interviews",
+      "Professional 4K multi-cam shoot & viral reel studio"
+    ],
+    ctaTextHi: "स्टूडियो छायाचित्र गैलरी में देखें",
+    ctaTextEn: "View Studio Gallery",
+    ctaLink: "/gallery"
+  },
+  warRoomCard: {
+    badgeHi: "कमांड एंड कंट्रोल संभाग",
+    badgeEn: "Command & Control Wing",
+    titleHi: "हाई-टेक वॉर रूम व 50+ सीट कॉलिंग सेंटर",
+    titleEn: "Hi-Tech War Room & 50+ Seat Calling Center",
+    descHi: "लखनऊ एवं कानपुर स्थित अत्याधुनिक वार रूम से 403 विधानसभाओं के बूथ-स्तरीय डेटा, मतदाता सूची मैपिंग, विपक्षी दलों के मूवमेंट्स और स्थानीय जनमुद्दों की 24/7 लाइव मॉनिटरिंग की जाती है। प्रशिक्षित कॉलर्स प्रतिदिन हजारों मतदाताओं से सीधा संपर्क साधते हैं।",
+    descEn: "24/7 monitoring of booth telemetry, swing voters, opponent movements, and sentiment tracking across UP constituencies with dedicated tele-calling desks.",
+    image1Src: "/images/showcase/kendriya-war-room.png",
+    image1Label: "केंद्रीय वार रूम",
+    image2Src: "/images/showcase/tele-calling-center.png",
+    image2Label: "टेली-कॉलिंग सेंटर",
+    bulletsHi: [
+      "बूथ-वाइज टेलीमेट्री, वोटर टर्नआउट व स्विंग वोटर्स का रियल-टाइम एनालिसिस",
+      "मिस्ड कॉल, आईवीआर (IVR) एवं बल्क व्हाट्सएप/मैसेज प्रसारण",
+      "दैनिक समीक्षा रिपोर्ट एवं त्वरित डैमेज कंट्रोल निर्देश"
+    ],
+    bulletsEn: [
+      "Booth-wise telemetry, turnout & swing voter real-time analytics",
+      "Missed call, IVR and bulk WhatsApp broadcast operations",
+      "Daily campaign intelligence briefings & rapid response instructions"
+    ],
+    ctaTextHi: "वार रूम टेक्नोलॉजी एवं टूल्स देखें",
+    ctaTextEn: "Explore War Room Tech & Tools",
+    ctaLink: "/technology"
+  }
+};
+
+export const defaultGallery: GalleryContent = {
+  showImageContent: false, // Default is false as requested by user! Keep all content in admin, but hidden on user side
+  headingHi: "जमीनी सक्रियता, हाई-टेक वार रूम व मीडिया स्टूडियो की एक झलक",
+  headingEn: "Glimpse of Ground Operations, Hi-Tech War Room & Media Studio",
+  subtitleHi: "उत्तर प्रदेश भर में प्रत्याशियों और राजनीतिक नेताओं के साथ 360° चुनावी अभियान प्रबंधन के वास्तविक छायाचित्र।",
+  subtitleEn: "Authentic campaign photography documenting real-time ground ops, booth management, and broadcast studios.",
+  items: galleryItems
+};
+
 export const defaultHomepage: HomepageContent = {
+  studioWarRoom: defaultStudioWarRoom,
   bannerSlider: {
     slides: [
       {

@@ -7,11 +7,13 @@ import {
   HomepageContent,
   PagesContent,
   FaqItem,
+  GalleryContent,
   defaultSettings,
   defaultNavigation,
   defaultHomepage,
   defaultPages,
-  defaultFaqs
+  defaultFaqs,
+  defaultGallery
 } from "@/lib/content-schema";
 
 interface ContentContextType {
@@ -20,6 +22,7 @@ interface ContentContextType {
   homepage: HomepageContent;
   pages: PagesContent;
   faqs: FaqItem[];
+  gallery: GalleryContent;
   refreshContent: () => Promise<void>;
   loading: boolean;
 }
@@ -32,6 +35,7 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
   const [homepage, setHomepage] = useState<HomepageContent>(defaultHomepage);
   const [pages, setPages] = useState<PagesContent>(defaultPages);
   const [faqs, setFaqs] = useState<FaqItem[]>(defaultFaqs);
+  const [gallery, setGallery] = useState<GalleryContent>(defaultGallery);
   const [loading, setLoading] = useState(true);
 
   const fetchContent = useCallback(async () => {
@@ -45,6 +49,7 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
           if (json.data.homepage) setHomepage(json.data.homepage);
           if (json.data.pages) setPages(json.data.pages);
           if (json.data.faqs) setFaqs(json.data.faqs);
+          if (json.data.gallery) setGallery(json.data.gallery);
         }
       }
     } catch (err) {
@@ -66,6 +71,7 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
         homepage,
         pages,
         faqs,
+        gallery,
         refreshContent: fetchContent,
         loading
       }}
@@ -85,6 +91,7 @@ export function useContent() {
       homepage: defaultHomepage,
       pages: defaultPages,
       faqs: defaultFaqs,
+      gallery: defaultGallery,
       refreshContent: async () => {},
       loading: false
     };

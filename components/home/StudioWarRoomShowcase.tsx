@@ -4,10 +4,20 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
-import { Mic, Headphones, Tv, Radio, Monitor, PhoneCall, Users, CheckCircle2, ArrowRight } from "lucide-react";
+import { useContent } from "@/context/ContentContext";
+import { defaultStudioWarRoom } from "@/lib/content-schema";
+import { Mic, Tv, Monitor, CheckCircle2, ArrowRight } from "lucide-react";
 
 export default function StudioWarRoomShowcase() {
   const { language } = useLanguage();
+  const { homepage } = useContent();
+
+  const showcase = homepage?.studioWarRoom || defaultStudioWarRoom;
+  const studio = showcase.studioCard || defaultStudioWarRoom.studioCard;
+  const warRoom = showcase.warRoomCard || defaultStudioWarRoom.warRoomCard;
+
+  const studioBullets = language === "hi" ? studio.bulletsHi : (studio.bulletsEn || studio.bulletsHi);
+  const warRoomBullets = language === "hi" ? warRoom.bulletsHi : (warRoom.bulletsEn || warRoom.bulletsHi);
 
   return (
     <section className="py-20 bg-navy-950 border-b border-navy-800 relative">
@@ -17,27 +27,19 @@ export default function StudioWarRoomShowcase() {
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-navy-900 border border-sky-400/30 text-sky-400 text-xs font-bold uppercase tracking-wider">
             <Tv className="w-3.5 h-3.5" />
-            <span>{language === "hi" ? "इन-हाउस इंफ्रास्ट्रक्चर" : "In-House Campaign Infrastructure"}</span>
+            <span>{language === "hi" ? showcase.badgeHi : (showcase.badgeEn || showcase.badgeHi)}</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-hindi leading-tight">
             {language === "hi" ? (
-              <>
-                अत्याधुनिक मीडिया स्टूडियो एवं <br />
-                <span className="text-accent-orange">24/7 केंद्रीय चुनावी वार रूम</span>
-              </>
+              showcase.headingHi
             ) : (
-              <>
-                State-of-the-Art Media Production Studio & <br />
-                <span className="text-accent-orange">24/7 Central Election War Room</span>
-              </>
+              showcase.headingEn || showcase.headingHi
             )}
           </h2>
 
           <p className="text-sm sm:text-base text-slate-300 font-hindi leading-relaxed">
-            {language === "hi"
-              ? "वर्कफोर्स इन्फोटेक के पास अपने स्वयं के पेशेवर ऑडियो रिकॉर्डिंग स्टूडियो, वीडियो पॉडकास्ट सेट और विशाल कॉलिंग वार रूम हैं — जिससे आपके अभियान की गति किसी बाहरी एजेंसी पर निर्भर नहीं रहती।"
-              : "With dedicated broadcast studios, acoustically treated music recording facilities, and enterprise war room floors, our campaigns run without dependency or delay."}
+            {language === "hi" ? showcase.subHi : (showcase.subEn || showcase.subHi)}
           </p>
         </div>
 
@@ -51,28 +53,28 @@ export default function StudioWarRoomShowcase() {
               <div className="grid grid-cols-2 gap-3 aspect-[16/10] w-full rounded-2xl overflow-hidden bg-navy-950">
                 <div className="relative w-full h-full">
                   <Image
-                    src="/images/gallery/gallery-21.jpeg"
-                    alt="Limelight with Anuj Podcast Studio"
+                    src={studio.image1Src || "/images/gallery/gallery-21.jpeg"}
+                    alt={studio.image1Label || "Limelight with Anuj Podcast Studio"}
                     fill
                     unoptimized={true}
                     sizes="(max-width: 1024px) 50vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/85 text-[10px] font-bold text-accent-gold keep-dark">
-                    पॉडकास्ट स्टूडियो
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/85 text-[10px] font-bold text-accent-gold keep-dark shadow">
+                    {studio.image1Label || "पॉडकास्ट स्टूडियो"}
                   </div>
                 </div>
                 <div className="relative w-full h-full">
                   <Image
-                    src="/images/gallery/gallery-26.jpeg"
-                    alt="Professional Video Shoot & Multi-Cam Studio"
+                    src={studio.image2Src || "/images/showcase/chunavi-gane-nirman-kaksh.png"}
+                    alt={studio.image2Label || "चुनावी गाने निर्माण कक्ष"}
                     fill
                     unoptimized={true}
                     sizes="(max-width: 1024px) 50vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/85 text-[10px] font-bold text-sky-400 keep-dark">
-                    मल्टी-कैम शूट रूम
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/85 text-[10px] font-bold text-sky-400 keep-dark shadow">
+                    {studio.image2Label || "चुनावी गाने निर्माण कक्ष"}
                   </div>
                 </div>
               </div>
@@ -80,38 +82,34 @@ export default function StudioWarRoomShowcase() {
               <div className="space-y-2">
                 <div className="inline-flex items-center gap-2 text-xs font-bold text-accent-gold uppercase tracking-wider">
                   <Mic className="w-4 h-4 text-accent-orange" />
-                  <span>वर्कफोर्स मीडिया स्टूडियो संभाग</span>
+                  <span>{language === "hi" ? studio.badgeHi : (studio.badgeEn || studio.badgeHi)}</span>
                 </div>
                 <h3 className="text-2xl font-bold text-white font-hindi">
-                  ऑडियो रिकॉर्डिंग, चुनावी गाने & पॉडकास्ट
+                  {language === "hi" ? studio.titleHi : (studio.titleEn || studio.titleHi)}
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-300 font-hindi leading-relaxed">
-                  ध्वनिरोधी रिकॉर्डिंग स्टूडियो में गायक, संगीतकार और साउंड इंजीनियर्स प्रत्याशी के लिए जोशीले चुनावी गाने, कॉलर ट्यून्स, रेडियो जिंगल और सोशल मीडिया बाइट्स रिकॉर्ड करते हैं। साथ ही फ्लैगशिप वीडियो पॉडकास्ट ‘लाइमलाइट विद अनुज’ (Limelight With Anuj) में जनता के मुद्दों पर विस्तृत चर्चा प्रसारित होती है।
+                  {language === "hi" ? studio.descHi : (studio.descEn || studio.descHi)}
                 </p>
               </div>
 
-              <ul className="space-y-2 text-xs text-slate-300 font-hindi">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                  <span>प्रत्याशी-विशिष्ट चुनावी एंथम व थीम सोंग्स का संगीत निर्माण</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                  <span>‘लाइमलाइट विद अनुज’ व ‘संवाद कार्यक्रम’ पॉडकास्ट साक्षात्कार</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                  <span>प्रोफेशनल 4K वीडियो शूट, रील्स एवं सोशल मीडिया लाइव स्ट्रीमिंग</span>
-                </li>
-              </ul>
+              {studioBullets && studioBullets.length > 0 && (
+                <ul className="space-y-2 text-xs text-slate-300 font-hindi">
+                  {studioBullets.map((bullet, idx) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                      <span>{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <div className="pt-4 border-t border-navy-800">
               <Link
-                href="/gallery"
+                href={studio.ctaLink || "/gallery"}
                 className="inline-flex items-center gap-2 text-xs font-bold text-accent-orange hover:text-accent-gold transition"
               >
-                <span>स्टूडियो छायाचित्र गैलरी में देखें</span>
+                <span>{language === "hi" ? studio.ctaTextHi : (studio.ctaTextEn || studio.ctaTextHi)}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -124,28 +122,28 @@ export default function StudioWarRoomShowcase() {
               <div className="grid grid-cols-2 gap-3 aspect-[16/10] w-full rounded-2xl overflow-hidden bg-navy-950">
                 <div className="relative w-full h-full">
                   <Image
-                    src="/images/gallery/gallery-16.jpeg"
-                    alt="Central Election War Room Operations"
+                    src={warRoom.image1Src || "/images/showcase/kendriya-war-room.png"}
+                    alt={warRoom.image1Label || "केंद्रीय वॉर रूम"}
                     fill
                     unoptimized={true}
                     sizes="(max-width: 1024px) 50vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/85 text-[10px] font-bold text-emerald-400 keep-dark">
-                    केंद्रीय वार रूम
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/85 text-[10px] font-bold text-emerald-400 keep-dark shadow">
+                    {warRoom.image1Label || "केंद्रीय वॉर रूम"}
                   </div>
                 </div>
                 <div className="relative w-full h-full">
                   <Image
-                    src="/images/gallery/gallery-17.jpeg"
-                    alt="Tele-Calling Command Center"
+                    src={warRoom.image2Src || "/images/showcase/tele-calling-center.png"}
+                    alt={warRoom.image2Label || "टेली-कॉलिंग सेंटर"}
                     fill
                     unoptimized={true}
                     sizes="(max-width: 1024px) 50vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/85 text-[10px] font-bold text-sky-400 keep-dark">
-                    टेली-कॉलिंग सेंटर
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-navy-950/85 text-[10px] font-bold text-sky-400 keep-dark shadow">
+                    {warRoom.image2Label || "टेली-कॉलिंग सेंटर"}
                   </div>
                 </div>
               </div>
@@ -153,38 +151,34 @@ export default function StudioWarRoomShowcase() {
               <div className="space-y-2">
                 <div className="inline-flex items-center gap-2 text-xs font-bold text-sky-400 uppercase tracking-wider">
                   <Monitor className="w-4 h-4 text-sky-400" />
-                  <span>कमांड एंड कंट्रोल संभाग</span>
+                  <span>{language === "hi" ? warRoom.badgeHi : (warRoom.badgeEn || warRoom.badgeHi)}</span>
                 </div>
                 <h3 className="text-2xl font-bold text-white font-hindi">
-                  हाई-टेक वॉर रूम व 50+ सीट कॉलिंग सेंटर
+                  {language === "hi" ? warRoom.titleHi : (warRoom.titleEn || warRoom.titleHi)}
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-300 font-hindi leading-relaxed">
-                  लखनऊ एवं कानपुर स्थित अत्याधुनिक वार रूम से 403 विधानसभाओं के बूथ-स्तरीय डेटा, मतदाता सूची मैपिंग, विपक्षी दलों के मूवमेंट्स और स्थानीय जनमुद्दों की 24/7 लाइव मॉनिटरिंग की जाती है। प्रशिक्षित कॉलर्स प्रतिदिन हजारों मतदाताओं से सीधा संपर्क साधते हैं।
+                  {language === "hi" ? warRoom.descHi : (warRoom.descEn || warRoom.descHi)}
                 </p>
               </div>
 
-              <ul className="space-y-2 text-xs text-slate-300 font-hindi">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                  <span>बूथ-वाइज टेलीमेट्री, वोटर टर्नआउट व स्विंग वोटर्स का रियल टाइम एनालिसिस</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                  <span>मिस्ड कॉल, आईवीआर (IVR) एवं बल्क व्हाट्सएप/मैसेज प्रसारण</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                  <span>दैनिक समीक्षा रिपोर्ट एवं त्वरित डैमेज कंट्रोल निर्देश</span>
-                </li>
-              </ul>
+              {warRoomBullets && warRoomBullets.length > 0 && (
+                <ul className="space-y-2 text-xs text-slate-300 font-hindi">
+                  {warRoomBullets.map((bullet, idx) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                      <span>{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <div className="pt-4 border-t border-navy-800">
               <Link
-                href="/technology"
+                href={warRoom.ctaLink || "/technology"}
                 className="inline-flex items-center gap-2 text-xs font-bold text-accent-orange hover:text-accent-gold transition"
               >
-                <span>वार रूम टेक्नोलॉजी एवं टूल्स देखें</span>
+                <span>{language === "hi" ? warRoom.ctaTextHi : (warRoom.ctaTextEn || warRoom.ctaTextHi)}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>

@@ -10,9 +10,12 @@ import {
   PagesContent,
   AdminCredentials,
   DatabaseSchema,
+  GalleryContent,
   defaultSettings,
   defaultNavigation,
   defaultHomepage,
+  defaultStudioWarRoom,
+  defaultGallery,
   defaultPages,
   defaultFaqs
 } from "./content-schema";
@@ -31,7 +34,8 @@ function getLocalDatabase(): DatabaseSchema {
         navigation: defaultNavigation,
         homepage: defaultHomepage,
         pages: defaultPages,
-        faqs: defaultFaqs
+        faqs: defaultFaqs,
+        gallery: defaultGallery
       };
       fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
       fs.writeFileSync(DB_PATH, JSON.stringify(initialDb, null, 2), "utf-8");
@@ -48,6 +52,7 @@ function getLocalDatabase(): DatabaseSchema {
         ...defaultHomepage,
         ...(parsed.homepage || {}),
         bannerSlider: { ...defaultHomepage.bannerSlider, ...(parsed.homepage?.bannerSlider || {}) },
+        studioWarRoom: { ...defaultStudioWarRoom, ...(parsed.homepage?.studioWarRoom || {}) },
         hero: { ...defaultHomepage.hero, ...(parsed.homepage?.hero || {}) },
         telemetry: { ...defaultHomepage.telemetry, ...(parsed.homepage?.telemetry || {}) },
         trustStrip: { ...defaultHomepage.trustStrip, ...(parsed.homepage?.trustStrip || {}) },
@@ -77,6 +82,13 @@ function getLocalDatabase(): DatabaseSchema {
         servicesPage: { ...defaultPages.servicesPage, ...(parsed.pages?.servicesPage || {}) }
       },
       faqs: Array.isArray(parsed.faqs) && parsed.faqs.length > 0 ? parsed.faqs : defaultFaqs,
+      gallery: parsed.gallery
+        ? {
+            ...defaultGallery,
+            ...parsed.gallery,
+            items: Array.isArray(parsed.gallery.items) ? parsed.gallery.items : defaultGallery.items
+          }
+        : defaultGallery,
       adminCredentials: parsed.adminCredentials || undefined
     };
   } catch (err) {
@@ -87,7 +99,8 @@ function getLocalDatabase(): DatabaseSchema {
       navigation: defaultNavigation,
       homepage: defaultHomepage,
       pages: defaultPages,
-      faqs: defaultFaqs
+      faqs: defaultFaqs,
+      gallery: defaultGallery
     };
   }
 }
@@ -137,6 +150,7 @@ export const db = {
           homepage: local.homepage,
           pages: local.pages,
           faqs: local.faqs,
+          gallery: local.gallery || defaultGallery,
           adminCredentials: local.adminCredentials,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
@@ -461,6 +475,7 @@ export const db = {
     data.homepage = {
       ...data.homepage,
       ...content,
+      studioWarRoom: { ...(data.homepage.studioWarRoom || defaultStudioWarRoom), ...(content.studioWarRoom || {}) },
       hero: { ...data.homepage.hero, ...(content.hero || {}) },
       telemetry: { ...data.homepage.telemetry, ...(content.telemetry || {}) },
       trustStrip: { ...data.homepage.trustStrip, ...(content.trustStrip || {}) },
@@ -487,6 +502,7 @@ export const db = {
     data.homepage = {
       ...data.homepage,
       ...content,
+      studioWarRoom: { ...(data.homepage.studioWarRoom || defaultStudioWarRoom), ...(content.studioWarRoom || {}) },
       hero: { ...data.homepage.hero, ...(content.hero || {}) },
       telemetry: { ...data.homepage.telemetry, ...(content.telemetry || {}) },
       trustStrip: { ...data.homepage.trustStrip, ...(content.trustStrip || {}) },
@@ -614,6 +630,43 @@ export const db = {
     return false;
   },
 
+  // === GALLERY CONTENT ===
+  async getGalleryAsync(): Promise<GalleryContent> {
+    const content = await this.getAllContentAsync();
+    return content.gallery || defaultGallery;
+  },
+
+  getGallery(): GalleryContent {
+    const data = getLocalDatabase();
+    return data.gallery || defaultGallery;
+  },
+
+  async updateGalleryAsync(gallery: Partial<GalleryContent>): Promise<GalleryContent> {
+    const data = getLocalDatabase();
+    const current = data.gallery || defaultGallery;
+    data.gallery = {
+      ...current,
+      ...gallery,
+      items: gallery.items ? gallery.items : current.items
+    };
+    saveLocalDatabase(data);
+    await syncToMongo("content", { gallery: data.gallery });
+    return data.gallery;
+  },
+
+  updateGallery(gallery: Partial<GalleryContent>): GalleryContent {
+    const data = getLocalDatabase();
+    const current = data.gallery || defaultGallery;
+    data.gallery = {
+      ...current,
+      ...gallery,
+      items: gallery.items ? gallery.items : current.items
+    };
+    saveLocalDatabase(data);
+    syncToMongo("content", { gallery: data.gallery });
+    return data.gallery;
+  },
+
   // === COMPLETE DYNAMIC SITE CONTENT BUNDLE ===
   async getAllContentAsync() {
     try {
@@ -628,6 +681,7 @@ export const db = {
               ...defaultHomepage,
               ...(doc.homepage || {}),
               bannerSlider: { ...defaultHomepage.bannerSlider, ...(doc.homepage?.bannerSlider || {}) },
+              studioWarRoom: { ...defaultStudioWarRoom, ...(doc.homepage?.studioWarRoom || {}) },
               trackRecord: { ...defaultHomepage.trackRecord, ...(doc.homepage?.trackRecord || {}) },
               founderMessage: { ...defaultHomepage.founderMessage, ...(doc.homepage?.founderMessage || {}) }
             },
@@ -635,7 +689,14 @@ export const db = {
               ...defaultPages,
               ...(doc.pages || {})
             },
-            faqs: doc.faqs || defaultFaqs
+            faqs: doc.faqs || defaultFaqs,
+            gallery: doc.gallery
+              ? {
+                  ...defaultGallery,
+                  ...doc.gallery,
+                  items: Array.isArray(doc.gallery.items) ? doc.gallery.items : defaultGallery.items
+                }
+              : defaultGallery
           };
         } else {
           // Trigger initial seed
@@ -652,7 +713,8 @@ export const db = {
       navigation: (data.navigation || defaultNavigation).sort((a, b) => a.order - b.order),
       homepage: data.homepage,
       pages: data.pages,
-      faqs: data.faqs
+      faqs: data.faqs,
+      gallery: data.gallery || defaultGallery
     };
   },
 
@@ -663,7 +725,8 @@ export const db = {
       navigation: (data.navigation || defaultNavigation).sort((a, b) => a.order - b.order),
       homepage: data.homepage,
       pages: data.pages,
-      faqs: data.faqs
+      faqs: data.faqs,
+      gallery: data.gallery || defaultGallery
     };
   },
 

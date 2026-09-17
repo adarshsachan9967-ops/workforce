@@ -50,12 +50,16 @@ export async function PUT(req: NextRequest) {
           await db.saveFaqAsync(data);
         }
         break;
+      case "gallery":
+        await db.updateGalleryAsync(data);
+        break;
       default:
         // If full content payload provided
         if (body.settings) await db.updateSettingsAsync(body.settings);
         if (body.homepage) await db.updateHomepageContentAsync(body.homepage);
         if (body.pages) await db.updatePagesContentAsync(body.pages);
         if (body.navigation) await db.saveNavigationAsync(body.navigation);
+        if (body.gallery) await db.updateGalleryAsync(body.gallery);
         break;
     }
 

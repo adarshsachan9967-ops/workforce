@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import {
   HomepageContent,
   defaultHomepage,
+  defaultStudioWarRoom,
+  StudioWarRoomContent,
   BannerSlideItem,
   VictoryLeaderItem
 } from "@/lib/content-schema";
@@ -32,7 +34,10 @@ import {
   ArrowUp,
   ArrowDown,
   Video,
-  ExternalLink
+  ExternalLink,
+  Tv,
+  Mic,
+  Monitor
 } from "lucide-react";
 
 interface HomepageCmsProps {
@@ -53,6 +58,7 @@ export default function HomepageCms({
 
   // Safe fallback accessors
   const bannerSlider = homepage.bannerSlider || defaultHomepage.bannerSlider!;
+  const studioWarRoom = homepage.studioWarRoom || defaultStudioWarRoom;
   const trackRecord = homepage.trackRecord || defaultHomepage.trackRecord!;
   const founderMessage = homepage.founderMessage || defaultHomepage.founderMessage!;
   const telemetry = homepage.telemetry || defaultHomepage.telemetry;
@@ -91,21 +97,22 @@ export default function HomepageCms({
     { id: "banners", label: "1. बैनर स्लाइडर व टिकर", icon: ImageIcon },
     { id: "hero", label: "2. मुख्य शीर्षक (Hero)", icon: Sparkles },
     { id: "telemetry", label: "3. वॉर रूम डैशबोर्ड व वीडियो", icon: Radio },
-    { id: "victories", label: "4. चुनावी ट्रैक रिकॉर्ड व विजयी नेता", icon: Trophy },
-    { id: "founder", label: "5. संस्थापक संदेश (Founder's Desk)", icon: UserCheck },
-    { id: "trust", label: "6. 6 आंकड़े (Trust Strip)", icon: Award },
-    { id: "about", label: "7. अबाउट टीज़र व कार्ड्स", icon: Shield },
-    { id: "services", label: "8. 11 चुनावी सेवाएं", icon: Layers },
-    { id: "pillars", label: "9. 7 मजबूत स्तंभ", icon: Workflow },
-    { id: "process", label: "10. 7-स्टेप कार्यप्रणाली", icon: Workflow },
-    { id: "command", label: "11. कमांड सेंटर मैट्रिक्स", icon: ShieldAlert },
-    { id: "map", label: "12. यूपी रणनीतिक मैप", icon: MapPin },
-    { id: "why", label: "13. वर्कफोर्स क्यों चुनें", icon: Award },
-    { id: "team", label: "14. 1000+ टीम विंग्स", icon: Users },
-    { id: "tech", label: "15. टेक अवसंरचना", icon: Cpu },
-    { id: "solutions", label: "16. सॉल्यूशंस मॉडल", icon: Sparkles },
-    { id: "compliance", label: "17. विधिक अनुपालन", icon: Scale },
-    { id: "finalCta", label: "18. फ़ाइनल बैनर", icon: PhoneCall },
+    { id: "studio", label: "4. स्टूडियो व वॉर रूम शोकेस", icon: Tv },
+    { id: "victories", label: "5. चुनावी ट्रैक रिकॉर्ड व विजयी नेता", icon: Trophy },
+    { id: "founder", label: "6. संस्थापक संदेश (Founder's Desk)", icon: UserCheck },
+    { id: "trust", label: "7. 6 आंकड़े (Trust Strip)", icon: Award },
+    { id: "about", label: "8. अबाउट टीज़र व कार्ड्स", icon: Shield },
+    { id: "services", label: "9. 11 चुनावी सेवाएं", icon: Layers },
+    { id: "pillars", label: "10. 7 मजबूत स्तंभ", icon: Workflow },
+    { id: "process", label: "11. 7-स्टेप कार्यप्रणाली", icon: Workflow },
+    { id: "command", label: "12. कमांड सेंटर मैट्रिक्स", icon: ShieldAlert },
+    { id: "map", label: "13. यूपी रणनीतिक मैप", icon: MapPin },
+    { id: "why", label: "14. वर्कफोर्स क्यों चुनें", icon: Award },
+    { id: "team", label: "15. 1000+ टीम विंग्स", icon: Users },
+    { id: "tech", label: "16. टेक अवसंरचना", icon: Cpu },
+    { id: "solutions", label: "17. सॉल्यूशंस मॉडल", icon: Sparkles },
+    { id: "compliance", label: "18. विधिक अनुपालन", icon: Scale },
+    { id: "finalCta", label: "19. फ़ाइनल बैनर", icon: PhoneCall },
   ];
 
   return (
@@ -1109,7 +1116,837 @@ export default function HomepageCms({
       )}
 
       {/* =======================================================
-          4. TRACK RECORD & ELECTORAL VICTORIES
+          4. STUDIO & WAR ROOM SHOWCASE CMS
+          ======================================================= */}
+      {activeSubTab === "studio" && (
+        <div className="p-6 rounded-2xl bg-navy-900 border border-navy-800 space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-navy-800 pb-3">
+            <div>
+              <h4 className="text-base font-bold text-accent-gold font-hindi">4. अत्याधुनिक मीडिया स्टूडियो एवं केंद्रीय चुनावी वॉर रूम (Studio & War Room Showcase)</h4>
+              <p className="text-xs text-slate-400">होमपेज पर प्रदर्शित मीडिया स्टूडियो (गाने, पॉडकास्ट) और 24/7 वॉर रूम व टेली-कॉलिंग सेंटर के सभी कंटेंट, 4 तस्वीरें व बुलेट्स को लाइव प्रबंधित करें।</p>
+            </div>
+            <button
+              type="button"
+              disabled={saving}
+              onClick={() => saveSection("homepage", homepage)}
+              className="px-4 py-2 rounded-xl bg-accent-orange hover:bg-accent-orange-hover text-white text-xs font-bold flex items-center gap-1.5 shadow cursor-pointer self-start sm:self-auto disabled:opacity-50"
+            >
+              <Save className="w-3.5 h-3.5" />
+              <span>{saving ? "सहेजा जा रहा है..." : "परिवर्तन सहेजें (Save)"}</span>
+            </button>
+          </div>
+
+          {/* Section Main Header Settings */}
+          <div className="p-5 rounded-2xl bg-navy-950 border border-navy-800 space-y-4">
+            <h5 className="text-sm font-bold text-sky-400 flex items-center gap-2">
+              <Tv className="w-4 h-4" />
+              <span>सेक्शन मुख्य शीर्षक व उपशीर्षक (Section Header Details)</span>
+            </h5>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">सेक्शन बैज (हिंदी)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.badgeHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: { ...studioWarRoom, badgeHi: e.target.value }
+                  })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Section Badge (English)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.badgeEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: { ...studioWarRoom, badgeEn: e.target.value }
+                  })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">मुख्य हेडिंग (हिंदी)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.headingHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: { ...studioWarRoom, headingHi: e.target.value }
+                  })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Main Heading (English)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.headingEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: { ...studioWarRoom, headingEn: e.target.value }
+                  })}
+                  className="w-full px-3.5 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">उपशीर्षक/विवरण (हिंदी)</label>
+                <textarea
+                  rows={2}
+                  value={studioWarRoom.subHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: { ...studioWarRoom, subHi: e.target.value }
+                  })}
+                  className="w-full p-2.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-300 font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Subtitle/Description (English)</label>
+                <textarea
+                  rows={2}
+                  value={studioWarRoom.subEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: { ...studioWarRoom, subEn: e.target.value }
+                  })}
+                  className="w-full p-2.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-300"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Studio & Media Suite Card (Left Card) */}
+          <div className="p-5 rounded-2xl bg-navy-950 border border-navy-800 space-y-6">
+            <div className="flex items-center justify-between border-b border-navy-800/80 pb-3">
+              <h5 className="text-sm font-bold text-accent-gold flex items-center gap-2">
+                <Mic className="w-4 h-4 text-accent-orange" />
+                <span>कार्ड 1: मीडिया स्टूडियो, पॉडकास्ट व चुनावी गाने (Media Studio Card)</span>
+              </h5>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">कार्ड बैज (हिंदी)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.studioCard?.badgeHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      studioCard: { ...studioWarRoom.studioCard, badgeHi: e.target.value }
+                    }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Card Badge (English)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.studioCard?.badgeEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      studioCard: { ...studioWarRoom.studioCard, badgeEn: e.target.value }
+                    }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">कार्ड मुख्य शीर्षक (हिंदी)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.studioCard?.titleHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      studioCard: { ...studioWarRoom.studioCard, titleHi: e.target.value }
+                    }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi font-bold"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Card Title (English)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.studioCard?.titleEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      studioCard: { ...studioWarRoom.studioCard, titleEn: e.target.value }
+                    }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-bold"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">कार्ड विवरण (हिंदी)</label>
+                <textarea
+                  rows={3}
+                  value={studioWarRoom.studioCard?.descHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      studioCard: { ...studioWarRoom.studioCard, descHi: e.target.value }
+                    }
+                  })}
+                  className="w-full p-2.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-300 font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Card Description (English)</label>
+                <textarea
+                  rows={3}
+                  value={studioWarRoom.studioCard?.descEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      studioCard: { ...studioWarRoom.studioCard, descEn: e.target.value }
+                    }
+                  })}
+                  className="w-full p-2.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-300"
+                />
+              </div>
+            </div>
+
+            {/* Studio Card 2 Images */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 rounded-xl bg-navy-900 border border-navy-800">
+              {/* Studio Image 1 */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-accent-gold">तस्वीर 1: पॉडकास्ट स्टूडियो</span>
+                  <label className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-navy-800 hover:bg-navy-750 text-accent-orange text-[11px] font-semibold cursor-pointer border border-navy-700">
+                    <Upload className="w-3 h-3" />
+                    <span>{uploadingField === "studioImg1" ? "अपलोड हो रहा है..." : "फोटो बदलें"}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleImageUpload(e, (url) => {
+                        setHomepage({
+                          ...homepage,
+                          studioWarRoom: {
+                            ...studioWarRoom,
+                            studioCard: { ...studioWarRoom.studioCard, image1Src: url }
+                          }
+                        });
+                      }, "studioImg1")}
+                    />
+                  </label>
+                </div>
+                <div className="relative aspect-video rounded-xl overflow-hidden bg-navy-950 border border-navy-700">
+                  <img
+                    src={studioWarRoom.studioCard?.image1Src || "/images/gallery/gallery-21.jpeg"}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/75 text-[10px] text-white">
+                    {studioWarRoom.studioCard?.image1Label || "पॉडकास्ट स्टूडियो"}
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    placeholder="इमेज यूआरएल"
+                    value={studioWarRoom.studioCard?.image1Src || ""}
+                    onChange={(e) => setHomepage({
+                      ...homepage,
+                      studioWarRoom: {
+                        ...studioWarRoom,
+                        studioCard: { ...studioWarRoom.studioCard, image1Src: e.target.value }
+                      }
+                    })}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-mono"
+                  />
+                  <input
+                    type="text"
+                    placeholder="इमेज लेबल (उदा. पॉडकास्ट स्टूडियो)"
+                    value={studioWarRoom.studioCard?.image1Label || ""}
+                    onChange={(e) => setHomepage({
+                      ...homepage,
+                      studioWarRoom: {
+                        ...studioWarRoom,
+                        studioCard: { ...studioWarRoom.studioCard, image1Label: e.target.value }
+                      }
+                    })}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-hindi"
+                  />
+                </div>
+              </div>
+
+              {/* Studio Image 2 */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-sky-400">तस्वीर 2: चुनावी गाने निर्माण कक्ष</span>
+                  <label className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-navy-800 hover:bg-navy-750 text-sky-400 text-[11px] font-semibold cursor-pointer border border-navy-700">
+                    <Upload className="w-3 h-3" />
+                    <span>{uploadingField === "studioImg2" ? "अपलोड हो रहा है..." : "फोटो बदलें"}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleImageUpload(e, (url) => {
+                        setHomepage({
+                          ...homepage,
+                          studioWarRoom: {
+                            ...studioWarRoom,
+                            studioCard: { ...studioWarRoom.studioCard, image2Src: url }
+                          }
+                        });
+                      }, "studioImg2")}
+                    />
+                  </label>
+                </div>
+                <div className="relative aspect-video rounded-xl overflow-hidden bg-navy-950 border border-navy-700">
+                  <img
+                    src={studioWarRoom.studioCard?.image2Src || "/images/showcase/chunavi-gane-nirman-kaksh.png"}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/75 text-[10px] text-white">
+                    {studioWarRoom.studioCard?.image2Label || "चुनावी गाने निर्माण कक्ष"}
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    placeholder="इमेज यूआरएल"
+                    value={studioWarRoom.studioCard?.image2Src || ""}
+                    onChange={(e) => setHomepage({
+                      ...homepage,
+                      studioWarRoom: {
+                        ...studioWarRoom,
+                        studioCard: { ...studioWarRoom.studioCard, image2Src: e.target.value }
+                      }
+                    })}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-mono"
+                  />
+                  <input
+                    type="text"
+                    placeholder="इमेज लेबल (उदा. चुनावी गाने निर्माण कक्ष)"
+                    value={studioWarRoom.studioCard?.image2Label || ""}
+                    onChange={(e) => setHomepage({
+                      ...homepage,
+                      studioWarRoom: {
+                        ...studioWarRoom,
+                        studioCard: { ...studioWarRoom.studioCard, image2Label: e.target.value }
+                      }
+                    })}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-hindi"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Studio Bullets */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold text-slate-300">स्टूडियो की प्रमुख विशेषताएं / बुलेट्स (Bullets)</label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const hiArr = [...(studioWarRoom.studioCard?.bulletsHi || []), "नई स्टूडियो सेवा"];
+                    const enArr = [...(studioWarRoom.studioCard?.bulletsEn || []), "New studio service"];
+                    setHomepage({
+                      ...homepage,
+                      studioWarRoom: {
+                        ...studioWarRoom,
+                        studioCard: { ...studioWarRoom.studioCard, bulletsHi: hiArr, bulletsEn: enArr }
+                      }
+                    });
+                  }}
+                  className="px-2.5 py-1 rounded-lg bg-navy-800 hover:bg-navy-750 text-accent-gold text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                >
+                  <Plus className="w-3 h-3" />
+                  <span>+ बिंदु जोड़ें</span>
+                </button>
+              </div>
+
+              {(studioWarRoom.studioCard?.bulletsHi || []).map((bullet, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <span className="text-xs font-mono text-emerald-400 px-2 py-1.5 rounded bg-navy-900 border border-navy-800">✓ #{idx + 1}</span>
+                  <input
+                    type="text"
+                    value={bullet}
+                    placeholder="बुलेट टेक्स्ट (हिंदी)"
+                    onChange={(e) => {
+                      const updated = [...studioWarRoom.studioCard.bulletsHi];
+                      updated[idx] = e.target.value;
+                      setHomepage({
+                        ...homepage,
+                        studioWarRoom: {
+                          ...studioWarRoom,
+                          studioCard: { ...studioWarRoom.studioCard, bulletsHi: updated }
+                        }
+                      });
+                    }}
+                    className="w-full px-3.5 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-200 font-hindi"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const hiUpdated = studioWarRoom.studioCard.bulletsHi.filter((_, i) => i !== idx);
+                      const enUpdated = (studioWarRoom.studioCard.bulletsEn || []).filter((_, i) => i !== idx);
+                      setHomepage({
+                        ...homepage,
+                        studioWarRoom: {
+                          ...studioWarRoom,
+                          studioCard: { ...studioWarRoom.studioCard, bulletsHi: hiUpdated, bulletsEn: enUpdated }
+                        }
+                      });
+                    }}
+                    className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 cursor-pointer"
+                    title="हटाएं"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* Studio CTA Button */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 rounded-xl bg-navy-900 border border-navy-800">
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-400 mb-1">बटन टेक्स्ट (हिंदी)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.studioCard?.ctaTextHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      studioCard: { ...studioWarRoom.studioCard, ctaTextHi: e.target.value }
+                    }
+                  })}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-400 mb-1">Button Text (English)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.studioCard?.ctaTextEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      studioCard: { ...studioWarRoom.studioCard, ctaTextEn: e.target.value }
+                    }
+                  })}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-400 mb-1">बटन लिंक (URL)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.studioCard?.ctaLink || "/gallery"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      studioCard: { ...studioWarRoom.studioCard, ctaLink: e.target.value }
+                    }
+                  })}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-mono"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* War Room & Call Center Card (Right Card) */}
+          <div className="p-5 rounded-2xl bg-navy-950 border border-navy-800 space-y-6">
+            <div className="flex items-center justify-between border-b border-navy-800/80 pb-3">
+              <h5 className="text-sm font-bold text-sky-400 flex items-center gap-2">
+                <Monitor className="w-4 h-4 text-sky-400" />
+                <span>कार्ड 2: केंद्रीय वॉर रूम एवं टेली-कॉलिंग सेंटर (War Room & Call Center Card)</span>
+              </h5>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">कार्ड बैज (हिंदी)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.warRoomCard?.badgeHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      warRoomCard: { ...studioWarRoom.warRoomCard, badgeHi: e.target.value }
+                    }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Card Badge (English)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.warRoomCard?.badgeEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      warRoomCard: { ...studioWarRoom.warRoomCard, badgeEn: e.target.value }
+                    }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">कार्ड मुख्य शीर्षक (हिंदी)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.warRoomCard?.titleHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      warRoomCard: { ...studioWarRoom.warRoomCard, titleHi: e.target.value }
+                    }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-hindi font-bold"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Card Title (English)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.warRoomCard?.titleEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      warRoomCard: { ...studioWarRoom.warRoomCard, titleEn: e.target.value }
+                    }
+                  })}
+                  className="w-full px-3 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-white font-bold"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">कार्ड विवरण (हिंदी)</label>
+                <textarea
+                  rows={3}
+                  value={studioWarRoom.warRoomCard?.descHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      warRoomCard: { ...studioWarRoom.warRoomCard, descHi: e.target.value }
+                    }
+                  })}
+                  className="w-full p-2.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-300 font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Card Description (English)</label>
+                <textarea
+                  rows={3}
+                  value={studioWarRoom.warRoomCard?.descEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      warRoomCard: { ...studioWarRoom.warRoomCard, descEn: e.target.value }
+                    }
+                  })}
+                  className="w-full p-2.5 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-300"
+                />
+              </div>
+            </div>
+
+            {/* War Room Card 2 Images */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 rounded-xl bg-navy-900 border border-navy-800">
+              {/* War Room Image 1 */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-emerald-400">तस्वीर 1: केंद्रीय वार रूम</span>
+                  <label className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-navy-800 hover:bg-navy-750 text-emerald-400 text-[11px] font-semibold cursor-pointer border border-navy-700">
+                    <Upload className="w-3 h-3" />
+                    <span>{uploadingField === "warRoomImg1" ? "अपलोड हो रहा है..." : "फोटो बदलें"}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleImageUpload(e, (url) => {
+                        setHomepage({
+                          ...homepage,
+                          studioWarRoom: {
+                            ...studioWarRoom,
+                            warRoomCard: { ...studioWarRoom.warRoomCard, image1Src: url }
+                          }
+                        });
+                      }, "warRoomImg1")}
+                    />
+                  </label>
+                </div>
+                <div className="relative aspect-video rounded-xl overflow-hidden bg-navy-950 border border-navy-700">
+                  <img
+                    src={studioWarRoom.warRoomCard?.image1Src || "/images/showcase/kendriya-war-room.png"}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/75 text-[10px] text-white">
+                    {studioWarRoom.warRoomCard?.image1Label || "केंद्रीय वार रूम"}
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    placeholder="इमेज यूआरएल"
+                    value={studioWarRoom.warRoomCard?.image1Src || ""}
+                    onChange={(e) => setHomepage({
+                      ...homepage,
+                      studioWarRoom: {
+                        ...studioWarRoom,
+                        warRoomCard: { ...studioWarRoom.warRoomCard, image1Src: e.target.value }
+                      }
+                    })}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-mono"
+                  />
+                  <input
+                    type="text"
+                    placeholder="इमेज लेबल (उदा. केंद्रीय वार रूम)"
+                    value={studioWarRoom.warRoomCard?.image1Label || ""}
+                    onChange={(e) => setHomepage({
+                      ...homepage,
+                      studioWarRoom: {
+                        ...studioWarRoom,
+                        warRoomCard: { ...studioWarRoom.warRoomCard, image1Label: e.target.value }
+                      }
+                    })}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-hindi"
+                  />
+                </div>
+              </div>
+
+              {/* War Room Image 2 */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-sky-400">तस्वीर 2: टेली-कॉलिंग सेंटर</span>
+                  <label className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-navy-800 hover:bg-navy-750 text-sky-400 text-[11px] font-semibold cursor-pointer border border-navy-700">
+                    <Upload className="w-3 h-3" />
+                    <span>{uploadingField === "warRoomImg2" ? "अपलोड हो रहा है..." : "फोटो बदलें"}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleImageUpload(e, (url) => {
+                        setHomepage({
+                          ...homepage,
+                          studioWarRoom: {
+                            ...studioWarRoom,
+                            warRoomCard: { ...studioWarRoom.warRoomCard, image2Src: url }
+                          }
+                        });
+                      }, "warRoomImg2")}
+                    />
+                  </label>
+                </div>
+                <div className="relative aspect-video rounded-xl overflow-hidden bg-navy-950 border border-navy-700">
+                  <img
+                    src={studioWarRoom.warRoomCard?.image2Src || "/images/showcase/tele-calling-center.png"}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/75 text-[10px] text-white">
+                    {studioWarRoom.warRoomCard?.image2Label || "टेली-कॉलिंग सेंटर"}
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="text"
+                    placeholder="इमेज यूआरएल"
+                    value={studioWarRoom.warRoomCard?.image2Src || ""}
+                    onChange={(e) => setHomepage({
+                      ...homepage,
+                      studioWarRoom: {
+                        ...studioWarRoom,
+                        warRoomCard: { ...studioWarRoom.warRoomCard, image2Src: e.target.value }
+                      }
+                    })}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-mono"
+                  />
+                  <input
+                    type="text"
+                    placeholder="इमेज लेबल (उदा. टेली-कॉलिंग सेंटर)"
+                    value={studioWarRoom.warRoomCard?.image2Label || ""}
+                    onChange={(e) => setHomepage({
+                      ...homepage,
+                      studioWarRoom: {
+                        ...studioWarRoom,
+                        warRoomCard: { ...studioWarRoom.warRoomCard, image2Label: e.target.value }
+                      }
+                    })}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-hindi"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* War Room Bullets */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold text-slate-300">वॉर रूम की प्रमुख विशेषताएं / बुलेट्स (Bullets)</label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const hiArr = [...(studioWarRoom.warRoomCard?.bulletsHi || []), "नई वॉर रूम सुविधा"];
+                    const enArr = [...(studioWarRoom.warRoomCard?.bulletsEn || []), "New war room feature"];
+                    setHomepage({
+                      ...homepage,
+                      studioWarRoom: {
+                        ...studioWarRoom,
+                        warRoomCard: { ...studioWarRoom.warRoomCard, bulletsHi: hiArr, bulletsEn: enArr }
+                      }
+                    });
+                  }}
+                  className="px-2.5 py-1 rounded-lg bg-navy-800 hover:bg-navy-750 text-accent-gold text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                >
+                  <Plus className="w-3 h-3" />
+                  <span>+ बिंदु जोड़ें</span>
+                </button>
+              </div>
+
+              {(studioWarRoom.warRoomCard?.bulletsHi || []).map((bullet, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <span className="text-xs font-mono text-emerald-400 px-2 py-1.5 rounded bg-navy-900 border border-navy-800">✓ #{idx + 1}</span>
+                  <input
+                    type="text"
+                    value={bullet}
+                    placeholder="बुलेट टेक्स्ट (हिंदी)"
+                    onChange={(e) => {
+                      const updated = [...studioWarRoom.warRoomCard.bulletsHi];
+                      updated[idx] = e.target.value;
+                      setHomepage({
+                        ...homepage,
+                        studioWarRoom: {
+                          ...studioWarRoom,
+                          warRoomCard: { ...studioWarRoom.warRoomCard, bulletsHi: updated }
+                        }
+                      });
+                    }}
+                    className="w-full px-3.5 py-2 rounded-xl bg-navy-900 border border-navy-700 text-xs text-slate-200 font-hindi"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const hiUpdated = studioWarRoom.warRoomCard.bulletsHi.filter((_, i) => i !== idx);
+                      const enUpdated = (studioWarRoom.warRoomCard.bulletsEn || []).filter((_, i) => i !== idx);
+                      setHomepage({
+                        ...homepage,
+                        studioWarRoom: {
+                          ...studioWarRoom,
+                          warRoomCard: { ...studioWarRoom.warRoomCard, bulletsHi: hiUpdated, bulletsEn: enUpdated }
+                        }
+                      });
+                    }}
+                    className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 cursor-pointer"
+                    title="हटाएं"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* War Room CTA Button */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 rounded-xl bg-navy-900 border border-navy-800">
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-400 mb-1">बटन टेक्स्ट (हिंदी)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.warRoomCard?.ctaTextHi || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      warRoomCard: { ...studioWarRoom.warRoomCard, ctaTextHi: e.target.value }
+                    }
+                  })}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-hindi"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-400 mb-1">Button Text (English)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.warRoomCard?.ctaTextEn || ""}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      warRoomCard: { ...studioWarRoom.warRoomCard, ctaTextEn: e.target.value }
+                    }
+                  })}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-400 mb-1">बटन लिंक (URL)</label>
+                <input
+                  type="text"
+                  value={studioWarRoom.warRoomCard?.ctaLink || "/technology"}
+                  onChange={(e) => setHomepage({
+                    ...homepage,
+                    studioWarRoom: {
+                      ...studioWarRoom,
+                      warRoomCard: { ...studioWarRoom.warRoomCard, ctaLink: e.target.value }
+                    }
+                  })}
+                  className="w-full px-2.5 py-1.5 rounded-lg bg-navy-950 border border-navy-700 text-xs text-white font-mono"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-4">
+            <button
+              type="button"
+              disabled={saving}
+              onClick={() => saveSection("homepage", homepage)}
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-accent-orange to-accent-orange-hover hover:brightness-110 text-white font-bold text-sm shadow-xl shadow-accent-orange/20 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            >
+              <Save className="w-4 h-4" />
+              <span>{saving ? "सहेजा जा रहा है..." : "स्टूडियो व वॉर रूम शोकेस सहेजें (Save Changes)"}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* =======================================================
+          5. TRACK RECORD & ELECTORAL VICTORIES
           ======================================================= */}
       {activeSubTab === "victories" && (
         <div className="p-6 rounded-2xl bg-navy-900 border border-navy-800 space-y-6">
