@@ -55,11 +55,13 @@ import {
   X,
   Image as ImageIcon,
   Upload,
-  Camera
+  Camera,
+  Trophy
 } from "lucide-react";
 import HomepageCms from "@/components/admin/HomepageCms";
 import PagesCms from "@/components/admin/PagesCms";
 import GalleryCms from "@/components/admin/GalleryCms";
+import TrackRecordCms from "@/components/admin/TrackRecordCms";
 import MediaManagerCms from "@/components/admin/MediaManagerCms";
 import GoogleAnalyticsCms from "@/components/admin/GoogleAnalyticsCms";
 
@@ -76,7 +78,7 @@ export default function AdminDashboardPage() {
 
   // Active Navigation Tab
   const [activeTab, setActiveTab] = useState<
-    "leads" | "header" | "contact" | "home" | "pages" | "gallery" | "faqs" | "footer" | "media" | "security" | "analytics"
+    "leads" | "header" | "contact" | "home" | "victories" | "pages" | "gallery" | "faqs" | "footer" | "media" | "security" | "analytics"
   >("leads");
 
   // Core Data Stores
@@ -454,6 +456,18 @@ export default function AdminDashboardPage() {
           >
             <Radio className="w-4 h-4" />
             <span>होमपेज कंटेंट व टेलीमेट्री</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("victories")}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+              activeTab === "victories"
+                ? "bg-accent-orange text-white shadow-md shadow-accent-orange/25"
+                : "text-slate-400 hover:text-white hover:bg-navy-800"
+            }`}
+          >
+            <Trophy className="w-4 h-4 text-accent-gold" />
+            <span>चुनावी ट्रैक रिकॉर्ड व परिणाम</span>
           </button>
 
           <button
@@ -1552,6 +1566,23 @@ export default function AdminDashboardPage() {
           <HomepageCms
             homepage={homepage}
             setHomepage={setHomepage}
+            saveSection={saveSection}
+            saving={saving}
+          />
+        )}
+
+        {/* =========================================================
+            TAB 4.5: TRACK RECORD & ELECTORAL VICTORIES (DEDICATED CMS)
+            ========================================================= */}
+        {activeTab === "victories" && (
+          <TrackRecordCms
+            trackRecord={homepage.trackRecord || defaultHomepage.trackRecord!}
+            setTrackRecord={(updatedTr) => {
+              setHomepage({
+                ...homepage,
+                trackRecord: updatedTr
+              });
+            }}
             saveSection={saveSection}
             saving={saving}
           />

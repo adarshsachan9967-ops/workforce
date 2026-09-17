@@ -11,6 +11,7 @@ import {
   AdminCredentials,
   DatabaseSchema,
   GalleryContent,
+  TrackRecordContent,
   defaultSettings,
   defaultNavigation,
   defaultHomepage,
@@ -476,6 +477,13 @@ export const db = {
       ...data.homepage,
       ...content,
       studioWarRoom: { ...(data.homepage.studioWarRoom || defaultStudioWarRoom), ...(content.studioWarRoom || {}) },
+      trackRecord: content.trackRecord
+        ? {
+            ...(data.homepage.trackRecord || defaultHomepage.trackRecord!),
+            ...content.trackRecord,
+            items: content.trackRecord.items ? content.trackRecord.items : (data.homepage.trackRecord?.items || defaultHomepage.trackRecord!.items)
+          }
+        : (data.homepage.trackRecord || defaultHomepage.trackRecord!),
       hero: { ...data.homepage.hero, ...(content.hero || {}) },
       telemetry: { ...data.homepage.telemetry, ...(content.telemetry || {}) },
       trustStrip: { ...data.homepage.trustStrip, ...(content.trustStrip || {}) },
@@ -503,6 +511,13 @@ export const db = {
       ...data.homepage,
       ...content,
       studioWarRoom: { ...(data.homepage.studioWarRoom || defaultStudioWarRoom), ...(content.studioWarRoom || {}) },
+      trackRecord: content.trackRecord
+        ? {
+            ...(data.homepage.trackRecord || defaultHomepage.trackRecord!),
+            ...content.trackRecord,
+            items: content.trackRecord.items ? content.trackRecord.items : (data.homepage.trackRecord?.items || defaultHomepage.trackRecord!.items)
+          }
+        : (data.homepage.trackRecord || defaultHomepage.trackRecord!),
       hero: { ...data.homepage.hero, ...(content.hero || {}) },
       telemetry: { ...data.homepage.telemetry, ...(content.telemetry || {}) },
       trustStrip: { ...data.homepage.trustStrip, ...(content.trustStrip || {}) },
@@ -667,6 +682,43 @@ export const db = {
     return data.gallery;
   },
 
+  // === TRACK RECORD CONTENT ===
+  async getTrackRecordAsync(): Promise<TrackRecordContent> {
+    const content = await this.getAllContentAsync();
+    return content.homepage.trackRecord || defaultHomepage.trackRecord!;
+  },
+
+  getTrackRecord(): TrackRecordContent {
+    const data = getLocalDatabase();
+    return data.homepage.trackRecord || defaultHomepage.trackRecord!;
+  },
+
+  async updateTrackRecordAsync(trackRecord: Partial<TrackRecordContent>): Promise<TrackRecordContent> {
+    const data = getLocalDatabase();
+    const current = data.homepage.trackRecord || defaultHomepage.trackRecord!;
+    data.homepage.trackRecord = {
+      ...current,
+      ...trackRecord,
+      items: trackRecord.items ? trackRecord.items : current.items
+    };
+    saveLocalDatabase(data);
+    await syncToMongo("content", { homepage: data.homepage });
+    return data.homepage.trackRecord;
+  },
+
+  updateTrackRecord(trackRecord: Partial<TrackRecordContent>): TrackRecordContent {
+    const data = getLocalDatabase();
+    const current = data.homepage.trackRecord || defaultHomepage.trackRecord!;
+    data.homepage.trackRecord = {
+      ...current,
+      ...trackRecord,
+      items: trackRecord.items ? trackRecord.items : current.items
+    };
+    saveLocalDatabase(data);
+    syncToMongo("content", { homepage: data.homepage });
+    return data.homepage.trackRecord;
+  },
+
   // === COMPLETE DYNAMIC SITE CONTENT BUNDLE ===
   async getAllContentAsync() {
     try {
@@ -674,6 +726,7 @@ export const db = {
       if (mongo) {
         const doc: any = await mongo.collection("content").findOne({ _id: CONTENT_DOC_ID as any });
         if (doc) {
+          const local = getLocalDatabase();
           return {
             settings: { ...defaultSettings, ...(doc.settings || {}) },
             navigation: ((doc.navigation || defaultNavigation) as NavigationItem[]).sort((a, b) => a.order - b.order),
@@ -682,7 +735,15 @@ export const db = {
               ...(doc.homepage || {}),
               bannerSlider: { ...defaultHomepage.bannerSlider, ...(doc.homepage?.bannerSlider || {}) },
               studioWarRoom: { ...defaultStudioWarRoom, ...(doc.homepage?.studioWarRoom || {}) },
-              trackRecord: { ...defaultHomepage.trackRecord, ...(doc.homepage?.trackRecord || {}) },
+              trackRecord: doc.homepage?.trackRecord
+                ? {
+                    ...defaultHomepage.trackRecord,
+                    ...doc.homepage.trackRecord,
+                    items: Array.isArray(doc.homepage.trackRecord.items) && doc.homepage.trackRecord.items.length > 0
+                      ? doc.homepage.trackRecord.items
+                      : (local.homepage?.trackRecord?.items || defaultHomepage.trackRecord!.items)
+                  }
+                : (local.homepage?.trackRecord || defaultHomepage.trackRecord!),
               founderMessage: { ...defaultHomepage.founderMessage, ...(doc.homepage?.founderMessage || {}) }
             },
             pages: {

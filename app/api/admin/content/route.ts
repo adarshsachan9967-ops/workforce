@@ -53,6 +53,9 @@ export async function PUT(req: NextRequest) {
       case "gallery":
         await db.updateGalleryAsync(data);
         break;
+      case "trackRecord":
+        await db.updateTrackRecordAsync(data);
+        break;
       default:
         // If full content payload provided
         if (body.settings) await db.updateSettingsAsync(body.settings);
@@ -60,6 +63,7 @@ export async function PUT(req: NextRequest) {
         if (body.pages) await db.updatePagesContentAsync(body.pages);
         if (body.navigation) await db.saveNavigationAsync(body.navigation);
         if (body.gallery) await db.updateGalleryAsync(body.gallery);
+        if (body.trackRecord) await db.updateTrackRecordAsync(body.trackRecord);
         break;
     }
 

@@ -80,8 +80,8 @@ const defaultVictoriesData: VictoryItem[] = [
     constituency: "कल्याणपुर, कानपुर",
     election: "यूपी विधानसभा चुनाव 2022",
     partyBadge: "SP",
-    status: "winner",
-    highlight: "विजयी विधायक"
+    status: "runner-up",
+    highlight: "उपविजेता"
   },
   {
     name: "चौधरी सागर सिंह",

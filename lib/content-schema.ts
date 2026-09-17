@@ -817,8 +817,8 @@ export const defaultHomepage: HomepageContent = {
         constituency: "कल्याणपुर, कानपुर",
         election: "यूपी विधानसभा चुनाव 2022",
         partyBadge: "SP",
-        status: "winner",
-        highlight: "विजयी विधायक"
+        status: "runner-up",
+        highlight: "उपविजेता"
       },
       {
         id: "tr-7",
