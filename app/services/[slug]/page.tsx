@@ -4,10 +4,25 @@ import { servicesData } from "@/data/servicesData";
 import ServiceDetailLayout from "@/components/shared/ServiceDetailLayout";
 import { Metadata } from "next";
 
+export const SLUG_ALIASES: Record<string, string> = {
+  "war-room": "election-war-room",
+  "voter-data": "election-data-research",
+  "survey": "election-data-research",
+  "cadre-booth": "booth-ground-management",
+  "digital-media": "social-media-management",
+  "ground-campaign": "booth-ground-management",
+  "telecalling": "voter-communication",
+  "it-solutions": "election-technology",
+  "pr-media": "media-public-relations",
+  "branding": "candidate-branding",
+  "outdoor": "outdoor-campaign",
+  "rallies": "event-campaign-management"
+};
+
 export async function generateStaticParams() {
-  return servicesData.map((s) => ({
-    slug: s.slug,
-  }));
+  const directSlugs = servicesData.map((s) => ({ slug: s.slug }));
+  const aliasSlugs = Object.keys(SLUG_ALIASES).map((slug) => ({ slug }));
+  return [...directSlugs, ...aliasSlugs];
 }
 
 export async function generateMetadata({
@@ -16,7 +31,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const service = servicesData.find((s) => s.slug === slug);
+  const canonicalSlug = SLUG_ALIASES[slug] || slug;
+  const service = servicesData.find((s) => s.slug === canonicalSlug);
 
   if (!service) {
     return {
@@ -134,7 +150,8 @@ export default async function ServicePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const service = servicesData.find((s) => s.slug === slug);
+  const canonicalSlug = SLUG_ALIASES[slug] || slug;
+  const service = servicesData.find((s) => s.slug === canonicalSlug);
 
   if (!service) {
     notFound();

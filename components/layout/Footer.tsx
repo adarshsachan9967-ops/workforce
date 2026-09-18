@@ -314,12 +314,12 @@ export default function Footer() {
                 {language === "hi" ? "वॉर रूम, डेटा व सर्वे" : "War Room & Data Analytics"}
               </p>
               <ul className="space-y-1.5 leading-relaxed">
-                <li><Link href="/services/war-room" className="hover:text-accent-orange transition-colors">Election War Room Management</Link></li>
-                <li><Link href="/services/voter-data" className="hover:text-accent-orange transition-colors">Voter Data & Booth Level Management</Link></li>
-                <li><Link href="/services/survey" className="hover:text-accent-orange transition-colors">Election Survey Company & Opinion Polls</Link></li>
-                <li><Link href="/services/survey" className="hover:text-accent-orange transition-colors">Constituency Survey & Ground Feedback</Link></li>
-                <li><Link href="/services/voter-data" className="hover:text-accent-orange transition-colors">Political Data Analytics & Voter Mapping</Link></li>
-                <li><Link href="/services/cadre-booth" className="hover:text-accent-orange transition-colors">Booth Management & Panna Pramukh Grid</Link></li>
+                <li><Link href="/services/election-war-room" className="hover:text-accent-orange transition-colors">Election War Room Management</Link></li>
+                <li><Link href="/services/election-data-research" className="hover:text-accent-orange transition-colors">Voter Data & Booth Level Management</Link></li>
+                <li><Link href="/services/election-data-research" className="hover:text-accent-orange transition-colors">Election Survey Company & Opinion Polls</Link></li>
+                <li><Link href="/services/election-data-research" className="hover:text-accent-orange transition-colors">Constituency Survey & Ground Feedback</Link></li>
+                <li><Link href="/services/election-data-research" className="hover:text-accent-orange transition-colors">Political Data Analytics & Voter Mapping</Link></li>
+                <li><Link href="/services/booth-ground-management" className="hover:text-accent-orange transition-colors">Booth Management & Panna Pramukh Grid</Link></li>
               </ul>
             </div>
 
@@ -329,12 +329,12 @@ export default function Footer() {
                 {language === "hi" ? "डिजिटल एवं ग्राउंड कैंपेन" : "Digital & Ground Campaign"}
               </p>
               <ul className="space-y-1.5 leading-relaxed">
-                <li><Link href="/services/digital-media" className="hover:text-accent-orange transition-colors">Political Digital Marketing Agency</Link></li>
-                <li><Link href="/services/digital-media" className="hover:text-accent-orange transition-colors">Election Social Media Campaign</Link></li>
-                <li><Link href="/services/digital-media" className="hover:text-accent-orange transition-colors">Candidate Branding & Political PR</Link></li>
-                <li><Link href="/services/ground-campaign" className="hover:text-accent-orange transition-colors">Election Ground Campaign Management</Link></li>
-                <li><Link href="/services/ground-campaign" className="hover:text-accent-orange transition-colors">Door to Door Campaign Management</Link></li>
-                <li><Link href="/services/telecalling" className="hover:text-accent-orange transition-colors">Election Call Center & Voter Calling</Link></li>
+                <li><Link href="/services/social-media-management" className="hover:text-accent-orange transition-colors">Political Digital Marketing Agency</Link></li>
+                <li><Link href="/services/social-media-management" className="hover:text-accent-orange transition-colors">Election Social Media Campaign</Link></li>
+                <li><Link href="/services/candidate-branding" className="hover:text-accent-orange transition-colors">Candidate Branding & Political PR</Link></li>
+                <li><Link href="/services/booth-ground-management" className="hover:text-accent-orange transition-colors">Election Ground Campaign Management</Link></li>
+                <li><Link href="/services/booth-ground-management" className="hover:text-accent-orange transition-colors">Door to Door Campaign Management</Link></li>
+                <li><Link href="/services/voter-communication" className="hover:text-accent-orange transition-colors">Election Call Center & Voter Calling</Link></li>
               </ul>
             </div>
 
