@@ -94,22 +94,22 @@ export default function ContactPage() {
   return (
     <main className="flex-1 bg-navy-900 text-slate-100 overflow-hidden">
       {/* Hero Header */}
-      <section className="relative pt-16 pb-16 lg:pt-20 lg:pb-24 bg-gradient-to-b from-navy-950 via-navy-900 to-navy-900 border-b border-navy-800 bg-grid-pattern">
+      <section className="relative pt-8 pb-5 sm:pt-10 sm:pb-6 lg:pt-12 lg:pb-6 bg-gradient-to-b from-navy-950 via-navy-900 to-navy-900 border-b border-navy-800 bg-grid-pattern">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-left">
-          <div className="max-w-3xl space-y-4">
-            <div className="flex items-center gap-2 text-xs text-slate-400 font-mono mb-2">
+          <div className="max-w-6xl space-y-2.5">
+            <div className="flex items-center gap-2 text-xs text-slate-400 font-mono mb-1">
               <Link href="/" className="hover:text-accent-gold">HOME</Link>
               <span>/</span>
               <span className="text-accent-orange font-bold">CONTACT & CONSULTATION</span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight font-hindi leading-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[46px] font-black text-white tracking-tight font-hindi leading-snug lg:whitespace-nowrap">
               {language === "hi"
                 ? (pages?.contact?.heading || "अपने चुनाव अभियान पर चर्चा करें।")
                 : "Discuss Your Campaign Strategy."}
             </h1>
 
-            <p className="text-lg sm:text-xl text-slate-300 font-normal leading-relaxed">
+            <p className="text-sm sm:text-base lg:text-base xl:text-lg text-slate-300 font-normal leading-relaxed max-w-5xl">
               {language === "hi"
                 ? (pages?.contact?.sub || "अपने विधानसभा क्षेत्र, campaign requirements और आवश्यक सेवाओं की जानकारी साझा करें। हमारी वरिष्ठ रणनीति टीम आपकी आवश्यकता के अनुसार आगे की चर्चा करेगी।")
                 : "Share your constituency focus and desired verticals. Our senior campaign directorship will arrange a private strategic consultation within 24 hours."}
@@ -119,7 +119,7 @@ export default function ContactPage() {
       </section>
 
       {/* Main Form & Contact Info Section */}
-      <section className="py-16 lg:py-24 bg-navy-950">
+      <section className="pt-6 pb-12 sm:pt-8 sm:pb-16 lg:pt-8 lg:pb-20 bg-navy-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             
