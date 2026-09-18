@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
@@ -40,6 +40,19 @@ export default function ContactPage() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#consultation-form") {
+      setTimeout(() => {
+        const formEl = document.getElementById("consultation-form");
+        if (formEl) {
+          formEl.scrollIntoView({ behavior: "smooth", block: "start" });
+          const firstInput = formEl.querySelector("input");
+          if (firstInput) firstInput.focus();
+        }
+      }, 300);
+    }
+  }, []);
 
   const handleServiceToggle = (serviceTitle: string) => {
     setFormData((prev) => {
@@ -282,7 +295,7 @@ export default function ContactPage() {
             </div>
 
             {/* Right Col: Comprehensive Consultation Form */}
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-7 scroll-mt-28" id="consultation-form">
               <div className="rounded-3xl bg-gradient-to-b from-navy-850 to-navy-950 border border-navy-700 p-6 sm:p-10 shadow-2xl text-left">
                 
                 <div className="mb-8">

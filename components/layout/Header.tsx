@@ -277,7 +277,19 @@ export default function Header() {
 
             {/* CTA Discuss Campaign */}
             <Link
-              href={settings.headerCtaUrl || "/contact"}
+              href={settings.headerCtaUrl && settings.headerCtaUrl !== "/contact" ? settings.headerCtaUrl : "/contact#consultation-form"}
+              onClick={(e) => {
+                if (pathname === "/contact") {
+                  e.preventDefault();
+                  const formEl = document.getElementById("consultation-form");
+                  if (formEl) {
+                    formEl.scrollIntoView({ behavior: "smooth", block: "start" });
+                    const input = formEl.querySelector("input");
+                    if (input) input.focus();
+                  }
+                  window.history.pushState(null, "", "/contact#consultation-form");
+                }
+              }}
               className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-accent-orange to-accent-orange-hover hover:brightness-110 text-white font-semibold text-xs tracking-wide shadow-lg shadow-accent-orange/20 transition-all cursor-pointer"
             >
               <MessageSquare className="w-3.5 h-3.5" />
@@ -390,8 +402,20 @@ export default function Header() {
               </div>
 
               <Link
-                href={settings.headerCtaUrl || "/contact"}
-                onClick={() => setMobileMenuOpen(false)}
+                href={settings.headerCtaUrl && settings.headerCtaUrl !== "/contact" ? settings.headerCtaUrl : "/contact#consultation-form"}
+                onClick={(e) => {
+                  setMobileMenuOpen(false);
+                  if (pathname === "/contact") {
+                    e.preventDefault();
+                    const formEl = document.getElementById("consultation-form");
+                    if (formEl) {
+                      formEl.scrollIntoView({ behavior: "smooth", block: "start" });
+                      const input = formEl.querySelector("input");
+                      if (input) input.focus();
+                    }
+                    window.history.pushState(null, "", "/contact#consultation-form");
+                  }
+                }}
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-accent-orange to-accent-orange-hover text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg"
               >
                 <MessageSquare className="w-4 h-4" />

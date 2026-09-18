@@ -44,7 +44,7 @@ export default function FinalCta() {
             {/* CTA Buttons */}
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
               <Link
-                href="/contact"
+                href="/contact#consultation-form"
                 className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 rounded-2xl bg-gradient-to-r from-accent-orange to-accent-orange-hover hover:brightness-110 text-white font-bold text-base sm:text-lg shadow-xl shadow-accent-orange/25 transition-all flex items-center justify-center gap-3 cursor-pointer"
               >
                 <MessageSquare className="w-5 h-5" />
