@@ -1152,6 +1152,19 @@ export default function AdminDashboardPage() {
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    हेडर बटन लिंक URL (Default: /contact)
+                  </label>
+                  <input
+                    type="text"
+                    value={settings.headerCtaUrl || "/contact"}
+                    onChange={(e) => setSettings({ ...settings, headerCtaUrl: e.target.value })}
+                    placeholder="/contact"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white focus:border-accent-orange outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
                     लोगो URL / ImageKit CDN Path
                   </label>
                   <div className="flex items-center gap-2">

@@ -88,13 +88,13 @@ export default function Hero() {
 
             {/* Primary & Secondary Action CTAs */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
-              <button
-                onClick={() => setModalOpen(true)}
+              <Link
+                href="/contact"
                 className="px-8 py-4 rounded-xl bg-gradient-to-r from-accent-orange to-accent-orange-hover hover:brightness-110 text-white font-bold text-sm sm:text-base shadow-xl shadow-accent-orange/25 transition-all duration-200 flex items-center justify-center gap-3 cursor-pointer group"
               >
                 <span>{primaryCta}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
+              </Link>
 
               <Link
                 href="/services"

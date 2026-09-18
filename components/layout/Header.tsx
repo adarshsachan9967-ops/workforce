@@ -276,13 +276,13 @@ export default function Header() {
             </button>
 
             {/* CTA Discuss Campaign */}
-            <button
-              onClick={() => setIsModalOpen(true)}
+            <Link
+              href={settings.headerCtaUrl || "/contact"}
               className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-accent-orange to-accent-orange-hover hover:brightness-110 text-white font-semibold text-xs tracking-wide shadow-lg shadow-accent-orange/20 transition-all cursor-pointer"
             >
               <MessageSquare className="w-3.5 h-3.5" />
               <span>{language === "hi" ? settings.headerCtaHi : settings.headerCtaEn}</span>
-            </button>
+            </Link>
 
             {/* Mobile Menu Button */}
             <button
@@ -389,16 +389,14 @@ export default function Header() {
                 <ThemeToggle showLabel />
               </div>
 
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setIsModalOpen(true);
-                }}
+              <Link
+                href={settings.headerCtaUrl || "/contact"}
+                onClick={() => setMobileMenuOpen(false)}
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-accent-orange to-accent-orange-hover text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg"
               >
                 <MessageSquare className="w-4 h-4" />
                 <span>{language === "hi" ? settings.headerCtaHi : settings.headerCtaEn}</span>
-              </button>
+              </Link>
 
               <div className="flex items-center justify-center gap-4 text-xs text-slate-400">
                 <a href={`tel:${settings.phone1}`} className="flex items-center gap-1 hover:text-white">
