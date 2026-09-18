@@ -347,8 +347,8 @@ html.light .text-accent-gold {
 /* Preserve white text ONLY on primary orange CTA buttons, badges or inside keep-dark */
 html.light button[class*="from-accent-orange"],
 html.light a[class*="from-accent-orange"],
-html.light button[class*="bg-accent-orange"],
-html.light a[class*="bg-accent-orange"],
+html.light button[class*="bg-accent-orange"]:not([class*="/"]),
+html.light a[class*="bg-accent-orange"]:not([class*="/"]),
 html.light .btn-primary,
 html.light .keep-dark button,
 html.light .keep-dark a,

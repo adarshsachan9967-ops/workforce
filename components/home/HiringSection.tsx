@@ -118,37 +118,37 @@ export default function HiringSection() {
   };
 
   return (
-    <section id="careers" className="py-24 bg-navy-950 border-b border-navy-800 relative overflow-hidden">
+    <section id="careers" className="py-20 lg:py-24 bg-slate-50/80 dark:bg-navy-950 border-b border-slate-200 dark:border-navy-800 relative overflow-hidden transition-colors">
       {/* Background Ambience Elements */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-accent-orange/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-royal-blue/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b08_1px,transparent_1px),linear-gradient(to_bottom,#1e293b08_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-royal-blue/15 dark:bg-royal-blue/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a08_1px,transparent_1px),linear-gradient(to_bottom,#0f172a08_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b08_1px,transparent_1px),linear-gradient(to_bottom,#1e293b08_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-navy-900/90 border border-accent-orange/40 text-accent-orange text-xs font-bold uppercase tracking-wider shadow-lg shadow-accent-orange/10">
+        <div className="text-center max-w-3xl mx-auto space-y-4 mb-14 lg:mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white dark:bg-navy-900/90 border border-accent-orange/30 dark:border-accent-orange/40 text-accent-orange text-xs font-bold uppercase tracking-wider shadow-sm dark:shadow-lg dark:shadow-accent-orange/10">
             <Briefcase className="w-3.5 h-3.5 text-accent-orange animate-pulse" />
             <span>{language === "hi" ? hiring.badgeHi : (hiring.badgeEn || hiring.badgeHi)}</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-hindi tracking-tight leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white font-hindi tracking-tight leading-tight">
             {language === "hi" ? hiring.headingHi : (hiring.headingEn || hiring.headingHi)}
           </h2>
 
-          <p className="text-base sm:text-lg text-slate-300 font-hindi leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 font-hindi leading-relaxed">
             {language === "hi" ? hiring.taglineHi : (hiring.taglineEn || hiring.taglineHi)}
           </p>
         </div>
 
         {/* Direct Action & Email Apply Banner */}
-        <div className="mb-16 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-navy-900 via-navy-850 to-navy-900 border border-accent-orange/30 shadow-2xl shadow-navy-950/60 relative overflow-hidden">
+        <div className="mb-16 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-navy-900 via-navy-850 to-navy-900 border border-accent-orange/40 shadow-2xl shadow-navy-950/20 relative overflow-hidden keep-dark">
           <div className="absolute top-0 right-0 w-64 h-64 bg-accent-orange/10 rounded-full blur-2xl pointer-events-none" />
           
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
             <div className="space-y-2 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-950/90 border border-emerald-500/40 text-emerald-300 text-xs font-bold">
                 <MapPin className="w-3.5 h-3.5" />
                 <span>{hiring.location}</span>
               </div>
@@ -213,9 +213,9 @@ export default function HiringSection() {
                 href={`https://wa.me/91${hiring.phone}?text=${encodeURIComponent("Hi, I want to apply for a job position at Workforce Infotech.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-white text-xs sm:text-sm font-bold shadow-lg hover:shadow-emerald-700/30 transition-all border border-emerald-500/40 flex-1 sm:flex-initial"
+                className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-bold shadow-lg hover:shadow-emerald-600/30 transition-all border border-emerald-500/40 flex-1 sm:flex-initial"
               >
-                <MessageSquare className="w-4 h-4 text-emerald-300" />
+                <MessageSquare className="w-4 h-4 text-emerald-200" />
                 <span>WhatsApp: {hiring.phone}</span>
               </a>
 
@@ -223,7 +223,7 @@ export default function HiringSection() {
               <button
                 type="button"
                 onClick={() => openApplyModal()}
-                className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-accent-orange hover:bg-accent-orange-hover text-white text-xs sm:text-sm font-bold shadow-lg shadow-accent-orange/20 transition-all cursor-pointer flex-1 sm:flex-initial"
+                className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-accent-orange to-accent-orange-hover hover:brightness-110 text-white text-xs sm:text-sm font-bold shadow-lg shadow-accent-orange/25 transition-all cursor-pointer flex-1 sm:flex-initial border border-accent-orange"
               >
                 <Sparkles className="w-4 h-4 text-amber-200" />
                 <span>{language === "hi" ? "त्वरित आवेदन भरें" : "Quick Apply Form"}</span>
@@ -233,18 +233,18 @@ export default function HiringSection() {
         </div>
 
         {/* 7 Open Positions Section */}
-        <div className="space-y-8 mb-20 text-left">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-navy-800 pb-4">
+        <div className="space-y-8 mb-16 text-left">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 dark:border-navy-800 pb-4">
             <div>
-              <div className="text-xs font-mono uppercase tracking-wider text-accent-gold flex items-center gap-2">
+              <div className="text-xs font-mono uppercase tracking-wider text-accent-orange dark:text-accent-gold flex items-center gap-2 font-bold">
                 <span>📌 CURRENT OPENINGS</span>
-                <span className="w-2 h-2 rounded-full bg-accent-gold animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-accent-orange dark:bg-accent-gold animate-ping" />
               </div>
-              <h3 className="text-2xl sm:text-3xl font-black text-white font-hindi mt-1">
+              <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white font-hindi mt-1">
                 {language === "hi" ? "उपलब्ध पद (Open Positions)" : "Explore Open Positions"}
               </h3>
             </div>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-md">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-md leading-relaxed">
               {language === "hi" 
                 ? "कानपुर स्थित हमारे आधुनिक कॉर्पोरेट व मीडिया स्टूडियो में इन पदों पर तत्काल आवश्यकता है।"
                 : "Immediate openings at our Kanpur corporate office and media production facility."}
@@ -255,53 +255,53 @@ export default function HiringSection() {
             {positions.map((pos, idx) => (
               <div
                 key={pos.id || `pos-${idx}`}
-                className="rounded-2xl bg-gradient-to-b from-navy-900 to-navy-920 border border-navy-800 p-6 flex flex-col justify-between hover:border-accent-orange/60 hover:shadow-xl hover:shadow-accent-orange/5 transition-all group duration-300 relative overflow-hidden"
+                className="rounded-2xl bg-white dark:bg-gradient-to-b dark:from-navy-900 dark:to-navy-920 border border-slate-200/90 dark:border-navy-800 p-6 flex flex-col justify-between shadow-[0_4px_20px_-4px_rgba(0,0,0,0.06)] dark:shadow-none hover:border-accent-orange/80 dark:hover:border-accent-orange/60 hover:shadow-xl hover:shadow-accent-orange/10 transition-all duration-300 group relative overflow-hidden"
               >
                 <div className="absolute -top-10 -right-10 w-24 h-24 bg-accent-orange/5 rounded-full blur-xl group-hover:bg-accent-orange/15 transition-all pointer-events-none" />
 
                 <div className="space-y-4">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="w-12 h-12 rounded-2xl bg-navy-800/80 border border-navy-700 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-inner">
+                    <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-navy-800/80 border border-slate-200 dark:border-navy-700 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform shadow-sm group-hover:border-accent-orange/40">
                       {pos.icon}
                     </div>
-                    <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-navy-800 text-slate-300 border border-navy-700/60">
+                    <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-navy-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-navy-700/60">
                       {pos.category}
                     </span>
                   </div>
 
                   <div>
-                    <h4 className="text-lg font-bold text-white group-hover:text-accent-orange transition-colors">
+                    <h4 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-accent-orange transition-colors font-hindi">
                       {pos.title}
                     </h4>
-                    <div className="flex flex-wrap items-center gap-2 mt-2">
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-slate-400 border border-navy-800 flex items-center gap-1">
-                        <MapPin className="w-2.5 h-2.5 text-accent-gold" />
+                    <div className="flex flex-wrap items-center gap-2 mt-2.5">
+                      <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-navy-950 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-navy-800 flex items-center gap-1">
+                        <MapPin className="w-2.5 h-2.5 text-accent-orange dark:text-accent-gold flex-shrink-0" />
                         {pos.location}
                       </span>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-emerald-400 border border-navy-800">
+                      <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-md bg-emerald-50 dark:bg-navy-950 text-emerald-700 dark:text-emerald-400 border border-emerald-200/80 dark:border-navy-800">
                         {pos.type}
                       </span>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-sky-300 border border-navy-800">
+                      <span className="text-[11px] font-medium px-2.5 py-0.5 rounded-md bg-sky-50 dark:bg-navy-950 text-sky-700 dark:text-sky-300 border border-sky-200/80 dark:border-navy-800">
                         {pos.experience}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-navy-800/80 flex items-center gap-2">
+                <div className="pt-6 mt-6 border-t border-slate-100 dark:border-navy-800/80 flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => openApplyModal(pos)}
-                    className="flex-1 py-2.5 px-3 rounded-xl bg-accent-orange/15 hover:bg-accent-orange text-accent-orange hover:text-white border border-accent-orange/40 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-accent-orange to-accent-orange-hover hover:brightness-110 text-white font-bold text-xs shadow-md shadow-accent-orange/25 transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-accent-orange group/btn"
                   >
-                    <span>{language === "hi" ? "आवेदन करें" : "Apply Now"}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <span className="text-white font-bold tracking-wide">{language === "hi" ? "आवेदन करें" : "Apply Now"}</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-white transition-transform group-hover/btn:translate-x-0.5" />
                   </button>
 
                   <a
                     href={`mailto:${hiring.email1}?subject=${getEmailSubject(pos.title)}`}
                     title="Direct Email Application"
-                    className="p-2.5 rounded-xl bg-navy-800 hover:bg-navy-750 text-slate-300 hover:text-white border border-navy-700 transition"
+                    className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-navy-800 dark:hover:bg-navy-750 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white border border-slate-200 dark:border-navy-700 transition shadow-sm flex items-center justify-center"
                   >
                     <Mail className="w-4 h-4" />
                   </a>
@@ -311,9 +311,9 @@ export default function HiringSection() {
                     target="_blank"
                     rel="noopener noreferrer"
                     title="Direct WhatsApp"
-                    className="p-2.5 rounded-xl bg-emerald-950 hover:bg-emerald-900 text-emerald-300 hover:text-white border border-emerald-800/50 transition"
+                    className="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-600 shadow-sm transition flex items-center justify-center"
                   >
-                    <MessageSquare className="w-4 h-4" />
+                    <MessageSquare className="w-4 h-4 text-white" />
                   </a>
                 </div>
               </div>
@@ -322,16 +322,16 @@ export default function HiringSection() {
         </div>
 
         {/* What We Offer Strip */}
-        <div className="mb-16 p-8 sm:p-10 rounded-3xl bg-navy-900/60 border border-navy-800 text-left space-y-6">
+        <div className="mb-16 p-8 sm:p-10 rounded-3xl bg-white dark:bg-navy-900/60 border border-slate-200 dark:border-navy-800 text-left space-y-6 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-emerald-950 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+            <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-500/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shadow-sm">
               <CheckCircle2 className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white font-hindi">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white font-hindi">
                 {language === "hi" ? "✅ क्या सुविधाएँ व अवसर मिलेंगे (What We Offer)" : "✅ What We Offer"}
               </h3>
-              <p className="text-xs sm:text-sm text-slate-400 font-hindi">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-hindi">
                 {language === "hi" ? "वर्कफोर्स इन्फोटेक परिवार से जुड़ने पर आपको मिलता है:" : "Joining Workforce Infotech comes with distinctive benefits:"}
               </p>
             </div>
@@ -341,12 +341,12 @@ export default function HiringSection() {
             {offers.map((offer, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-2xl bg-navy-950/80 border border-navy-800/90 flex items-start gap-3 hover:border-emerald-500/30 transition-all"
+                className="p-4 rounded-2xl bg-slate-50 dark:bg-navy-950/80 border border-slate-200/90 dark:border-navy-800/90 flex items-start gap-3 hover:border-emerald-500/40 transition-all shadow-sm hover:shadow-md"
               >
-                <div className="w-6 h-6 rounded-full bg-emerald-950/80 border border-emerald-500/50 flex items-center justify-center text-emerald-400 flex-shrink-0 mt-0.5">
+                <div className="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-500/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5">
                   <Check className="w-3.5 h-3.5" />
                 </div>
-                <span className="text-xs sm:text-sm font-medium text-slate-200 leading-snug">
+                <span className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 leading-snug">
                   {offer}
                 </span>
               </div>
@@ -355,17 +355,17 @@ export default function HiringSection() {
         </div>
 
         {/* Bottom Tagline & Brand Strip */}
-        <div className="text-center space-y-4 pt-6 border-t border-navy-800/60 max-w-4xl mx-auto">
+        <div className="text-center space-y-4 pt-6 border-t border-slate-200 dark:border-navy-800/60 max-w-4xl mx-auto">
           <div className="space-y-1">
-            <h4 className="text-base sm:text-lg font-bold text-white tracking-wide uppercase font-hindi">
+            <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-wide uppercase font-hindi">
               Workforce Infotech Pvt. Ltd.
             </h4>
-            <p className="text-xs sm:text-sm text-accent-gold font-medium italic">
+            <p className="text-xs sm:text-sm text-accent-orange dark:text-accent-gold font-medium italic">
               Innovating Digital Solutions • Creating Career Opportunities
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] font-mono text-slate-400">
+          <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] font-mono text-slate-500 dark:text-slate-400">
             <span>#Hiring</span>
             <span>•</span>
             <span>#KanpurJobs</span>
@@ -393,26 +393,27 @@ export default function HiringSection() {
           INTERACTIVE QUICK APPLY MODAL
           ========================================================================= */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in text-left">
-          <div className="bg-navy-900 border border-navy-700 rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative overflow-hidden max-h-[92vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/80 backdrop-blur-sm animate-fade-in text-left">
+          <div className="bg-white dark:bg-navy-900 border border-slate-200 dark:border-navy-700 rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative overflow-hidden max-h-[92vh] overflow-y-auto">
             
             {/* Close Button */}
             <button
               onClick={closeModal}
-              className="absolute top-5 right-5 p-2 rounded-full bg-navy-800 hover:bg-navy-700 text-slate-400 hover:text-white transition cursor-pointer"
+              className="absolute top-5 right-5 p-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-navy-800 dark:hover:bg-navy-700 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition cursor-pointer"
+              aria-label="Close modal"
             >
               <X className="w-5 h-5" />
             </button>
 
             {submitted ? (
               <div className="text-center py-10 space-y-5">
-                <div className="w-16 h-16 rounded-2xl bg-emerald-950 border border-emerald-500 text-emerald-400 flex items-center justify-center mx-auto shadow-lg">
+                <div className="w-16 h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-500 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-lg">
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
-                <h3 className="text-2xl font-bold text-white font-hindi">
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white font-hindi">
                   {language === "hi" ? "आवेदन सफलतापूर्वक प्राप्त हुआ!" : "Application Received!"}
                 </h3>
-                <p className="text-sm text-slate-300 font-hindi max-w-md mx-auto">
+                <p className="text-sm text-slate-600 dark:text-slate-300 font-hindi max-w-md mx-auto">
                   {language === "hi"
                     ? "धन्यवाद! हमारी एचआर टीम आपके विवरण की समीक्षा करके शीघ्र ही आपसे संपर्क करेगी।"
                     : "Thank you! Our recruitment team has received your information and will reach out shortly."}
@@ -421,14 +422,14 @@ export default function HiringSection() {
                 <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
                   <a
                     href={`mailto:${hiring.email1}?subject=${getEmailSubject(selectedPosition?.title || "Application")}&body=${getEmailBody(selectedPosition?.title || "Application")}`}
-                    className="px-5 py-2.5 rounded-xl bg-royal-blue hover:bg-royal-blue-hover text-white text-xs font-bold flex items-center gap-2"
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-royal-blue to-royal-blue-hover text-white text-xs font-bold flex items-center gap-2 shadow-md"
                   >
                     <Mail className="w-4 h-4" />
                     <span>ईमेल पर रिज्यूमे भेजें (Attach CV)</span>
                   </a>
                   <button
                     onClick={closeModal}
-                    className="px-5 py-2.5 rounded-xl bg-navy-800 hover:bg-navy-700 text-slate-300 text-xs font-bold cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-navy-800 dark:hover:bg-navy-750 text-slate-700 dark:text-slate-300 text-xs font-bold cursor-pointer transition border border-slate-200 dark:border-navy-700"
                   >
                     बंद करें (Close)
                   </button>
@@ -441,10 +442,10 @@ export default function HiringSection() {
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>त्वरित आवेदन (Quick Job Application)</span>
                   </div>
-                  <h3 className="text-2xl font-bold text-white font-hindi">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white font-hindi">
                     {selectedPosition ? selectedPosition.title : "Workforce Infotech Careers"}
                   </h3>
-                  <p className="text-xs text-slate-400 font-hindi">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-hindi">
                     स्थान: कानपुर, उत्तर प्रदेश • फ्रेशर्स व अनुभवी दोनों आमंत्रित हैं
                   </p>
                 </div>
@@ -452,7 +453,7 @@ export default function HiringSection() {
                 <div className="space-y-4">
                   {/* Position Select */}
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                       पद का चयन करें (Select Position) *
                     </label>
                     <select
@@ -461,7 +462,7 @@ export default function HiringSection() {
                         const found = positions.find((p) => p.id === e.target.value);
                         if (found) setSelectedPosition(found);
                       }}
-                      className="w-full px-4 py-2.5 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white focus:border-accent-orange outline-none"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-navy-950 border border-slate-300 dark:border-navy-700 text-sm text-slate-900 dark:text-white focus:border-accent-orange outline-none"
                     >
                       {positions.map((p) => (
                         <option key={p.id} value={p.id}>
@@ -473,7 +474,7 @@ export default function HiringSection() {
 
                   {/* Name */}
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                       पूरा नाम (Full Name) *
                     </label>
                     <div className="relative">
@@ -484,7 +485,7 @@ export default function HiringSection() {
                         value={applicantName}
                         onChange={(e) => setApplicantName(e.target.value)}
                         placeholder="आपका शुभ नाम..."
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white placeholder:text-slate-500 focus:border-accent-orange outline-none"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-navy-950 border border-slate-300 dark:border-navy-700 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-accent-orange outline-none"
                       />
                     </div>
                   </div>
@@ -492,7 +493,7 @@ export default function HiringSection() {
                   {/* Phone & Email in 2 columns */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                         मोबाइल / व्हाट्सएप नंबर *
                       </label>
                       <div className="relative">
@@ -503,13 +504,13 @@ export default function HiringSection() {
                           value={applicantPhone}
                           onChange={(e) => setApplicantPhone(e.target.value)}
                           placeholder="10 अंकों का फोन नंबर"
-                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white placeholder:text-slate-500 focus:border-accent-orange outline-none"
+                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-navy-950 border border-slate-300 dark:border-navy-700 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-accent-orange outline-none"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                      <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                         ईमेल पता (Email Address)
                       </label>
                       <div className="relative">
@@ -519,7 +520,7 @@ export default function HiringSection() {
                           value={applicantEmail}
                           onChange={(e) => setApplicantEmail(e.target.value)}
                           placeholder="your.name@gmail.com"
-                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white placeholder:text-slate-500 focus:border-accent-orange outline-none"
+                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 dark:bg-navy-950 border border-slate-300 dark:border-navy-700 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-accent-orange outline-none"
                         />
                       </div>
                     </div>
@@ -527,7 +528,7 @@ export default function HiringSection() {
 
                   {/* Experience */}
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                       कार्य अनुभव (Experience Level)
                     </label>
                     <div className="grid grid-cols-3 gap-2">
@@ -538,8 +539,8 @@ export default function HiringSection() {
                           onClick={() => setApplicantExp(lvl)}
                           className={`py-2 px-3 rounded-xl text-xs font-bold border transition text-center cursor-pointer ${
                             applicantExp === lvl
-                              ? "bg-accent-orange/20 border-accent-orange text-accent-orange"
-                              : "bg-navy-950 border-navy-700 text-slate-400 hover:text-white"
+                              ? "bg-accent-orange border-accent-orange text-white shadow-sm"
+                              : "bg-slate-100 dark:bg-navy-950 border-slate-300 dark:border-navy-700 text-slate-700 dark:text-slate-400 hover:bg-slate-200 dark:hover:text-white"
                           }`}
                         >
                           {lvl}
@@ -550,7 +551,7 @@ export default function HiringSection() {
 
                   {/* Portfolio / Note */}
                   <div>
-                    <label className="block text-xs font-bold text-slate-300 mb-1.5">
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
                       पोर्टफोलियो / रिज्यूमे लिंक अथवा संक्षिप्त परिचय (Notes / Link)
                     </label>
                     <textarea
@@ -558,7 +559,7 @@ export default function HiringSection() {
                       value={applicantNote}
                       onChange={(e) => setApplicantNote(e.target.value)}
                       placeholder="गूगल ड्राइव लिंक, यूट्यूब/सोशल लिंक अथवा संक्षिप्त परिचय..."
-                      className="w-full px-4 py-2.5 rounded-xl bg-navy-950 border border-navy-700 text-sm text-white placeholder:text-slate-500 focus:border-accent-orange outline-none resize-none"
+                      className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-navy-950 border border-slate-300 dark:border-navy-700 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-accent-orange outline-none resize-none"
                     />
                   </div>
                 </div>
@@ -568,7 +569,7 @@ export default function HiringSection() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full py-3 rounded-xl bg-accent-orange hover:bg-accent-orange-hover text-white text-sm font-bold shadow-lg shadow-accent-orange/20 transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-accent-orange to-accent-orange-hover hover:brightness-110 text-white text-sm font-bold shadow-lg shadow-accent-orange/20 transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 border border-accent-orange"
                   >
                     {submitting ? (
                       <span>भेजा जा रहा है...</span>
@@ -583,9 +584,9 @@ export default function HiringSection() {
                   <div className="grid grid-cols-2 gap-2 pt-1">
                     <a
                       href={`mailto:${hiring.email1}?subject=${getEmailSubject(selectedPosition?.title || "Job Application")}&body=${getEmailBody(selectedPosition?.title || "Job Application")}`}
-                      className="py-2.5 px-3 rounded-xl bg-navy-800 hover:bg-navy-750 text-slate-200 hover:text-white border border-navy-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition"
+                      className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-navy-800 dark:hover:bg-navy-750 text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white border border-slate-300 dark:border-navy-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-sm"
                     >
-                      <Mail className="w-3.5 h-3.5 text-accent-gold" />
+                      <Mail className="w-3.5 h-3.5 text-accent-orange dark:text-accent-gold" />
                       <span>ईमेल खोलें (Email CV)</span>
                     </a>
 
@@ -593,9 +594,9 @@ export default function HiringSection() {
                       href={getWhatsAppLink(selectedPosition?.title || "Job Application")}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="py-2.5 px-3 rounded-xl bg-emerald-950/80 hover:bg-emerald-900/80 text-emerald-300 hover:text-white border border-emerald-800/40 text-xs font-semibold flex items-center justify-center gap-1.5 transition"
+                      className="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white border border-emerald-600 text-xs font-semibold flex items-center justify-center gap-1.5 transition shadow-sm"
                     >
-                      <MessageSquare className="w-3.5 h-3.5 text-emerald-400" />
+                      <MessageSquare className="w-3.5 h-3.5 text-white" />
                       <span>व्हाट्सएप पर भेजें</span>
                     </a>
                   </div>
