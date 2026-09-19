@@ -12,7 +12,15 @@ export default function FounderMessageSection() {
   const { homepage } = useContent();
   const founder = homepage?.founderMessage;
 
-  const photoUrl = founder?.photoUrl || "/images/gallery/gallery-1.jpeg";
+  const defaultPhoto = "https://ik.imagekit.io/avdarinn/workforce/team/anuj-tiwari-founder.jpg";
+  const [imgSrc, setImgSrc] = React.useState<string>(founder?.photoUrl || defaultPhoto);
+
+  React.useEffect(() => {
+    if (founder?.photoUrl) {
+      setImgSrc(founder.photoUrl);
+    }
+  }, [founder?.photoUrl]);
+
   const founderName = founder?.founderName || "अनुज तिवारी (Anuj Tiwari)";
   const founderRole = language === "hi"
     ? (founder?.founderRoleHi || "FOUNDER & CEO // राजनीतिक रणनीतिकार")
@@ -78,13 +86,18 @@ export default function FounderMessageSection() {
             <div className="relative rounded-3xl overflow-hidden bg-white dark:bg-navy-850 border border-slate-200 dark:border-navy-700 shadow-xl p-2">
               <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden bg-slate-900">
                 <Image
-                  src={photoUrl}
+                  src={imgSrc}
                   alt={`${founderName} - ${founderRole}, ${companyName}`}
                   fill
                   priority={true}
                   unoptimized={true}
                   sizes="(max-width: 1024px) 100vw, 40vw"
                   className="object-cover object-top"
+                  onError={() => {
+                    if (imgSrc !== "/images/gallery/gallery-1.jpeg") {
+                      setImgSrc("/images/gallery/gallery-1.jpeg");
+                    }
+                  }}
                 />
                 
                 {/* Badge Overlay */}
