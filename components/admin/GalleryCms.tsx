@@ -65,16 +65,26 @@ export default function GalleryCms({
     if (!file) return;
     setUploadingField(fieldKey);
     try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("wf_admin_token") || "" : "";
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+        headers["x-admin-token"] = token;
+      }
+
       const formData = new FormData();
       formData.append("file", file);
       formData.append("folder", "workforce/gallery");
       const res = await fetch("/api/admin/upload", {
         method: "POST",
+        headers,
+        credentials: "include",
         body: formData,
       });
       const data = await res.json();
-      if (res.ok && data.success && data.url) {
-        onSuccess(data.url);
+      const uploadedUrl = data.url || data.file?.url;
+      if (res.ok && data.success && uploadedUrl) {
+        onSuccess(uploadedUrl);
       } else {
         alert(data.error || "फोटो अपलोड विफल रहा। कृपया पुनः प्रयास करें।");
       }
@@ -88,10 +98,12 @@ export default function GalleryCms({
 
   const handleToggleContent = () => {
     const updated = !showContent;
-    setGallery({
+    const updatedGallery = {
       ...gallery,
       showImageContent: updated
-    });
+    };
+    setGallery(updatedGallery);
+    saveSection("gallery", updatedGallery);
   };
 
   const handleAddItem = () => {
@@ -112,10 +124,12 @@ export default function GalleryCms({
       tag: newItem.tag || "अभियान"
     };
 
-    setGallery({
+    const updatedGallery = {
       ...gallery,
       items: [item, ...items]
-    });
+    };
+    setGallery(updatedGallery);
+    saveSection("gallery", updatedGallery);
 
     setIsAddModalOpen(false);
     setNewItem({
@@ -132,10 +146,12 @@ export default function GalleryCms({
 
   const handleDeleteItem = (id: number) => {
     if (!confirm("क्या आप वाकई इस तस्वीर को गैलरी से हटाना चाहते हैं?")) return;
-    setGallery({
+    const updatedGallery = {
       ...gallery,
       items: items.filter((i) => i.id !== id)
-    });
+    };
+    setGallery(updatedGallery);
+    saveSection("gallery", updatedGallery);
   };
 
   const handleMoveItem = (fromIdx: number, toIdx: number) => {
@@ -143,10 +159,12 @@ export default function GalleryCms({
     const copy = [...items];
     const item = copy.splice(fromIdx, 1)[0];
     copy.splice(toIdx, 0, item);
-    setGallery({
+    const updatedGallery = {
       ...gallery,
       items: copy
-    });
+    };
+    setGallery(updatedGallery);
+    saveSection("gallery", updatedGallery);
   };
 
   const filteredItems = items.filter((item) => {
@@ -351,7 +369,9 @@ export default function GalleryCms({
                       onChange={(e) => handleImageUpload(e, (url) => {
                         const copy = [...items];
                         copy[originalIdx] = { ...copy[originalIdx], src: url };
-                        setGallery({ ...gallery, items: copy });
+                        const updatedGallery = { ...gallery, items: copy };
+                        setGallery(updatedGallery);
+                        saveSection("gallery", updatedGallery);
                       }, `item-${item.id}`)}
                     />
                   </label>

@@ -5,7 +5,7 @@ import { uploadToImageKit } from "@/lib/imagekit";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
-  const session = await getAdminSession();
+  const session = await getAdminSession(req);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      url: result.url,
       file: result,
     });
   } catch (error: any) {

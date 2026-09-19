@@ -118,11 +118,14 @@ function saveLocalDatabase(data: DatabaseSchema): void {
   }
 }
 
-// Background async sync to MongoDB Atlas
+// Background sync to MongoDB Atlas with verification
 async function syncToMongo(collectionName: "enquiries" | "content", payload: any) {
   try {
     const mongo = await getMongoDb();
-    if (!mongo) return;
+    if (!mongo) {
+      console.warn("MongoDB not available for sync (continuing with local cache)");
+      return;
+    }
 
     if (collectionName === "content") {
       await mongo.collection("content").updateOne(
@@ -132,21 +135,23 @@ async function syncToMongo(collectionName: "enquiries" | "content", payload: any
       );
     }
   } catch (err) {
-    console.warn("Async MongoDB sync error (continuing with local cache):", err);
+    console.error("MongoDB Atlas sync error:", err);
+    throw err;
   }
 }
 
 export const db = {
-  // === AUTO-SEED MONGODB ATLAS FROM DB.JSON IF EMPTY ===
+  // === AUTO-SEED & BACKFILL MONGODB ATLAS FROM DEFAULTS & DB.JSON ===
   async initMongo(): Promise<boolean> {
     try {
       const mongo = await getMongoDb();
       if (!mongo) return false;
 
       // Seed Content if not present
-      const contentDoc = await mongo.collection("content").findOne({ _id: CONTENT_DOC_ID as any });
+      const contentDoc: any = await mongo.collection("content").findOne({ _id: CONTENT_DOC_ID as any });
+      const local = getLocalDatabase();
+
       if (!contentDoc) {
-        const local = getLocalDatabase();
         await mongo.collection("content").insertOne({
           _id: CONTENT_DOC_ID as any,
           settings: local.settings,
@@ -160,12 +165,40 @@ export const db = {
           updatedAt: new Date().toISOString()
         } as any);
         console.log("✓ Successfully seeded MongoDB Atlas 'content' collection from local db.json");
+      } else {
+        // Backfill any missing sections into existing content document
+        const backfills: Record<string, any> = {};
+        if (!contentDoc.homepage?.studioWarRoom) {
+          backfills["homepage.studioWarRoom"] = local.homepage?.studioWarRoom || defaultStudioWarRoom;
+        }
+        if (!contentDoc.homepage?.bannerSlider) {
+          backfills["homepage.bannerSlider"] = local.homepage?.bannerSlider || defaultHomepage.bannerSlider;
+        }
+        if (!contentDoc.homepage?.hiring) {
+          backfills["homepage.hiring"] = local.homepage?.hiring || defaultHiring;
+        }
+        if (!contentDoc.homepage?.trackRecord) {
+          backfills["homepage.trackRecord"] = local.homepage?.trackRecord || defaultHomepage.trackRecord;
+        }
+        if (!contentDoc.homepage?.founderMessage) {
+          backfills["homepage.founderMessage"] = local.homepage?.founderMessage || defaultHomepage.founderMessage;
+        }
+        if (!contentDoc.gallery || !Array.isArray(contentDoc.gallery?.items) || contentDoc.gallery.items.length === 0) {
+          backfills["gallery"] = local.gallery || defaultGallery;
+        }
+
+        if (Object.keys(backfills).length > 0) {
+          await mongo.collection("content").updateOne(
+            { _id: CONTENT_DOC_ID as any },
+            { $set: { ...backfills, updatedAt: new Date().toISOString() } }
+          );
+          console.log("✓ Successfully backfilled missing sections into MongoDB Atlas:", Object.keys(backfills));
+        }
       }
 
       // Seed Enquiries if not present
       const enquiryCount = await mongo.collection("enquiries").countDocuments();
       if (enquiryCount === 0) {
-        const local = getLocalDatabase();
         if (local.enquiries && local.enquiries.length > 0) {
           const formatted = local.enquiries.map((e) => ({ ...e, _id: e.id as any }));
           await mongo.collection("enquiries").insertMany(formatted as any);
@@ -421,18 +454,25 @@ export const db = {
   },
 
   async updateSettingsAsync(settings: Partial<SiteSettings>): Promise<SiteSettings> {
-    const data = getLocalDatabase();
-    data.settings = { ...data.settings, ...settings };
-    saveLocalDatabase(data);
-    await syncToMongo("content", { settings: data.settings });
-    return data.settings;
+    const current = await this.getAllContentAsync();
+    const updatedSettings: SiteSettings = {
+      ...current.settings,
+      ...settings
+    };
+    await syncToMongo("content", { settings: updatedSettings });
+    try {
+      const data = getLocalDatabase();
+      data.settings = updatedSettings;
+      saveLocalDatabase(data);
+    } catch {}
+    return updatedSettings;
   },
 
   updateSettings(settings: Partial<SiteSettings>): SiteSettings {
     const data = getLocalDatabase();
     data.settings = { ...data.settings, ...settings };
     saveLocalDatabase(data);
-    syncToMongo("content", { settings: data.settings });
+    syncToMongo("content", { settings: data.settings }).catch(() => {});
     return data.settings;
   },
 
@@ -448,18 +488,20 @@ export const db = {
   },
 
   async saveNavigationAsync(items: NavigationItem[]): Promise<NavigationItem[]> {
-    const data = getLocalDatabase();
-    data.navigation = items;
-    saveLocalDatabase(data);
     await syncToMongo("content", { navigation: items });
-    return data.navigation;
+    try {
+      const data = getLocalDatabase();
+      data.navigation = items;
+      saveLocalDatabase(data);
+    } catch {}
+    return items;
   },
 
   saveNavigation(items: NavigationItem[]): NavigationItem[] {
     const data = getLocalDatabase();
     data.navigation = items;
     saveLocalDatabase(data);
-    syncToMongo("content", { navigation: items });
+    syncToMongo("content", { navigation: items }).catch(() => {});
     return data.navigation;
   },
 
@@ -475,46 +517,73 @@ export const db = {
   },
 
   async updateHomepageContentAsync(content: Partial<HomepageContent>): Promise<HomepageContent> {
-    const data = getLocalDatabase();
-    data.homepage = {
-      ...data.homepage,
+    const current = await this.getAllContentAsync();
+    const updatedHomepage: HomepageContent = {
+      ...current.homepage,
       ...content,
-      studioWarRoom: { ...(data.homepage.studioWarRoom || defaultStudioWarRoom), ...(content.studioWarRoom || {}) },
+      studioWarRoom: content.studioWarRoom
+        ? {
+            ...(current.homepage.studioWarRoom || defaultStudioWarRoom),
+            ...content.studioWarRoom,
+            studioCard: {
+              ...(current.homepage.studioWarRoom?.studioCard || defaultStudioWarRoom.studioCard),
+              ...(content.studioWarRoom.studioCard || {})
+            },
+            warRoomCard: {
+              ...(current.homepage.studioWarRoom?.warRoomCard || defaultStudioWarRoom.warRoomCard),
+              ...(content.studioWarRoom.warRoomCard || {})
+            }
+          }
+        : (current.homepage.studioWarRoom || defaultStudioWarRoom),
+      bannerSlider: content.bannerSlider
+        ? {
+            ...(current.homepage.bannerSlider || defaultHomepage.bannerSlider!),
+            ...content.bannerSlider,
+            slides: content.bannerSlider.slides || current.homepage.bannerSlider?.slides || defaultHomepage.bannerSlider!.slides
+          }
+        : (current.homepage.bannerSlider || defaultHomepage.bannerSlider!),
       hiring: content.hiring
         ? {
-            ...(data.homepage.hiring || defaultHiring),
+            ...(current.homepage.hiring || defaultHiring),
             ...content.hiring,
-            positions: content.hiring.positions ? content.hiring.positions : (data.homepage.hiring?.positions || defaultHiring.positions),
-            offersHi: content.hiring.offersHi ? content.hiring.offersHi : (data.homepage.hiring?.offersHi || defaultHiring.offersHi),
-            offersEn: content.hiring.offersEn ? content.hiring.offersEn : (data.homepage.hiring?.offersEn || defaultHiring.offersEn)
+            positions: content.hiring.positions ? content.hiring.positions : (current.homepage.hiring?.positions || defaultHiring.positions),
+            offersHi: content.hiring.offersHi ? content.hiring.offersHi : (current.homepage.hiring?.offersHi || defaultHiring.offersHi),
+            offersEn: content.hiring.offersEn ? content.hiring.offersEn : (current.homepage.hiring?.offersEn || defaultHiring.offersEn)
           }
-        : (data.homepage.hiring || defaultHiring),
+        : (current.homepage.hiring || defaultHiring),
       trackRecord: content.trackRecord
         ? {
-            ...(data.homepage.trackRecord || defaultHomepage.trackRecord!),
+            ...(current.homepage.trackRecord || defaultHomepage.trackRecord!),
             ...content.trackRecord,
-            items: content.trackRecord.items ? content.trackRecord.items : (data.homepage.trackRecord?.items || defaultHomepage.trackRecord!.items)
+            items: content.trackRecord.items ? content.trackRecord.items : (current.homepage.trackRecord?.items || defaultHomepage.trackRecord!.items)
           }
-        : (data.homepage.trackRecord || defaultHomepage.trackRecord!),
-      hero: { ...data.homepage.hero, ...(content.hero || {}) },
-      telemetry: { ...data.homepage.telemetry, ...(content.telemetry || {}) },
-      trustStrip: { ...data.homepage.trustStrip, ...(content.trustStrip || {}) },
-      aboutTeaser: { ...data.homepage.aboutTeaser, ...(content.aboutTeaser || {}) },
-      servicesSection: { ...data.homepage.servicesSection, ...(content.servicesSection || {}) },
-      oneAgency: { ...data.homepage.oneAgency, ...(content.oneAgency || {}) },
-      process: { ...data.homepage.process, ...(content.process || {}) },
-      commandCenter: { ...data.homepage.commandCenter, ...(content.commandCenter || {}) },
-      interactiveMap: { ...data.homepage.interactiveMap, ...(content.interactiveMap || {}) },
-      whyChooseUs: { ...data.homepage.whyChooseUs, ...(content.whyChooseUs || {}) },
-      teamSection: { ...data.homepage.teamSection, ...(content.teamSection || {}) },
-      techSection: { ...data.homepage.techSection, ...(content.techSection || {}) },
-      solutionShowcase: { ...data.homepage.solutionShowcase, ...(content.solutionShowcase || {}) },
-      compliance: { ...data.homepage.compliance, ...(content.compliance || {}) },
-      finalCta: { ...data.homepage.finalCta, ...(content.finalCta || {}) }
+        : (current.homepage.trackRecord || defaultHomepage.trackRecord!),
+      hero: { ...(current.homepage.hero || defaultHomepage.hero), ...(content.hero || {}) },
+      telemetry: { ...(current.homepage.telemetry || defaultHomepage.telemetry), ...(content.telemetry || {}) },
+      trustStrip: { ...(current.homepage.trustStrip || defaultHomepage.trustStrip), ...(content.trustStrip || {}) },
+      founderMessage: { ...(current.homepage.founderMessage || defaultHomepage.founderMessage!), ...(content.founderMessage || {}) },
+      aboutTeaser: { ...(current.homepage.aboutTeaser || defaultHomepage.aboutTeaser), ...(content.aboutTeaser || {}) },
+      servicesSection: { ...(current.homepage.servicesSection || defaultHomepage.servicesSection), ...(content.servicesSection || {}) },
+      oneAgency: { ...(current.homepage.oneAgency || defaultHomepage.oneAgency), ...(content.oneAgency || {}) },
+      process: { ...(current.homepage.process || defaultHomepage.process), ...(content.process || {}) },
+      commandCenter: { ...(current.homepage.commandCenter || defaultHomepage.commandCenter), ...(content.commandCenter || {}) },
+      interactiveMap: { ...(current.homepage.interactiveMap || defaultHomepage.interactiveMap), ...(content.interactiveMap || {}) },
+      whyChooseUs: { ...(current.homepage.whyChooseUs || defaultHomepage.whyChooseUs), ...(content.whyChooseUs || {}) },
+      teamSection: { ...(current.homepage.teamSection || defaultHomepage.teamSection), ...(content.teamSection || {}) },
+      techSection: { ...(current.homepage.techSection || defaultHomepage.techSection), ...(content.techSection || {}) },
+      solutionShowcase: { ...(current.homepage.solutionShowcase || defaultHomepage.solutionShowcase), ...(content.solutionShowcase || {}) },
+      compliance: { ...(current.homepage.compliance || defaultHomepage.compliance), ...(content.compliance || {}) },
+      finalCta: { ...(current.homepage.finalCta || defaultHomepage.finalCta), ...(content.finalCta || {}) }
     };
-    saveLocalDatabase(data);
-    await syncToMongo("content", { homepage: data.homepage });
-    return data.homepage;
+
+    await syncToMongo("content", { homepage: updatedHomepage });
+    try {
+      const data = getLocalDatabase();
+      data.homepage = updatedHomepage;
+      saveLocalDatabase(data);
+    } catch {}
+
+    return updatedHomepage;
   },
 
   updateHomepageContent(content: Partial<HomepageContent>): HomepageContent {
@@ -572,20 +641,24 @@ export const db = {
   },
 
   async updatePagesContentAsync(content: Partial<PagesContent>): Promise<PagesContent> {
-    const data = getLocalDatabase();
-    data.pages = {
-      ...data.pages,
+    const current = await this.getAllContentAsync();
+    const updatedPages: PagesContent = {
+      ...current.pages,
       ...content,
-      about: { ...data.pages.about, ...(content.about || {}) },
-      process: { ...data.pages.process, ...(content.process || {}) },
-      technology: { ...data.pages.technology, ...(content.technology || {}) },
-      solutions: { ...data.pages.solutions, ...(content.solutions || {}) },
-      contact: { ...data.pages.contact, ...(content.contact || {}) },
-      servicesPage: { ...data.pages.servicesPage, ...(content.servicesPage || {}) }
+      about: { ...(current.pages?.about || defaultPages.about), ...(content.about || {}) },
+      process: { ...(current.pages?.process || defaultPages.process), ...(content.process || {}) },
+      technology: { ...(current.pages?.technology || defaultPages.technology), ...(content.technology || {}) },
+      solutions: { ...(current.pages?.solutions || defaultPages.solutions), ...(content.solutions || {}) },
+      contact: { ...(current.pages?.contact || defaultPages.contact), ...(content.contact || {}) },
+      servicesPage: { ...(current.pages?.servicesPage || defaultPages.servicesPage), ...(content.servicesPage || {}) }
     };
-    saveLocalDatabase(data);
-    await syncToMongo("content", { pages: data.pages });
-    return data.pages;
+    await syncToMongo("content", { pages: updatedPages });
+    try {
+      const data = getLocalDatabase();
+      data.pages = updatedPages;
+      saveLocalDatabase(data);
+    } catch {}
+    return updatedPages;
   },
 
   updatePagesContent(content: Partial<PagesContent>): PagesContent {
@@ -601,7 +674,7 @@ export const db = {
       servicesPage: { ...data.pages.servicesPage, ...(content.servicesPage || {}) }
     };
     saveLocalDatabase(data);
-    syncToMongo("content", { pages: data.pages });
+    syncToMongo("content", { pages: data.pages }).catch(() => {});
     return data.pages;
   },
 
@@ -617,38 +690,46 @@ export const db = {
   },
 
   async saveFaqAsync(faq: FaqItem): Promise<FaqItem> {
-    const data = getLocalDatabase();
-    const existingIndex = data.faqs.findIndex((f) => f.id === faq.id);
+    const current = await this.getAllContentAsync();
+    const existingIndex = current.faqs.findIndex((f: FaqItem) => f.id === faq.id);
+    const updatedFaqs = [...current.faqs];
     if (existingIndex >= 0) {
-      data.faqs[existingIndex] = faq;
+      updatedFaqs[existingIndex] = faq;
     } else {
-      data.faqs.push(faq);
+      updatedFaqs.push(faq);
     }
-    saveLocalDatabase(data);
-    await syncToMongo("content", { faqs: data.faqs });
+    await syncToMongo("content", { faqs: updatedFaqs });
+    try {
+      const data = getLocalDatabase();
+      data.faqs = updatedFaqs;
+      saveLocalDatabase(data);
+    } catch {}
     return faq;
   },
 
   saveFaq(faq: FaqItem): FaqItem {
     const data = getLocalDatabase();
-    const existingIndex = data.faqs.findIndex((f) => f.id === faq.id);
+    const existingIndex = data.faqs.findIndex((f: FaqItem) => f.id === faq.id);
     if (existingIndex >= 0) {
       data.faqs[existingIndex] = faq;
     } else {
       data.faqs.push(faq);
     }
     saveLocalDatabase(data);
-    syncToMongo("content", { faqs: data.faqs });
+    syncToMongo("content", { faqs: data.faqs }).catch(() => {});
     return faq;
   },
 
   async deleteFaqAsync(id: string): Promise<boolean> {
-    const data = getLocalDatabase();
-    const initialLen = data.faqs.length;
-    data.faqs = data.faqs.filter((f) => f.id !== id);
-    if (data.faqs.length !== initialLen) {
-      saveLocalDatabase(data);
-      await syncToMongo("content", { faqs: data.faqs });
+    const current = await this.getAllContentAsync();
+    const filtered = current.faqs.filter((f: FaqItem) => f.id !== id);
+    if (filtered.length !== current.faqs.length) {
+      await syncToMongo("content", { faqs: filtered });
+      try {
+        const data = getLocalDatabase();
+        data.faqs = filtered;
+        saveLocalDatabase(data);
+      } catch {}
       return true;
     }
     return false;
@@ -660,7 +741,7 @@ export const db = {
     data.faqs = data.faqs.filter((f) => f.id !== id);
     if (data.faqs.length !== initialLen) {
       saveLocalDatabase(data);
-      syncToMongo("content", { faqs: data.faqs });
+      syncToMongo("content", { faqs: data.faqs }).catch(() => {});
       return true;
     }
     return false;
@@ -678,16 +759,19 @@ export const db = {
   },
 
   async updateGalleryAsync(gallery: Partial<GalleryContent>): Promise<GalleryContent> {
-    const data = getLocalDatabase();
-    const current = data.gallery || defaultGallery;
-    data.gallery = {
-      ...current,
+    const current = await this.getAllContentAsync();
+    const updatedGallery: GalleryContent = {
+      ...current.gallery,
       ...gallery,
-      items: gallery.items ? gallery.items : current.items
+      items: Array.isArray(gallery.items) ? gallery.items : current.gallery.items
     };
-    saveLocalDatabase(data);
-    await syncToMongo("content", { gallery: data.gallery });
-    return data.gallery;
+    await syncToMongo("content", { gallery: updatedGallery });
+    try {
+      const data = getLocalDatabase();
+      data.gallery = updatedGallery;
+      saveLocalDatabase(data);
+    } catch {}
+    return updatedGallery;
   },
 
   updateGallery(gallery: Partial<GalleryContent>): GalleryContent {
@@ -699,7 +783,7 @@ export const db = {
       items: gallery.items ? gallery.items : current.items
     };
     saveLocalDatabase(data);
-    syncToMongo("content", { gallery: data.gallery });
+    syncToMongo("content", { gallery: data.gallery }).catch(() => {});
     return data.gallery;
   },
 
@@ -715,16 +799,24 @@ export const db = {
   },
 
   async updateTrackRecordAsync(trackRecord: Partial<TrackRecordContent>): Promise<TrackRecordContent> {
-    const data = getLocalDatabase();
-    const current = data.homepage.trackRecord || defaultHomepage.trackRecord!;
-    data.homepage.trackRecord = {
-      ...current,
+    const current = await this.getAllContentAsync();
+    const currentTr = current.homepage.trackRecord || defaultHomepage.trackRecord!;
+    const updatedTrackRecord: TrackRecordContent = {
+      ...currentTr,
       ...trackRecord,
-      items: trackRecord.items ? trackRecord.items : current.items
+      items: trackRecord.items ? trackRecord.items : currentTr.items
     };
-    saveLocalDatabase(data);
-    await syncToMongo("content", { homepage: data.homepage });
-    return data.homepage.trackRecord;
+    const updatedHomepage: HomepageContent = {
+      ...current.homepage,
+      trackRecord: updatedTrackRecord
+    };
+    await syncToMongo("content", { homepage: updatedHomepage });
+    try {
+      const data = getLocalDatabase();
+      data.homepage = updatedHomepage;
+      saveLocalDatabase(data);
+    } catch {}
+    return updatedTrackRecord;
   },
 
   updateTrackRecord(trackRecord: Partial<TrackRecordContent>): TrackRecordContent {
@@ -736,7 +828,7 @@ export const db = {
       items: trackRecord.items ? trackRecord.items : current.items
     };
     saveLocalDatabase(data);
-    syncToMongo("content", { homepage: data.homepage });
+    syncToMongo("content", { homepage: data.homepage }).catch(() => {});
     return data.homepage.trackRecord;
   },
 
@@ -752,18 +844,26 @@ export const db = {
   },
 
   async updateHiringAsync(hiring: Partial<HiringContent>): Promise<HiringContent> {
-    const data = getLocalDatabase();
-    const current = data.homepage.hiring || defaultHiring;
-    data.homepage.hiring = {
-      ...current,
+    const current = await this.getAllContentAsync();
+    const currentHiring = current.homepage.hiring || defaultHiring;
+    const updatedHiring: HiringContent = {
+      ...currentHiring,
       ...hiring,
-      positions: hiring.positions ? hiring.positions : current.positions,
-      offersHi: hiring.offersHi ? hiring.offersHi : current.offersHi,
-      offersEn: hiring.offersEn ? hiring.offersEn : current.offersEn
+      positions: hiring.positions ? hiring.positions : currentHiring.positions,
+      offersHi: hiring.offersHi ? hiring.offersHi : currentHiring.offersHi,
+      offersEn: hiring.offersEn ? hiring.offersEn : currentHiring.offersEn
     };
-    saveLocalDatabase(data);
-    await syncToMongo("content", { homepage: data.homepage });
-    return data.homepage.hiring;
+    const updatedHomepage: HomepageContent = {
+      ...current.homepage,
+      hiring: updatedHiring
+    };
+    await syncToMongo("content", { homepage: updatedHomepage });
+    try {
+      const data = getLocalDatabase();
+      data.homepage = updatedHomepage;
+      saveLocalDatabase(data);
+    } catch {}
+    return updatedHiring;
   },
 
   updateHiring(hiring: Partial<HiringContent>): HiringContent {
@@ -777,7 +877,7 @@ export const db = {
       offersEn: hiring.offersEn ? hiring.offersEn : current.offersEn
     };
     saveLocalDatabase(data);
-    syncToMongo("content", { homepage: data.homepage });
+    syncToMongo("content", { homepage: data.homepage }).catch(() => {});
     return data.homepage.hiring;
   },
 
@@ -786,20 +886,49 @@ export const db = {
     try {
       const mongo = await getMongoDb();
       if (mongo) {
-        const doc: any = await mongo.collection("content").findOne({ _id: CONTENT_DOC_ID as any });
+        let doc: any = await mongo.collection("content").findOne({ _id: CONTENT_DOC_ID as any });
+        if (!doc) {
+          // Trigger initial seed if empty
+          await this.initMongo();
+          doc = await mongo.collection("content").findOne({ _id: CONTENT_DOC_ID as any });
+        }
+
         if (doc) {
           const local = getLocalDatabase();
           return {
-            settings: { ...defaultSettings, ...(doc.settings || {}) },
-            navigation: ((doc.navigation || defaultNavigation) as NavigationItem[]).sort((a, b) => a.order - b.order),
+            settings: { ...defaultSettings, ...(local.settings || {}), ...(doc.settings || {}) },
+            navigation: (((doc.navigation || local.navigation || defaultNavigation) as NavigationItem[])).sort((a, b) => a.order - b.order),
             homepage: {
               ...defaultHomepage,
+              ...(local.homepage || {}),
               ...(doc.homepage || {}),
-              bannerSlider: { ...defaultHomepage.bannerSlider, ...(doc.homepage?.bannerSlider || {}) },
-              studioWarRoom: { ...defaultStudioWarRoom, ...(doc.homepage?.studioWarRoom || {}) },
+              bannerSlider: {
+                ...defaultHomepage.bannerSlider,
+                ...(local.homepage?.bannerSlider || {}),
+                ...(doc.homepage?.bannerSlider || {}),
+                slides: Array.isArray(doc.homepage?.bannerSlider?.slides) && doc.homepage.bannerSlider.slides.length > 0
+                  ? doc.homepage.bannerSlider.slides
+                  : (local.homepage?.bannerSlider?.slides || defaultHomepage.bannerSlider!.slides)
+              },
+              studioWarRoom: {
+                ...defaultStudioWarRoom,
+                ...(local.homepage?.studioWarRoom || {}),
+                ...(doc.homepage?.studioWarRoom || {}),
+                studioCard: {
+                  ...defaultStudioWarRoom.studioCard,
+                  ...(local.homepage?.studioWarRoom?.studioCard || {}),
+                  ...(doc.homepage?.studioWarRoom?.studioCard || {})
+                },
+                warRoomCard: {
+                  ...defaultStudioWarRoom.warRoomCard,
+                  ...(local.homepage?.studioWarRoom?.warRoomCard || {}),
+                  ...(doc.homepage?.studioWarRoom?.warRoomCard || {})
+                }
+              },
               hiring: doc.homepage?.hiring
                 ? {
                     ...defaultHiring,
+                    ...(local.homepage?.hiring || {}),
                     ...doc.homepage.hiring,
                     positions: Array.isArray(doc.homepage.hiring.positions) && doc.homepage.hiring.positions.length > 0
                       ? doc.homepage.hiring.positions
@@ -811,30 +940,33 @@ export const db = {
               trackRecord: doc.homepage?.trackRecord
                 ? {
                     ...defaultHomepage.trackRecord,
+                    ...(local.homepage?.trackRecord || {}),
                     ...doc.homepage.trackRecord,
                     items: Array.isArray(doc.homepage.trackRecord.items) && doc.homepage.trackRecord.items.length > 0
                       ? doc.homepage.trackRecord.items
                       : (local.homepage?.trackRecord?.items || defaultHomepage.trackRecord!.items)
                   }
                 : (local.homepage?.trackRecord || defaultHomepage.trackRecord!),
-              founderMessage: { ...defaultHomepage.founderMessage, ...(doc.homepage?.founderMessage || {}) }
+              founderMessage: {
+                ...defaultHomepage.founderMessage,
+                ...(local.homepage?.founderMessage || {}),
+                ...(doc.homepage?.founderMessage || {})
+              }
             },
             pages: {
               ...defaultPages,
+              ...(local.pages || {}),
               ...(doc.pages || {})
             },
-            faqs: doc.faqs || defaultFaqs,
-            gallery: doc.gallery
+            faqs: Array.isArray(doc.faqs) && doc.faqs.length > 0 ? doc.faqs : (local.faqs || defaultFaqs),
+            gallery: doc.gallery && Array.isArray(doc.gallery.items) && doc.gallery.items.length > 0
               ? {
                   ...defaultGallery,
-                  ...doc.gallery,
-                  items: Array.isArray(doc.gallery.items) ? doc.gallery.items : defaultGallery.items
+                  ...(local.gallery || {}),
+                  ...doc.gallery
                 }
-              : defaultGallery
+              : (local.gallery || defaultGallery)
           };
-        } else {
-          // Trigger initial seed
-          await this.initMongo();
         }
       }
     } catch (err) {

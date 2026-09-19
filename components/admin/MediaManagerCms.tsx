@@ -35,11 +35,24 @@ export default function MediaManagerCms() {
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
+  const getAuthHeaders = (): Record<string, string> => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("wf_admin_token") || "" : "";
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+      headers["x-admin-token"] = token;
+    }
+    return headers;
+  };
+
   const fetchMedia = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/media?folder=workforce");
+      const res = await fetch("/api/admin/media?folder=workforce", {
+        headers: getAuthHeaders(),
+        credentials: "include",
+      });
       const data = await res.json();
       if (data.success && Array.isArray(data.files)) {
         setFiles(data.files);
@@ -72,6 +85,8 @@ export default function MediaManagerCms() {
 
       const res = await fetch("/api/admin/upload", {
         method: "POST",
+        headers: getAuthHeaders(),
+        credentials: "include",
         body: formData,
       });
 
@@ -103,6 +118,8 @@ export default function MediaManagerCms() {
     try {
       const res = await fetch(`/api/admin/media?fileId=${fileId}`, {
         method: "DELETE",
+        headers: getAuthHeaders(),
+        credentials: "include",
       });
       const data = await res.json();
       if (data.success) {

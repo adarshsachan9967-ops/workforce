@@ -1,21 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { getAdminSession } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
-export async function GET() {
-  const session = await getAdminSession();
+export async function GET(req: NextRequest) {
+  const session = await getAdminSession(req);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const data = await db.getAllContentAsync();
-  return NextResponse.json({ success: true, data });
+  return NextResponse.json(
+    { success: true, data },
+    {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+        "Pragma": "no-cache",
+        "Expires": "0",
+      },
+    }
+  );
 }
 
 export async function PUT(req: NextRequest) {
-  const session = await getAdminSession();
+  const session = await getAdminSession(req);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -71,10 +82,33 @@ export async function PUT(req: NextRequest) {
         break;
     }
 
+    try {
+      revalidatePath("/", "layout");
+      revalidatePath("/");
+      revalidatePath("/admin");
+      revalidatePath("/gallery");
+      revalidatePath("/contact");
+      revalidatePath("/process");
+      revalidatePath("/services");
+      revalidatePath("/about");
+    } catch (cacheErr) {
+      console.warn("revalidatePath warning:", cacheErr);
+    }
+
     const updated = await db.getAllContentAsync();
-    return NextResponse.json({ success: true, data: updated });
-  } catch (err) {
+    return NextResponse.json(
+      { success: true, data: updated },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+          "Pragma": "no-cache",
+          "Expires": "0",
+        },
+      }
+    );
+  } catch (err: unknown) {
     console.error("Error updating site content:", err);
-    return NextResponse.json({ error: "Failed to update content" }, { status: 500 });
+    const message = err instanceof Error ? err.message : "Failed to update content";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -14,8 +14,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "अमान्य क्रेडेंशियल्स। कृपया सही ईमेल और पासवर्ड दर्ज करें।" }, { status: 401 });
     }
 
-    await createAdminSession();
-    return NextResponse.json({ success: true, user: email });
+    const token = await createAdminSession(email);
+    return NextResponse.json({ success: true, user: email, token });
   } catch (err) {
     console.error("Login error:", err);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });

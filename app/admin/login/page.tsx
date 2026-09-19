@@ -21,12 +21,19 @@ export default function AdminLoginPage() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ email, password })
       });
 
       const data = await res.json();
       if (!res.ok) {
         throw new Error(data.error || "Login failed");
+      }
+
+      if (data.token) {
+        try {
+          localStorage.setItem("wf_admin_token", data.token);
+        } catch {}
       }
 
       router.push("/admin");

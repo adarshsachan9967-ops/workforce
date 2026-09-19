@@ -5,7 +5,7 @@ import { getAdminSession, verifyAdminCredentials } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
-  const session = await getAdminSession();
+  const session = await getAdminSession(req);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

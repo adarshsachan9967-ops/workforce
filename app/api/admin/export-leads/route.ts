@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getAdminSession } from "@/lib/auth";
 
@@ -10,8 +10,8 @@ function escapeCsvField(field: any): string {
   return `"${str}"`;
 }
 
-export async function GET() {
-  const session = await getAdminSession();
+export async function GET(req: NextRequest) {
+  const session = await getAdminSession(req);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }

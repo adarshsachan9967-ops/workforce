@@ -72,16 +72,26 @@ export default function HomepageCms({
     if (!file) return;
     setUploadingField(fieldKey);
     try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("wf_admin_token") || "" : "";
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+        headers["x-admin-token"] = token;
+      }
+
       const formData = new FormData();
       formData.append("file", file);
       formData.append("folder", "workforce");
       const res = await fetch("/api/admin/upload", {
         method: "POST",
+        headers,
+        credentials: "include",
         body: formData,
       });
       const data = await res.json();
-      if (res.ok && data.success && data.url) {
-        onSuccess(data.url);
+      const uploadedUrl = data.url || data.file?.url;
+      if (res.ok && data.success && uploadedUrl) {
+        onSuccess(uploadedUrl);
       } else {
         alert(data.error || "अपलोड विफल रहा। कृपया पुनः प्रयास करें।");
       }
@@ -332,10 +342,12 @@ export default function HomepageCms({
                             onChange={(e) => handleImageUpload(e, (url) => {
                               const arr = [...bannerSlider.slides];
                               arr[idx] = { ...arr[idx], src: url };
-                              setHomepage({
+                              const updated = {
                                 ...homepage,
                                 bannerSlider: { ...bannerSlider, slides: arr }
-                              });
+                              };
+                              setHomepage(updated);
+                              saveSection("homepage", updated);
                             }, `slide-${idx}`)}
                           />
                         </label>
@@ -1347,13 +1359,15 @@ export default function HomepageCms({
                       accept="image/*"
                       className="hidden"
                       onChange={(e) => handleImageUpload(e, (url) => {
-                        setHomepage({
+                        const updated = {
                           ...homepage,
                           studioWarRoom: {
                             ...studioWarRoom,
                             studioCard: { ...studioWarRoom.studioCard, image1Src: url }
                           }
-                        });
+                        };
+                        setHomepage(updated);
+                        saveSection("homepage", updated);
                       }, "studioImg1")}
                     />
                   </label>
@@ -1410,13 +1424,15 @@ export default function HomepageCms({
                       accept="image/*"
                       className="hidden"
                       onChange={(e) => handleImageUpload(e, (url) => {
-                        setHomepage({
+                        const updated = {
                           ...homepage,
                           studioWarRoom: {
                             ...studioWarRoom,
                             studioCard: { ...studioWarRoom.studioCard, image2Src: url }
                           }
-                        });
+                        };
+                        setHomepage(updated);
+                        saveSection("homepage", updated);
                       }, "studioImg2")}
                     />
                   </label>
@@ -1700,13 +1716,15 @@ export default function HomepageCms({
                       accept="image/*"
                       className="hidden"
                       onChange={(e) => handleImageUpload(e, (url) => {
-                        setHomepage({
+                        const updated = {
                           ...homepage,
                           studioWarRoom: {
                             ...studioWarRoom,
                             warRoomCard: { ...studioWarRoom.warRoomCard, image1Src: url }
                           }
-                        });
+                        };
+                        setHomepage(updated);
+                        saveSection("homepage", updated);
                       }, "warRoomImg1")}
                     />
                   </label>
@@ -1763,13 +1781,15 @@ export default function HomepageCms({
                       accept="image/*"
                       className="hidden"
                       onChange={(e) => handleImageUpload(e, (url) => {
-                        setHomepage({
+                        const updated = {
                           ...homepage,
                           studioWarRoom: {
                             ...studioWarRoom,
                             warRoomCard: { ...studioWarRoom.warRoomCard, image2Src: url }
                           }
-                        });
+                        };
+                        setHomepage(updated);
+                        saveSection("homepage", updated);
                       }, "warRoomImg2")}
                     />
                   </label>
@@ -2371,10 +2391,12 @@ export default function HomepageCms({
                         className="hidden"
                         disabled={uploadingField === "founder-photo"}
                         onChange={(e) => handleImageUpload(e, (url) => {
-                          setHomepage({
+                          const updated = {
                             ...homepage,
                             founderMessage: { ...founderMessage, photoUrl: url }
-                          });
+                          };
+                          setHomepage(updated);
+                          saveSection("homepage", updated);
                         }, "founder-photo")}
                       />
                     </label>

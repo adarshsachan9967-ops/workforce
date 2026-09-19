@@ -40,7 +40,13 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
 
   const fetchContent = useCallback(async () => {
     try {
-      const res = await fetch("/api/content", { cache: "no-store" });
+      const res = await fetch(`/api/content?_t=${Date.now()}`, {
+        cache: "no-store",
+        headers: {
+          Pragma: "no-cache",
+          "Cache-Control": "no-cache",
+        },
+      });
       if (res.ok) {
         const json = await res.json();
         if (json.data) {
@@ -61,6 +67,28 @@ export function ContentProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     fetchContent();
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "workforce_content_updated") {
+        fetchContent();
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        fetchContent();
+      }
+    };
+
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener("focus", fetchContent);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("focus", fetchContent);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [fetchContent]);
 
   return (

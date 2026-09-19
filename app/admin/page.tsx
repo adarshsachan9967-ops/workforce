@@ -117,9 +117,22 @@ export default function AdminDashboardPage() {
   const [faqModalOpen, setFaqModalOpen] = useState(false);
   const [editingFaq, setEditingFaq] = useState<FaqItem | null>(null);
 
+  const getAuthHeaders = (): Record<string, string> => {
+    const token = typeof window !== "undefined" ? localStorage.getItem("wf_admin_token") || "" : "";
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+      headers["x-admin-token"] = token;
+    }
+    return headers;
+  };
+
   // Check auth session
   useEffect(() => {
-    fetch("/api/auth/me")
+    fetch("/api/auth/me", {
+      headers: getAuthHeaders(),
+      credentials: "include"
+    })
       .then((res) => {
         if (!res.ok) {
           router.push("/admin/login");
@@ -127,6 +140,11 @@ export default function AdminDashboardPage() {
           res.json().then((d) => {
             setAuthenticated(true);
             if (d.user) setAdminEmail(d.user);
+            if (d.token) {
+              try {
+                localStorage.setItem("wf_admin_token", d.token);
+              } catch {}
+            }
             loadData();
           });
         }
@@ -144,9 +162,10 @@ export default function AdminDashboardPage() {
   const loadData = async () => {
     setLoading(true);
     try {
+      const authH = getAuthHeaders();
       const [enqRes, contentRes] = await Promise.all([
-        fetch("/api/enquiries", { cache: "no-store" }),
-        fetch("/api/admin/content", { cache: "no-store" })
+        fetch("/api/enquiries", { cache: "no-store", headers: authH, credentials: "include" }),
+        fetch("/api/admin/content", { cache: "no-store", headers: authH, credentials: "include" })
       ]);
 
       if (enqRes.ok) {
@@ -179,7 +198,8 @@ export default function AdminDashboardPage() {
     try {
       const res = await fetch(`/api/enquiries/${id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
+        credentials: "include",
         body: JSON.stringify({ status: newStatus })
       });
 
@@ -203,7 +223,8 @@ export default function AdminDashboardPage() {
     try {
       const res = await fetch(`/api/enquiries/${id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
+        credentials: "include",
         body: JSON.stringify({ adminNotes: adminNoteInput })
       });
 
@@ -227,7 +248,11 @@ export default function AdminDashboardPage() {
     }
 
     try {
-      const res = await fetch(`/api/enquiries/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/enquiries/${id}`, {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+        credentials: "include"
+      });
       if (res.ok) {
         setEnquiries((prev) => prev.filter((e) => e.id !== id));
         if (selectedLead?.id === id) setSelectedLead(null);
@@ -245,13 +270,20 @@ export default function AdminDashboardPage() {
     try {
       const res = await fetch("/api/admin/content", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
+        credentials: "include",
         body: JSON.stringify({ section: sectionName, data: dataToSave })
       });
 
       if (!res.ok) {
-        throw new Error("सुरक्षित करने में त्रुटि हुई।");
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.error || "सुरक्षित करने में त्रुटि हुई।");
       }
+
+      // Broadcast update across open browser tabs
+      try {
+        localStorage.setItem("workforce_content_updated", Date.now().toString());
+      } catch {}
 
       showNotification("परिवर्तन सफलतापूर्वक सहेजे गए और लाइव वेबसाइट पर अपडेट हो गए हैं!");
     } catch (err: any) {
@@ -274,7 +306,8 @@ export default function AdminDashboardPage() {
     try {
       const res = await fetch("/api/admin/credentials", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
+        credentials: "include",
         body: JSON.stringify({
           currentPassword: passwordForm.currentPassword,
           newEmail: passwordForm.newEmail || adminEmail,
@@ -301,7 +334,14 @@ export default function AdminDashboardPage() {
   };
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
+    try {
+      localStorage.removeItem("wf_admin_token");
+    } catch {}
+    await fetch("/api/auth/logout", {
+      method: "POST",
+      headers: getAuthHeaders(),
+      credentials: "include"
+    });
     router.push("/admin/login");
   };
 
@@ -1188,10 +1228,18 @@ export default function AdminDashboardPage() {
                             const fd = new FormData();
                             fd.append("file", file);
                             fd.append("folder", "workforce");
-                            const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+                            const res = await fetch("/api/admin/upload", {
+                              method: "POST",
+                              headers: getAuthHeaders(),
+                              credentials: "include",
+                              body: fd
+                            });
                             const json = await res.json();
-                            if (json.success && json.file?.url) {
-                              setSettings((prev) => ({ ...prev, logoUrl: json.file.url }));
+                            const uploadedUrl = json.url || json.file?.url;
+                            if (json.success && uploadedUrl) {
+                              const updatedSettings = { ...settings, logoUrl: uploadedUrl };
+                              setSettings(updatedSettings);
+                              saveSection("settings", updatedSettings);
                               alert("लोगो ImageKit (workforce) में सफलतापूर्वक अपलोड हो गया!");
                             } else {
                               alert(json.error || "अपलोड विफल रहा।");
