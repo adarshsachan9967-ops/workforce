@@ -36,50 +36,56 @@ export async function PUT(req: NextRequest) {
     const { section } = body;
     const data = body.data !== undefined ? body.data : body.content;
 
-    switch (section) {
-      case "settings":
-        await db.updateSettingsAsync(data);
-        break;
-      case "homepage":
-        await db.updateHomepageContentAsync(data);
-        break;
-      case "pages":
-        await db.updatePagesContentAsync(data);
-        break;
-      case "navigation":
-        await db.saveNavigationAsync(data);
-        break;
-      case "faqs":
-        if (Array.isArray(data)) {
-          for (const faq of data) {
-            await db.saveFaqAsync(faq);
+    let syncWarning: string | null = null;
+    try {
+      switch (section) {
+        case "settings":
+          await db.updateSettingsAsync(data);
+          break;
+        case "homepage":
+          await db.updateHomepageContentAsync(data);
+          break;
+        case "pages":
+          await db.updatePagesContentAsync(data);
+          break;
+        case "navigation":
+          await db.saveNavigationAsync(data);
+          break;
+        case "faqs":
+          if (Array.isArray(data)) {
+            for (const faq of data) {
+              await db.saveFaqAsync(faq);
+            }
           }
-        }
-        break;
-      case "faq-item":
-        if (data && data.id) {
-          await db.saveFaqAsync(data);
-        }
-        break;
-      case "gallery":
-        await db.updateGalleryAsync(data);
-        break;
-      case "trackRecord":
-        await db.updateTrackRecordAsync(data);
-        break;
-      case "hiring":
-        await db.updateHiringAsync(data);
-        break;
-      default:
-        // If full content payload provided
-        if (body.settings) await db.updateSettingsAsync(body.settings);
-        if (body.homepage) await db.updateHomepageContentAsync(body.homepage);
-        if (body.pages) await db.updatePagesContentAsync(body.pages);
-        if (body.navigation) await db.saveNavigationAsync(body.navigation);
-        if (body.gallery) await db.updateGalleryAsync(body.gallery);
-        if (body.trackRecord) await db.updateTrackRecordAsync(body.trackRecord);
-        if (body.hiring) await db.updateHiringAsync(body.hiring);
-        break;
+          break;
+        case "faq-item":
+          if (data && data.id) {
+            await db.saveFaqAsync(data);
+          }
+          break;
+        case "gallery":
+          await db.updateGalleryAsync(data);
+          break;
+        case "trackRecord":
+          await db.updateTrackRecordAsync(data);
+          break;
+        case "hiring":
+          await db.updateHiringAsync(data);
+          break;
+        default:
+          // If full content payload provided
+          if (body.settings) await db.updateSettingsAsync(body.settings);
+          if (body.homepage) await db.updateHomepageContentAsync(body.homepage);
+          if (body.pages) await db.updatePagesContentAsync(body.pages);
+          if (body.navigation) await db.saveNavigationAsync(body.navigation);
+          if (body.gallery) await db.updateGalleryAsync(body.gallery);
+          if (body.trackRecord) await db.updateTrackRecordAsync(body.trackRecord);
+          if (body.hiring) await db.updateHiringAsync(body.hiring);
+          break;
+      }
+    } catch (syncErr: any) {
+      console.warn("MongoDB sync warning in admin content PUT:", syncErr.message);
+      syncWarning = syncErr.message;
     }
 
     try {
@@ -97,7 +103,7 @@ export async function PUT(req: NextRequest) {
 
     const updated = await db.getAllContentAsync();
     return NextResponse.json(
-      { success: true, data: updated },
+      { success: true, data: updated, warning: syncWarning },
       {
         headers: {
           "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",

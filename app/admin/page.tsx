@@ -295,7 +295,11 @@ export default function AdminDashboardPage() {
         localStorage.setItem("workforce_content_updated", Date.now().toString());
       } catch {}
 
-      showNotification("परिवर्तन सफलतापूर्वक सहेजे गए और लाइव वेबसाइट पर अपडेट हो गए हैं!");
+      if (resData.warning) {
+        showNotification("परिवर्तन सुरक्षित हो गए हैं! (नोट: स्थायी लाइव सिंक हेतु MongoDB Atlas में 0.0.0.0/0 IP जोड़ें)");
+      } else {
+        showNotification("परिवर्तन सफलतापूर्वक सहेजे गए और लाइव वेबसाइट पर अपडेट हो गए हैं!");
+      }
     } catch (err: any) {
       setErrorMessage(err.message || "त्रुटि हुई।");
     } finally {
