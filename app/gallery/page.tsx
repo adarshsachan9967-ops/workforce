@@ -84,51 +84,51 @@ export default function GalleryPage() {
     <main className="flex-1 bg-navy-900 text-slate-100 overflow-hidden">
       
       {/* Hero Header */}
-      <section className="relative pt-14 pb-16 lg:pt-20 lg:pb-24 bg-gradient-to-b from-navy-950 via-navy-900 to-navy-900 border-b border-navy-800 bg-grid-pattern">
+      <section className="relative pt-6 pb-6 sm:pt-8 sm:pb-8 lg:pt-10 lg:pb-10 bg-gradient-to-b from-navy-950 via-navy-900 to-navy-900 border-b border-navy-800 bg-grid-pattern">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-left">
           
-          <div className="max-w-3xl space-y-4">
-            <div className="flex items-center gap-2 text-xs text-slate-400 font-mono mb-2">
+          <div className="max-w-5xl space-y-3">
+            <div className="flex items-center gap-2 text-xs text-slate-400 font-mono mb-1">
               <Link href="/" className="hover:text-accent-gold">HOME</Link>
               <span>/</span>
               <span className="text-accent-orange font-bold">GALLERY & GROUND ACTION</span>
             </div>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-navy-900 border border-accent-orange/40 text-accent-gold text-xs font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-navy-900 border border-accent-orange/40 text-accent-gold text-[11px] font-bold uppercase tracking-wider">
               <Camera className="w-3.5 h-3.5 text-accent-orange" />
               <span>{language === "hi" ? "वास्तविक अभियान छायाचित्र" : "Authentic Campaign Gallery"}</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight font-hindi leading-tight">
+            <h1 className="text-2xl sm:text-4xl lg:text-[44px] font-black tracking-tight font-hindi leading-[1.25]">
               {language === "hi" ? (
                 <>
-                  जमीनी सक्रियता, हाई-टेक वार रूम <br />
-                  <span className="text-accent-orange">& मीडिया स्टूडियो की एक झलक</span>
+                  <span className="block text-slate-950 dark:text-white">जमीनी सक्रियता, हाई-टेक वॉर रूम</span>
+                  <span className="block text-accent-orange !text-[#F28C28]">&amp; मीडिया स्टूडियो की एक झलक</span>
                 </>
               ) : (
                 <>
-                  Field Operations, High-Tech War Rooms <br />
-                  <span className="text-accent-orange">& Production Studios in Action</span>
+                  <span className="block text-slate-950 dark:text-white">Field Operations, High-Tech War Rooms</span>
+                  <span className="block text-accent-orange !text-[#F28C28]">&amp; Production Studios in Action</span>
                 </>
               )}
             </h1>
 
-            <p className="text-base sm:text-lg text-slate-300 font-normal leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 font-normal leading-normal max-w-5xl">
               {language === "hi"
-                ? "वर्कफोर्स इन्फोटेक के वास्तविक चुनावी अभियानों, कोर वार रूम ऑपरेशंस, ऑडियो-वीडियो रिकॉर्डिंग स्टूडियो, डोर-टू-डोर सर्वे और वरिष्ठ राजनीतिक नेतृत्व के साथ हुए संवादों का प्रामाणिक छायाचित्र संग्रह।"
-                : "A verified visual record of Workforce Infotech's actual campaign operations, command center telemetry, broadcast podcast suites, grassroots surveys, and top-tier political consultations."}
+                ? "वर्कफोर्स इन्फोटेक के वास्तविक चुनावी अभियानों, हाई-टेक वॉर रूम, ऑडियो-वीडियो स्टूडियो व जमीनी ऑपरेशंस का प्रामाणिक संग्रह।"
+                : "A verified visual showcase of Workforce Infotech's ground campaigns, high-tech war rooms, and production studios."}
             </p>
 
-            <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-medium">
-              <span className="px-3 py-1.5 rounded-xl bg-navy-950/80 border border-navy-700/80 text-accent-gold flex items-center gap-1.5">
+            <div className="pt-1 flex flex-wrap items-center gap-2 text-xs font-medium">
+              <span className="px-2.5 py-1 rounded-lg bg-navy-950/80 border border-navy-700/80 text-accent-gold flex items-center gap-1.5">
                 <Building2 className="w-3.5 h-3.5 text-accent-orange" />
                 <span>{allItems.length}+ प्रामाणिक तस्वीरें</span>
               </span>
-              <span className="px-3 py-1.5 rounded-xl bg-navy-950/80 border border-navy-700/80 text-slate-300 flex items-center gap-1.5">
+              <span className="px-2.5 py-1 rounded-lg bg-navy-950/80 border border-navy-700/80 text-slate-300 flex items-center gap-1.5">
                 <Tv className="w-3.5 h-3.5 text-sky-400" />
                 <span>पॉडकास्ट एवं ऑडियो स्टूडियो</span>
               </span>
-              <span className="px-3 py-1.5 rounded-xl bg-navy-950/80 border border-navy-700/80 text-slate-300 flex items-center gap-1.5">
+              <span className="px-2.5 py-1 rounded-lg bg-navy-950/80 border border-navy-700/80 text-slate-300 flex items-center gap-1.5">
                 <Users className="w-3.5 h-3.5 text-emerald-400" />
                 <span>1000+ प्रोफेशनल वर्कफोर्स</span>
               </span>
@@ -139,11 +139,11 @@ export default function GalleryPage() {
       </section>
 
       {/* Gallery Main Container */}
-      <section className="py-12 lg:py-16 bg-navy-950">
+      <section className="pt-6 pb-12 sm:pt-8 sm:pb-16 bg-navy-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Controls: Category Filter Tabs & Search */}
-          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-8 pb-6 border-b border-navy-800">
+          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-6 pb-4 border-b border-navy-800">
             
             {/* Category Filter Pills */}
             <div className="flex flex-wrap items-center gap-2">

@@ -21,6 +21,28 @@ export const galleryCategories = [
 
 export const galleryItems: GalleryItem[] = [
   {
+    id: 1789810191059,
+    src: "https://ik.imagekit.io/avdarinn/workforce/WhatsApp_Image_2026-09-19_at_14.07.50_GPAxsDgPQ.jpeg?updatedAt=1789807120768",
+    category: "war-room",
+    titleHi: "नया चुनावी छायाचित्र",
+    titleEn: "Meeting with MP Shri Naresh Uttam Patel Ji",
+    descHi: "वर्कफोर्स इन्फोटेक के वास्तविक चुनावी अभियान का छायाचित्र।",
+    descEn: "Authentic election campaign photograph by Workforce Infotech.",
+    location: "उत्तर प्रदेश",
+    tag: "संसद श्री नरेश उत्तम पटेल जी के साथ"
+  },
+  {
+    id: 1789810191060,
+    src: "https://ik.imagekit.io/avdarinn/workforce/WhatsApp_Image_2026-09-19_at_14.07.50_MslMsR_Sog.jpeg?updatedAt=1789807247826",
+    category: "war-room",
+    titleHi: "नया चुनावी छायाचित्र",
+    titleEn: "Meeting with Former CM Shri Akhilesh Yadav Ji",
+    descHi: "वर्कफोर्स इन्फोटेक के वास्तविक चुनावी अभियान का छायाचित्र।",
+    descEn: "Authentic election campaign photograph by Workforce Infotech.",
+    location: "उत्तर प्रदेश",
+    tag: "पूर्व मुख्यमंत्री श्री अखिलेश यादव जी के साथ"
+  },
+  {
     id: 1,
     src: "/images/gallery/gallery-1.jpeg",
     category: "events",

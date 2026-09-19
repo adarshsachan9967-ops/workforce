@@ -280,6 +280,16 @@ export default function AdminDashboardPage() {
         throw new Error(errJson.error || "सुरक्षित करने में त्रुटि हुई।");
       }
 
+      const resData = await res.json().catch(() => ({}));
+      if (resData.data) {
+        if (resData.data.settings) setSettings(resData.data.settings);
+        if (resData.data.navigation) setNavigation(resData.data.navigation);
+        if (resData.data.homepage) setHomepage(resData.data.homepage);
+        if (resData.data.pages) setPages(resData.data.pages);
+        if (resData.data.faqs) setFaqs(resData.data.faqs);
+        if (resData.data.gallery) setGallery(resData.data.gallery);
+      }
+
       // Broadcast update across open browser tabs
       try {
         localStorage.setItem("workforce_content_updated", Date.now().toString());

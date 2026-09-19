@@ -57,7 +57,7 @@ export default function GalleryTeaser() {
               href="/gallery"
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-accent-orange to-accent-orange-hover hover:brightness-110 text-white font-bold text-xs sm:text-sm shadow-xl shadow-accent-orange/20 transition-all cursor-pointer"
             >
-              <span>{language === "hi" ? "सभी 26+ तस्वीरें देखें" : "Explore All 26+ Photos"}</span>
+              <span>{language === "hi" ? `सभी ${allItems.length}+ तस्वीरें देखें` : `Explore All ${allItems.length}+ Photos`}</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

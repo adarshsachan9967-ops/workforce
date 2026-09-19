@@ -123,8 +123,8 @@ async function syncToMongo(collectionName: "enquiries" | "content", payload: any
   try {
     const mongo = await getMongoDb();
     if (!mongo) {
-      console.warn("MongoDB not available for sync (continuing with local cache)");
-      return;
+      console.error("MongoDB Atlas connection unavailable for sync");
+      throw new Error("डेटाबेस (MongoDB Atlas) से संपर्क नहीं हो सका। कृपया नेटवर्क या कनेक्शन की जांच करें।");
     }
 
     if (collectionName === "content") {
@@ -962,8 +962,8 @@ export const db = {
             gallery: doc.gallery && Array.isArray(doc.gallery.items) && doc.gallery.items.length > 0
               ? {
                   ...defaultGallery,
-                  ...(local.gallery || {}),
-                  ...doc.gallery
+                  ...doc.gallery,
+                  items: doc.gallery.items
                 }
               : (local.gallery || defaultGallery)
           };

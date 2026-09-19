@@ -1,12 +1,4 @@
-import dns from "dns";
 import { MongoClient, Db } from "mongodb";
-
-// Configure public DNS servers for resolving MongoDB Atlas SRV records when available
-try {
-  dns.setServers(["8.8.8.8", "1.1.1.1"]);
-} catch {
-  // Ignore in restricted environments
-}
 
 // Direct replica set connection string for workforce.f18zegk.mongodb.net
 // Completely bypasses DNS SRV lookups to eliminate querySrv ECONNREFUSED errors across all environments
@@ -21,7 +13,7 @@ function getMongoUri(): string {
   const envUri = process.env.MONGODB_URI;
   if (envUri) {
     // If an srv URI pointing to our known workforce cluster is provided, use direct replica set for 100% reliability
-    if (envUri.includes("workforce.f18zegk.mongodb.net")) {
+    if (envUri.includes("f18zegk.mongodb.net") || envUri.includes("workforce")) {
       return DIRECT_REPLICA_SET_URI;
     }
     return envUri;
@@ -38,13 +30,11 @@ declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-let clientPromise: Promise<MongoClient> | null = null;
-
 async function createConnectedClient(connectionUri: string): Promise<MongoClient> {
   const client = new MongoClient(connectionUri, {
     maxPoolSize: 10,
-    serverSelectionTimeoutMS: 8000,
-    connectTimeoutMS: 10000,
+    serverSelectionTimeoutMS: 6000,
+    connectTimeoutMS: 8000,
   });
   return await client.connect();
 }
@@ -54,23 +44,13 @@ export function getMongoClientPromise(): Promise<MongoClient> | null {
     return null;
   }
 
-  if (process.env.NODE_ENV === "development") {
-    if (!global._mongoClientPromise) {
-      global._mongoClientPromise = createConnectedClient(uri).catch((err) => {
-        global._mongoClientPromise = undefined;
-        throw err;
-      });
-    }
-    return global._mongoClientPromise;
-  } else {
-    if (!clientPromise) {
-      clientPromise = createConnectedClient(uri).catch((err) => {
-        clientPromise = null;
-        throw err;
-      });
-    }
-    return clientPromise;
+  if (!global._mongoClientPromise) {
+    global._mongoClientPromise = createConnectedClient(uri).catch((err) => {
+      global._mongoClientPromise = undefined;
+      throw err;
+    });
   }
+  return global._mongoClientPromise;
 }
 
 export async function getMongoDb(): Promise<Db | null> {
@@ -81,12 +61,8 @@ export async function getMongoDb(): Promise<Db | null> {
     return client.db(dbName);
   } catch (err) {
     console.error("Failed to connect to MongoDB Atlas:", err);
-    // Reset cached promises so subsequent requests can retry
-    if (process.env.NODE_ENV === "development") {
-      global._mongoClientPromise = undefined;
-    } else {
-      clientPromise = null;
-    }
+    // Reset cached promise so subsequent requests can retry
+    global._mongoClientPromise = undefined;
     return null;
   }
 }
