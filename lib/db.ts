@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { getMongoDb } from "./mongodb";
+import { getMongoDb, getLastMongoError } from "./mongodb";
 import {
   Enquiry,
   NavigationItem,
@@ -26,11 +26,22 @@ import {
 export * from "./content-schema";
 
 const DB_PATH = path.join(process.cwd(), "data", "db.json");
+const TMP_DB_PATH = path.join("/tmp", "workforce_db.json");
 const CONTENT_DOC_ID = "site_content";
 
 function getLocalDatabase(): DatabaseSchema {
   try {
-    if (!fs.existsSync(DB_PATH)) {
+    let data: string | null = null;
+    if (fs.existsSync(TMP_DB_PATH)) {
+      try {
+        data = fs.readFileSync(TMP_DB_PATH, "utf-8");
+      } catch {}
+    }
+    if (!data && fs.existsSync(DB_PATH)) {
+      data = fs.readFileSync(DB_PATH, "utf-8");
+    }
+
+    if (!data) {
       const initialDb: DatabaseSchema = {
         enquiries: [],
         settings: defaultSettings,
@@ -40,11 +51,11 @@ function getLocalDatabase(): DatabaseSchema {
         faqs: defaultFaqs,
         gallery: defaultGallery
       };
-      fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
-      fs.writeFileSync(DB_PATH, JSON.stringify(initialDb, null, 2), "utf-8");
+      try {
+        fs.writeFileSync(TMP_DB_PATH, JSON.stringify(initialDb, null, 2), "utf-8");
+      } catch {}
       return initialDb;
     }
-    const data = fs.readFileSync(DB_PATH, "utf-8");
     const parsed = JSON.parse(data);
 
     return {
@@ -111,33 +122,38 @@ function getLocalDatabase(): DatabaseSchema {
 
 function saveLocalDatabase(data: DatabaseSchema): void {
   try {
+    fs.writeFileSync(TMP_DB_PATH, JSON.stringify(data, null, 2), "utf-8");
+  } catch {}
+
+  try {
     fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
     fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), "utf-8");
-  } catch (err) {
-    console.error("Failed to write to database file:", err);
-  }
+  } catch {}
 }
 
 // Background sync to MongoDB Atlas with verification
 async function syncToMongo(collectionName: "enquiries" | "content", payload: any) {
   try {
     const mongo = await getMongoDb();
-    if (!mongo) {
-      console.error("MongoDB Atlas connection unavailable for sync");
-      throw new Error("डेटाबेस (MongoDB Atlas) से संपर्क नहीं हो सका। कृपया नेटवर्क या कनेक्शन की जांच करें।");
-    }
-
-    if (collectionName === "content") {
-      await mongo.collection("content").updateOne(
-        { _id: CONTENT_DOC_ID as any },
-        { $set: { ...payload, updatedAt: new Date().toISOString() } },
-        { upsert: true }
-      );
+    if (mongo) {
+      if (collectionName === "content") {
+        await mongo.collection("content").updateOne(
+          { _id: CONTENT_DOC_ID as any },
+          { $set: { ...payload, updatedAt: new Date().toISOString() } },
+          { upsert: true }
+        );
+      }
+      return;
     }
   } catch (err) {
     console.error("MongoDB Atlas sync error:", err);
-    throw err;
   }
+
+  const lastErr = getLastMongoError();
+  console.error("MongoDB Atlas connection unavailable for sync:", lastErr);
+  throw new Error(
+    `डेटाबेस (MongoDB Atlas) से संपर्क नहीं हो सका। कृपया MongoDB Atlas में Network Access -> 0.0.0.0/0 (Allow Access from Anywhere) की जांच करें। (${lastErr || "Timeout"})`
+  );
 }
 
 export const db = {
